@@ -318,19 +318,27 @@ function Hero() {
             transition={{ duration: 1, delay: 1.3 }}
             className="mt-10 flex flex-wrap items-center gap-4"
           >
-            <a
-              href="#portfolio"
-              className="group inline-flex items-center gap-3 bg-white px-7 py-4 text-[11px] uppercase tracking-[0.28em] text-charcoal transition-all hover:bg-gold"
-            >
-              Explore Projects
-              <span className="transition-transform group-hover:translate-x-1">→</span>
-            </a>
-            <a
-              href="#contact"
-              className="inline-flex items-center gap-3 border border-white/70 px-7 py-4 text-[11px] uppercase tracking-[0.28em] text-white transition-all hover:bg-white hover:text-charcoal"
-            >
-              Book a Consultation
-            </a>
+            <Magnetic>
+              <a
+                href="#portfolio"
+                className="group relative inline-flex items-center gap-3 overflow-hidden bg-white px-7 py-4 text-[11px] uppercase tracking-[0.28em] text-charcoal"
+              >
+                <span className="absolute inset-0 origin-left scale-x-0 bg-gold transition-transform duration-500 ease-out group-hover:scale-x-100" />
+                <span className="relative">Explore Projects</span>
+                <span className="relative transition-transform duration-500 group-hover:translate-x-1">→</span>
+              </a>
+            </Magnetic>
+            <Magnetic>
+              <a
+                href="#contact"
+                className="group relative inline-flex items-center gap-3 overflow-hidden border border-white/70 px-7 py-4 text-[11px] uppercase tracking-[0.28em] text-white"
+              >
+                <span className="absolute inset-0 origin-right scale-x-0 bg-white transition-transform duration-500 ease-out group-hover:origin-left group-hover:scale-x-100" />
+                <span className="relative transition-colors duration-500 group-hover:text-charcoal">
+                  Book a Consultation
+                </span>
+              </a>
+            </Magnetic>
           </motion.div>
         </div>
 
