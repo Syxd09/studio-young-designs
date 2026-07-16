@@ -266,10 +266,43 @@ function Hero() {
             <span className="gold-rule" />
             <span className="eyebrow text-white/70">Est. 1984 · Bangalore</span>
           </motion.div>
-          <SplitHeading
-            text="Crafting Timeless Interiors for Over 40 Years."
-            className="text-white text-[13vw] sm:text-6xl md:text-7xl lg:text-[5.5rem]"
-          />
+          <h1 className="font-display leading-[1.02] tracking-tight text-white text-[13vw] sm:text-6xl md:text-7xl lg:text-[5.5rem]">
+            {["Crafting", "Timeless", "Interiors"].map((w, i) => (
+              <span key={i} className="inline-block overflow-hidden pb-2 pr-[0.28em] align-bottom">
+                <motion.span
+                  className="inline-block"
+                  initial={{ y: "110%" }}
+                  animate={{ y: "0%" }}
+                  transition={{ duration: 1.1, delay: 0.3 + i * 0.08, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  {w}
+                </motion.span>
+              </span>
+            ))}
+            <br />
+            {["for", "Over"].map((w, i) => (
+              <span key={i} className="inline-block overflow-hidden pb-2 pr-[0.28em] align-bottom">
+                <motion.span
+                  className="inline-block"
+                  initial={{ y: "110%" }}
+                  animate={{ y: "0%" }}
+                  transition={{ duration: 1.1, delay: 0.6 + i * 0.08, ease: [0.22, 1, 0.36, 1] }}
+                >
+                  {w}
+                </motion.span>
+              </span>
+            ))}
+            <span className="inline-block overflow-hidden pb-2 pr-[0.28em] align-bottom">
+              <motion.span
+                className="inline-block"
+                initial={{ y: "110%" }}
+                animate={{ y: "0%" }}
+                transition={{ duration: 1.1, delay: 0.85, ease: [0.22, 1, 0.36, 1] }}
+              >
+                <Highlight dark>40 Years.</Highlight>
+              </motion.span>
+            </span>
+          </h1>
           <motion.p
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
