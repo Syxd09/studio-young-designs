@@ -642,6 +642,56 @@ function Portfolio() {
   );
 }
 
+function PortfolioCard({
+  piece,
+}: {
+  piece: { img: string; title: string; place: string; h: string };
+}) {
+  const ref = useRef<HTMLAnchorElement>(null);
+  const { x, y } = useCursorTag(ref);
+  const [hover, setHover] = useState(false);
+  return (
+    <a
+      ref={ref}
+      href="#contact"
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+      className={`group relative block overflow-hidden bg-muted ${
+        piece.h === "tall" ? "aspect-[4/5]" : "aspect-[4/3]"
+      }`}
+    >
+      <img
+        src={piece.img}
+        alt={piece.title}
+        loading="lazy"
+        className="h-full w-full object-cover transition-transform duration-[1400ms] ease-out group-hover:scale-[1.08]"
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent opacity-70 transition-opacity duration-500 group-hover:opacity-90" />
+      <motion.div
+        style={{ x, y }}
+        animate={{ opacity: hover ? 1 : 0, scale: hover ? 1 : 0.6 }}
+        transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+        className="pointer-events-none absolute left-0 top-0 -translate-x-1/2 -translate-y-1/2"
+      >
+        <span className="grid h-24 w-24 place-items-center rounded-full bg-gold font-display text-sm uppercase tracking-[0.24em] text-charcoal">
+          View
+        </span>
+      </motion.div>
+      <div className="absolute inset-x-0 bottom-0 flex items-end justify-between p-6 md:p-8">
+        <div className="text-white">
+          <div className="eyebrow text-white/70">{piece.place}</div>
+          <div className="mt-2 overflow-hidden">
+            <span className="block font-display text-2xl transition-transform duration-500 group-hover:-translate-y-1 md:text-3xl">
+              {piece.title}
+            </span>
+          </div>
+          <span className="mt-3 block h-px w-8 bg-gold transition-all duration-500 group-hover:w-24" />
+        </div>
+      </div>
+    </a>
+  );
+}
+
 /* --------------------------------- Process --------------------------------- */
 function Process() {
   const steps = [
