@@ -633,31 +633,7 @@ function Portfolio() {
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-8">
           {pieces.map((p, i) => (
             <Reveal key={p.title} delay={(i % 2) * 0.1}>
-              <a
-                href="#contact"
-                className={`group relative block overflow-hidden bg-muted ${
-                  p.h === "tall" ? "aspect-[4/5]" : "aspect-[4/3]"
-                }`}
-              >
-                <img
-                  src={p.img}
-                  alt={p.title}
-                  loading="lazy"
-                  className="h-full w-full object-cover transition-transform duration-[1400ms] ease-out group-hover:scale-[1.05]"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent opacity-70 transition-opacity duration-500 group-hover:opacity-90" />
-                <div className="absolute inset-x-0 bottom-0 flex items-end justify-between p-6 md:p-8">
-                  <div className="text-white">
-                    <div className="eyebrow text-white/70">{p.place}</div>
-                    <div className="mt-2 font-display text-2xl md:text-3xl">{p.title}</div>
-                  </div>
-                  <div className="translate-y-2 opacity-0 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100">
-                    <span className="grid h-12 w-12 place-items-center rounded-full border border-white/70 text-white">
-                      →
-                    </span>
-                  </div>
-                </div>
-              </a>
+              <PortfolioCard piece={p} />
             </Reveal>
           ))}
         </div>
