@@ -9,38 +9,160 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as ServicesRouteImport } from './routes/services'
+import { Route as JournalRouteImport } from './routes/journal'
+import { Route as GalleryRouteImport } from './routes/gallery'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ServicesIndexRouteImport } from './routes/services/index'
+import { Route as ServicesWardrobesRouteImport } from './routes/services/wardrobes'
+import { Route as ServicesLivingSpacesRouteImport } from './routes/services/living-spaces'
+import { Route as ServicesKitchensRouteImport } from './routes/services/kitchens'
+import { Route as ServicesInteriorsRouteImport } from './routes/services/interiors'
 
+const ServicesRoute = ServicesRouteImport.update({
+  id: '/services',
+  path: '/services',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const JournalRoute = JournalRouteImport.update({
+  id: '/journal',
+  path: '/journal',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GalleryRoute = GalleryRouteImport.update({
+  id: '/gallery',
+  path: '/gallery',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ServicesIndexRoute = ServicesIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ServicesRoute,
+} as any)
+const ServicesWardrobesRoute = ServicesWardrobesRouteImport.update({
+  id: '/wardrobes',
+  path: '/wardrobes',
+  getParentRoute: () => ServicesRoute,
+} as any)
+const ServicesLivingSpacesRoute = ServicesLivingSpacesRouteImport.update({
+  id: '/living-spaces',
+  path: '/living-spaces',
+  getParentRoute: () => ServicesRoute,
+} as any)
+const ServicesKitchensRoute = ServicesKitchensRouteImport.update({
+  id: '/kitchens',
+  path: '/kitchens',
+  getParentRoute: () => ServicesRoute,
+} as any)
+const ServicesInteriorsRoute = ServicesInteriorsRouteImport.update({
+  id: '/interiors',
+  path: '/interiors',
+  getParentRoute: () => ServicesRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/gallery': typeof GalleryRoute
+  '/journal': typeof JournalRoute
+  '/services': typeof ServicesRouteWithChildren
+  '/services/interiors': typeof ServicesInteriorsRoute
+  '/services/kitchens': typeof ServicesKitchensRoute
+  '/services/living-spaces': typeof ServicesLivingSpacesRoute
+  '/services/wardrobes': typeof ServicesWardrobesRoute
+  '/services/': typeof ServicesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/gallery': typeof GalleryRoute
+  '/journal': typeof JournalRoute
+  '/services/interiors': typeof ServicesInteriorsRoute
+  '/services/kitchens': typeof ServicesKitchensRoute
+  '/services/living-spaces': typeof ServicesLivingSpacesRoute
+  '/services/wardrobes': typeof ServicesWardrobesRoute
+  '/services': typeof ServicesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/gallery': typeof GalleryRoute
+  '/journal': typeof JournalRoute
+  '/services': typeof ServicesRouteWithChildren
+  '/services/interiors': typeof ServicesInteriorsRoute
+  '/services/kitchens': typeof ServicesKitchensRoute
+  '/services/living-spaces': typeof ServicesLivingSpacesRoute
+  '/services/wardrobes': typeof ServicesWardrobesRoute
+  '/services/': typeof ServicesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/gallery'
+    | '/journal'
+    | '/services'
+    | '/services/interiors'
+    | '/services/kitchens'
+    | '/services/living-spaces'
+    | '/services/wardrobes'
+    | '/services/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/gallery'
+    | '/journal'
+    | '/services/interiors'
+    | '/services/kitchens'
+    | '/services/living-spaces'
+    | '/services/wardrobes'
+    | '/services'
+  id:
+    | '__root__'
+    | '/'
+    | '/gallery'
+    | '/journal'
+    | '/services'
+    | '/services/interiors'
+    | '/services/kitchens'
+    | '/services/living-spaces'
+    | '/services/wardrobes'
+    | '/services/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  GalleryRoute: typeof GalleryRoute
+  JournalRoute: typeof JournalRoute
+  ServicesRoute: typeof ServicesRouteWithChildren
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/services': {
+      id: '/services'
+      path: '/services'
+      fullPath: '/services'
+      preLoaderRoute: typeof ServicesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/journal': {
+      id: '/journal'
+      path: '/journal'
+      fullPath: '/journal'
+      preLoaderRoute: typeof JournalRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/gallery': {
+      id: '/gallery'
+      path: '/gallery'
+      fullPath: '/gallery'
+      preLoaderRoute: typeof GalleryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,12 +170,80 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/services/': {
+      id: '/services/'
+      path: '/'
+      fullPath: '/services/'
+      preLoaderRoute: typeof ServicesIndexRouteImport
+      parentRoute: typeof ServicesRoute
+    }
+    '/services/wardrobes': {
+      id: '/services/wardrobes'
+      path: '/wardrobes'
+      fullPath: '/services/wardrobes'
+      preLoaderRoute: typeof ServicesWardrobesRouteImport
+      parentRoute: typeof ServicesRoute
+    }
+    '/services/living-spaces': {
+      id: '/services/living-spaces'
+      path: '/living-spaces'
+      fullPath: '/services/living-spaces'
+      preLoaderRoute: typeof ServicesLivingSpacesRouteImport
+      parentRoute: typeof ServicesRoute
+    }
+    '/services/kitchens': {
+      id: '/services/kitchens'
+      path: '/kitchens'
+      fullPath: '/services/kitchens'
+      preLoaderRoute: typeof ServicesKitchensRouteImport
+      parentRoute: typeof ServicesRoute
+    }
+    '/services/interiors': {
+      id: '/services/interiors'
+      path: '/interiors'
+      fullPath: '/services/interiors'
+      preLoaderRoute: typeof ServicesInteriorsRouteImport
+      parentRoute: typeof ServicesRoute
+    }
   }
 }
 
+interface ServicesRouteChildren {
+  ServicesInteriorsRoute: typeof ServicesInteriorsRoute
+  ServicesKitchensRoute: typeof ServicesKitchensRoute
+  ServicesLivingSpacesRoute: typeof ServicesLivingSpacesRoute
+  ServicesWardrobesRoute: typeof ServicesWardrobesRoute
+  ServicesIndexRoute: typeof ServicesIndexRoute
+}
+
+const ServicesRouteChildren: ServicesRouteChildren = {
+  ServicesInteriorsRoute: ServicesInteriorsRoute,
+  ServicesKitchensRoute: ServicesKitchensRoute,
+  ServicesLivingSpacesRoute: ServicesLivingSpacesRoute,
+  ServicesWardrobesRoute: ServicesWardrobesRoute,
+  ServicesIndexRoute: ServicesIndexRoute,
+}
+
+const ServicesRouteWithChildren = ServicesRoute._addFileChildren(
+  ServicesRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  GalleryRoute: GalleryRoute,
+  JournalRoute: JournalRoute,
+  ServicesRoute: ServicesRouteWithChildren,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}

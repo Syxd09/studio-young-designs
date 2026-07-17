@@ -1,4 +1,4 @@
-@import "tailwindcss" source(none);
+@import "tailwindcss";
 @source "../src";
 @import "tw-animate-css";
 
@@ -7,6 +7,8 @@
 /* Studio Young Designs — luxury interior brand system
  * Palette: warm white, walnut, matte black, brushed gold
  * Type: Cormorant Garamond (display serif) + Inter (sans)
+ *
+ * 3D Animation System — CSS perspective, tilt cards, grain, shimmer
  */
 
 @theme inline {
@@ -54,7 +56,7 @@
   --charcoal: oklch(0.18 0.01 60);
   --walnut: oklch(0.42 0.06 45);
   --walnut-deep: oklch(0.28 0.05 40);
-  --gold: oklch(0.72 0.09 78);
+  --gold: oklch(0.51 0.21 27);                /* Logo Red (#cb2026) */
 
   --card: oklch(0.99 0.005 80);
   --card-foreground: var(--foreground);
@@ -67,7 +69,7 @@
   --muted: oklch(0.94 0.01 70);
   --muted-foreground: oklch(0.45 0.02 60);
   --accent: var(--gold);
-  --accent-foreground: oklch(0.18 0.01 60);
+  --accent-foreground: oklch(0.985 0.006 80);
   --destructive: oklch(0.55 0.2 25);
   --destructive-foreground: oklch(0.985 0 0);
   --border: oklch(0.9 0.01 70);
@@ -85,9 +87,12 @@
     font-feature-settings: "ss01", "cv11";
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
+    overflow-x: hidden;
   }
-  ::selection { background: var(--gold); color: var(--charcoal); }
+  ::selection { background: var(--gold); color: var(--cream); }
 }
+
+/* ─── Typography utilities ─── */
 
 @utility font-display {
   font-family: var(--font-display);
@@ -102,6 +107,8 @@
   font-weight: 500;
   color: var(--muted-foreground);
 }
+
+/* ─── Design system utilities ─── */
 
 @utility gold-rule {
   display: inline-block;
@@ -119,4 +126,160 @@
   background: color-mix(in oklab, var(--background) 62%, transparent);
   backdrop-filter: blur(18px) saturate(140%);
   -webkit-backdrop-filter: blur(18px) saturate(140%);
+}
+
+/* ─── 3D Perspective Context ─── */
+
+@utility perspective-container {
+  perspective: 1200px;
+  perspective-origin: 50% 50%;
+}
+
+@utility perspective-deep {
+  perspective: 2000px;
+  perspective-origin: 50% 50%;
+}
+
+@utility preserve-3d {
+  transform-style: preserve-3d;
+}
+
+/* ─── Film Grain Overlay ─── */
+
+@keyframes grain {
+  0%, 100% { transform: translate(0, 0); }
+  10% { transform: translate(-5%, -10%); }
+  20% { transform: translate(-15%, 5%); }
+  30% { transform: translate(7%, -25%); }
+  40% { transform: translate(-5%, 25%); }
+  50% { transform: translate(-15%, 10%); }
+  60% { transform: translate(15%, 0%); }
+  70% { transform: translate(0%, 15%); }
+  80% { transform: translate(3%, 35%); }
+  90% { transform: translate(-10%, 10%); }
+}
+
+@utility grain-overlay {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  opacity: 0.03;
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* ─── Shimmer / Glow Effects ─── */
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+@keyframes breathe-glow {
+  0%, 100% { opacity: 0.3; filter: blur(20px); }
+  50% { opacity: 0.7; filter: blur(40px); }
+}
+
+@keyframes float-particle {
+  0% { transform: translateY(100vh) scale(0); opacity: 0; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+}
+
+@keyframes pulse-ring {
+  0% { transform: scale(0.9); opacity: 0.6; }
+  50% { transform: scale(1.1); opacity: 0.3; }
+  100% { transform: scale(0.9); opacity: 0.6; }
+}
+
+@keyframes line-draw {
+  0% { stroke-dashoffset: 1; }
+  100% { stroke-dashoffset: 0; }
+}
+
+@keyframes gold-wipe {
+  0% { transform: scaleX(0); }
+  50% { transform: scaleX(1); }
+  100% { transform: scaleX(0); transform-origin: right; }
+}
+
+/* ─── 3D Flip Counter ─── */
+
+@keyframes flip-top {
+  0% { transform: rotateX(0deg); }
+  100% { transform: rotateX(-90deg); }
+}
+
+@keyframes flip-bottom {
+  0% { transform: rotateX(90deg); }
+  100% { transform: rotateX(0deg); }
+}
+
+@utility flip-card {
+  perspective: 400px;
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ─── Tilt Card Lighting ─── */
+
+@utility tilt-card-shine {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    600px circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+    rgba(255, 255, 255, 0.08),
+    transparent 40%
+  );
+  pointer-events: none;
+  z-index: 2;
+  opacity: 0;
+  transition: opacity 0.5s ease;
+}
+
+/* ─── Scroll Progress Bar ─── */
+
+@utility scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--gold), var(--walnut));
+  z-index: 9998;
+  transform-origin: left;
+  will-change: transform;
+}
+
+/* ─── Section Divider Wipe ─── */
+
+.section-wipe {
+  position: relative;
+  overflow: hidden;
+}
+
+.section-wipe::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  animation: gold-wipe 3s ease-in-out infinite;
+  transform-origin: left;
+}
+
+/* ─── Reduced Motion ─── */
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
