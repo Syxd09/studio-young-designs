@@ -4,6 +4,7 @@ import {
   Link,
   createRootRouteWithContext,
   useRouter,
+  useLocation,
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
@@ -85,6 +86,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         content:
           "For over 40 years, Studio Young Designs has crafted timeless interiors, modular kitchens, and custom furniture across Bangalore.",
       },
+      { name: "robots", content: "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" },
+      { name: "author", content: "Studio Young Designs" },
       { property: "og:title", content: "Studio Young Designs — 40+ Years of Bespoke Interiors" },
       {
         property: "og:description",
@@ -119,10 +122,65 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 });
 
 function RootShell({ children }: { children: ReactNode }) {
+  const schemaOrgJSON = {
+    "@context": "https://schema.org",
+    "@type": "HomeAndConstructionBusiness",
+    name: "Studio Young Designs",
+    url: "https://studioyoungdesigns.com",
+    logo: "https://studioyoungdesigns.com/logo-transparent.png",
+    image: "https://studioyoungdesigns.com/og.jpg",
+    description:
+      "Bespoke luxury interior design, modular kitchens, custom walk-in wardrobes, and turnkey residential execution in Bangalore since 1981.",
+    telephone: "+91-9902599515",
+    email: "info@studioyoungdesigns.com",
+    address: {
+      "@type": "PostalAddress",
+      streetAddress: "No.105, Parvathi Plaza, Richmond Rd, Richmond Town",
+      addressLocality: "Bengaluru",
+      addressRegion: "Karnataka",
+      postalCode: "560025",
+      addressCountry: "IN",
+    },
+    openingHoursSpecification: {
+      "@type": "OpeningHoursSpecification",
+      dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+      opens: "10:30",
+      closes: "20:00",
+    },
+    founder: [
+      {
+        "@type": "Person",
+        name: "Dhanesh Samant",
+        jobTitle: "Founder",
+      },
+      {
+        "@type": "Person",
+        name: "Geeta Samant",
+        jobTitle: "Co-Founder",
+      },
+    ],
+    knowsAbout: [
+      "Modular Kitchens",
+      "Custom Wardrobes",
+      "Turnkey Residential Interiors",
+      "Luxury Living Room Design",
+      "Bespoke Furniture Manufacturing",
+    ],
+  };
+
   return (
     <html lang="en">
       <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){if('scrollRestoration' in history){history.scrollRestoration='manual';}window.scrollTo(0,0);})();`,
+          }}
+        />
         <HeadContent />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaOrgJSON) }}
+        />
       </head>
       <body>
         {children}
@@ -134,6 +192,64 @@ function RootShell({ children }: { children: ReactNode }) {
 
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
+  const location = useLocation();
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    if ("scrollRestoration" in window.history) {
+      window.history.scrollRestoration = "manual";
+    }
+
+    // Force top scroll immediately
+    window.scrollTo(0, 0);
+
+    const isHomePage = location.pathname === "/" || location.pathname === "";
+
+    let userTouched = false;
+
+    // Detect actual physical user interaction (wheel, touch, arrow keys)
+    const onUserInteract = () => {
+      userTouched = true;
+    };
+
+    window.addEventListener("wheel", onUserInteract, { passive: true });
+    window.addEventListener("touchmove", onUserInteract, { passive: true });
+    window.addEventListener("pointerdown", onUserInteract, { passive: true });
+    window.addEventListener("keydown", onUserInteract, { passive: true });
+
+    let autoScrollTimer: any;
+
+    // Auto-scroll gently after 3.5s ONLY for inner subpages (About, Gallery, Services, Journal)
+    if (!isHomePage) {
+      autoScrollTimer = setTimeout(() => {
+        if (!userTouched) {
+          const targetY = Math.round(window.innerHeight * 0.45);
+          window.scrollTo({
+            top: targetY > 150 ? targetY : 380,
+            behavior: "smooth",
+          });
+        }
+      }, 3500);
+    }
+
+    const handleResetScroll = () => {
+      window.scrollTo(0, 0);
+    };
+
+    window.addEventListener("beforeunload", handleResetScroll);
+    window.addEventListener("pagehide", handleResetScroll);
+
+    return () => {
+      clearTimeout(autoScrollTimer);
+      window.removeEventListener("wheel", onUserInteract);
+      window.removeEventListener("touchmove", onUserInteract);
+      window.removeEventListener("pointerdown", onUserInteract);
+      window.removeEventListener("keydown", onUserInteract);
+      window.removeEventListener("beforeunload", handleResetScroll);
+      window.removeEventListener("pagehide", handleResetScroll);
+    };
+  }, [location.pathname]);
 
   return (
     <QueryClientProvider client={queryClient}>

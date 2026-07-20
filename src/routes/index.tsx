@@ -33,10 +33,10 @@ import {
 
 import heroImg from "@/assets/hero.jpg";
 import aboutImg from "@/assets/about.jpg";
-import svcKitchen from "@/assets/service-kitchen.jpg";
-import svcWardrobe from "@/assets/service-wardrobe.jpg";
-import svcLiving from "@/assets/service-living.jpg";
-import svcComplete from "@/assets/service-complete.jpg";
+import svcKitchen from "@/assets/service-kitchen.webp";
+import svcWardrobe from "@/assets/service-wardrobe.webp";
+import svcLiving from "@/assets/service-living.webp";
+import svcComplete from "@/assets/service-complete.webp";
 import p1 from "@/assets/portfolio-1.jpg";
 import p2 from "@/assets/portfolio-2.jpg";
 import p3 from "@/assets/portfolio-3.jpg";
@@ -57,6 +57,7 @@ function Loader() {
   const [phase, setPhase] = useState<"loading" | "reveal" | "done">("loading");
 
   useEffect(() => {
+    window.scrollTo(0, 0);
     const t1 = setTimeout(() => setPhase("reveal"), 1600);
     const t2 = setTimeout(() => setPhase("done"), 2800);
     return () => {
@@ -680,6 +681,7 @@ function ServiceRow({
   index: number;
 }) {
   const ref = useRef<HTMLDivElement>(null);
+  const [isLoaded, setIsLoaded] = useState(false);
   const { scrollYProgress } = useScroll({ target: ref, offset: ["start end", "end start"] });
   const y = useTransform(scrollYProgress, [0, 1], ["-6%", "10%"]);
   const imgRef = useRef<HTMLDivElement>(null);
@@ -698,7 +700,7 @@ function ServiceRow({
       }`}
     >
       <div className="md:col-span-7">
-        <div ref={imgRef} className="relative aspect-[4/3] overflow-hidden">
+        <div ref={imgRef} className="relative aspect-[4/3] overflow-hidden rounded-sm bg-charcoal-light/60 shadow-2xl">
           <motion.div
             initial={{ clipPath: clipFrom }}
             animate={imgInView ? { clipPath: clipTo } : {}}
@@ -709,7 +711,16 @@ function ServiceRow({
               style={{ y }}
               src={item.img}
               alt={item.t}
-              loading="lazy"
+              loading="eager"
+              decoding="async"
+              onLoad={() => setIsLoaded(true)}
+              initial={{ opacity: 0, scale: 1.08, filter: "blur(8px)" }}
+              animate={
+                imgInView && isLoaded
+                  ? { opacity: 1, scale: 1, filter: "blur(0px)" }
+                  : { opacity: isLoaded ? 0.85 : 0 }
+              }
+              transition={{ duration: 1.2, ease: EASE_SMOOTH }}
               className="h-[115%] w-full object-cover transition-transform duration-[1200ms] ease-out will-change-transform hover:scale-[1.04]"
             />
           </motion.div>
@@ -1188,7 +1199,7 @@ function Counters({ config = {} }: { config?: Record<string, string> }) {
     { n: yearsNum, s: yearsSuffix, label: config.stat_years_label || "Years of Experience" },
     { n: spacesNum, s: spacesSuffix, label: config.stat_spaces_label || "Projects Completed" },
     { n: artisansNum, s: artisansSuffix, label: config.stat_artisans_label || "Master Craftsmen" },
-    { text: "Premium", label: "Quality Materials" },
+    { text: config.stat_quality || "Premium", label: config.stat_quality_label || "Quality Materials" },
   ];
   return (
     <section className="relative overflow-hidden bg-walnut-deep py-28 text-cream md:py-36">

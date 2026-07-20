@@ -221,9 +221,13 @@ function JournalPage() {
             date: format(new Date(p.published_date), "MMMM dd, yyyy"),
             readTime: p.read_time,
             category:
-              p.category === "Kitchen Planning" || p.category === "Wardrobe Design"
-                ? "guides"
-                : ((p.category === "Material Studies" ? "materials" : "design-tips") as Category),
+              p.category === "Material Studies" || p.category === "materials"
+                ? "materials"
+                : p.category === "Design Philosophy" ||
+                    p.category === "design-tips" ||
+                    p.category === "Design Theory"
+                  ? "design-tips"
+                  : "guides",
             image: p.image_url,
             keywords: parseKeywords(p),
           }))

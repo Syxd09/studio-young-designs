@@ -462,14 +462,16 @@ function JournalComponent() {
                     <label className="text-[9px] uppercase tracking-widest text-stone-400 dark:text-stone-500 font-bold block">
                       Category
                     </label>
-                    <input
-                      type="text"
+                    <select
                       value={category}
                       onChange={(e) => setCategory(e.target.value)}
-                      placeholder="e.g. Design Theory, Kitchen Planning"
-                      className="w-full bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded p-2.5 text-xs text-stone-900 dark:text-white outline-none focus:border-[#cb2026] focus:bg-white dark:focus:bg-transparent"
+                      className="w-full bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded p-2.5 text-xs text-stone-900 dark:text-white outline-none focus:border-[#cb2026] focus:bg-white dark:focus:bg-transparent cursor-pointer"
                       required
-                    />
+                    >
+                      <option value="Guides & Manuals">Guides & Manuals</option>
+                      <option value="Material Studies">Material Studies</option>
+                      <option value="Design Philosophy">Design Philosophy</option>
+                    </select>
                   </div>
                   <div className="space-y-1">
                     <label className="text-[9px] uppercase tracking-widest text-stone-400 dark:text-stone-550 font-bold block">

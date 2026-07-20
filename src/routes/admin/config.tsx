@@ -757,6 +757,26 @@ function ConfigComponent() {
                     placeholder="Label text"
                   />
                 </div>
+
+                {/* Quality Standard */}
+                <div className="border border-stone-200 dark:border-stone-850 p-4 rounded bg-stone-50 dark:bg-stone-900/35 space-y-3">
+                  <label className="text-[10px] uppercase tracking-widest text-[#cb2026] font-bold">
+                    Material Standard
+                  </label>
+                  <input
+                    type="text"
+                    value={config.stat_quality || "Premium"}
+                    onChange={(e) => handleTextChange("stat_quality", e.target.value)}
+                    className="w-full bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded p-2 text-stone-900 dark:text-white focus:border-[#cb2026] outline-none text-xs font-semibold"
+                  />
+                  <input
+                    type="text"
+                    value={config.stat_quality_label || "Quality Materials"}
+                    onChange={(e) => handleTextChange("stat_quality_label", e.target.value)}
+                    className="w-full bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded p-2 text-stone-500 dark:text-stone-400 focus:border-[#cb2026] outline-none text-[10px]"
+                    placeholder="Label text"
+                  />
+                </div>
               </motion.div>
             )}
 
