@@ -287,17 +287,32 @@ function AdminLayoutComponent() {
   }
 
   // DASHBOARD LAYOUT FOR AUTHENTICATED ADMIN
-  const menuItems = [
-    { label: "Overview Dashboard", icon: LayoutDashboard, to: "/admin" },
-    { label: "Leads / Enquiries", icon: MessageSquare, to: "/admin/enquiries" },
-    { label: "About Page", icon: BookOpen, to: "/admin/about" },
-    { label: "Gallery Portfolio", icon: ImageIcon, to: "/admin/gallery" },
-    { label: "Why Choose Us", icon: Award, to: "/admin/why" },
-    { label: "Services Page", icon: Briefcase, to: "/admin/services" },
-    { label: "Journal Articles", icon: PenTool, to: "/admin/journal" },
-    { label: "Testimonials", icon: Users, to: "/admin/testimonials" },
-    { label: "Site Layout Config", icon: Settings, to: "/admin/config" },
-    { label: "System Health", icon: Activity, to: "/admin/health" },
+  const menuGroups = [
+    {
+      title: "Overview & Leads",
+      items: [
+        { label: "Overview Dashboard", icon: LayoutDashboard, to: "/admin" },
+        { label: "Leads / Enquiries", icon: MessageSquare, to: "/admin/enquiries" },
+      ],
+    },
+    {
+      title: "Content & Pages",
+      items: [
+        { label: "About Page", icon: BookOpen, to: "/admin/about" },
+        { label: "Services Page", icon: Briefcase, to: "/admin/services" },
+        { label: "Gallery Portfolio", icon: ImageIcon, to: "/admin/gallery" },
+        { label: "Journal Articles", icon: PenTool, to: "/admin/journal" },
+        { label: "Testimonials", icon: Users, to: "/admin/testimonials" },
+        { label: "Why Choose Us", icon: Award, to: "/admin/why" },
+      ],
+    },
+    {
+      title: "System & Config",
+      items: [
+        { label: "Site Layout Config", icon: Settings, to: "/admin/config" },
+        { label: "System Health", icon: Activity, to: "/admin/health" },
+      ],
+    },
   ];
 
   return (
@@ -318,46 +333,56 @@ function AdminLayoutComponent() {
             theme === "dark" ? "border-stone-850" : "border-stone-200/80"
           }`}
         >
-          <span
-            className={`font-display text-2xl font-bold tracking-wide transition-colors ${theme === "dark" ? "text-white" : "text-stone-900"}`}
-          >
-            STUDIO YOUNG
-          </span>
+          <div className="flex items-center justify-between">
+            <span
+              className={`font-display text-xl font-bold tracking-wide transition-colors ${theme === "dark" ? "text-white" : "text-stone-900"}`}
+            >
+              STUDIO YOUNG
+            </span>
+            <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" title="Database Connected" />
+          </div>
           <span className="text-[8px] uppercase tracking-[0.25em] text-[#cb2026] font-bold mt-1">
             Command Atelier
           </span>
         </div>
 
-        {/* Sidebar Navigation */}
-        <nav className="flex-1 p-4 space-y-1 mt-4">
-          {menuItems.map((item) => {
-            const isActive =
-              location.pathname === item.to ||
-              (item.to !== "/admin" && location.pathname.startsWith(item.to));
-            return (
-              <Link
-                key={item.to}
-                to={item.to}
-                className={`flex items-center gap-3 px-4 py-2.5 rounded text-xs transition-all uppercase tracking-wider font-semibold group ${
-                  isActive
-                    ? "bg-[#cb2026]/10 text-stone-900 dark:text-white border-l-2 border-[#cb2026]"
-                    : theme === "dark"
-                      ? "text-stone-400 hover:bg-stone-900/50 hover:text-white"
-                      : "text-stone-500 hover:bg-stone-50 hover:text-stone-900"
-                }`}
-              >
-                <item.icon
-                  size={16}
-                  className={
-                    isActive
-                      ? "text-[#cb2026]"
-                      : "text-stone-400 group-hover:text-stone-700 dark:group-hover:text-stone-300"
-                  }
-                />
-                <span>{item.label}</span>
-              </Link>
-            );
-          })}
+        {/* Sidebar Navigation Groups */}
+        <nav className="flex-1 p-4 space-y-6 overflow-y-auto">
+          {menuGroups.map((group) => (
+            <div key={group.title} className="space-y-1">
+              <div className="px-3 text-[9px] uppercase tracking-widest font-bold text-stone-400 dark:text-stone-500 mb-1">
+                {group.title}
+              </div>
+              {group.items.map((item) => {
+                const isActive =
+                  location.pathname === item.to ||
+                  (item.to !== "/admin" && location.pathname.startsWith(item.to));
+                return (
+                  <Link
+                    key={item.to}
+                    to={item.to}
+                    className={`flex items-center gap-3 px-3 py-2 rounded-lg text-xs transition-all uppercase tracking-wider font-semibold group ${
+                      isActive
+                        ? "bg-[#cb2026]/10 text-stone-900 dark:text-white border-l-2 border-[#cb2026] shadow-sm font-bold"
+                        : theme === "dark"
+                          ? "text-stone-400 hover:bg-stone-900/50 hover:text-white"
+                          : "text-stone-500 hover:bg-stone-50 hover:text-stone-900"
+                    }`}
+                  >
+                    <item.icon
+                      size={15}
+                      className={
+                        isActive
+                          ? "text-[#cb2026]"
+                          : "text-stone-400 group-hover:text-stone-700 dark:group-hover:text-stone-300"
+                      }
+                    />
+                    <span>{item.label}</span>
+                  </Link>
+                );
+              })}
+            </div>
+          ))}
         </nav>
 
         {/* Sidebar Footer */}
@@ -371,10 +396,11 @@ function AdminLayoutComponent() {
           {/* Live site link */}
           <Link
             to="/"
-            className={`flex items-center gap-3 px-4 py-2 text-[10px] uppercase tracking-wider font-bold transition-colors ${
+            target="_blank"
+            className={`flex items-center gap-3 px-3 py-2 text-[10px] uppercase tracking-wider font-bold transition-colors rounded-md ${
               theme === "dark"
-                ? "text-stone-400 hover:text-white"
-                : "text-stone-500 hover:text-stone-900"
+                ? "text-stone-400 hover:bg-stone-900/60 hover:text-white"
+                : "text-stone-500 hover:bg-stone-100 hover:text-stone-900"
             }`}
           >
             <Globe size={14} className="text-stone-400" />
@@ -384,10 +410,10 @@ function AdminLayoutComponent() {
           {/* Theme Selector Toggle */}
           <button
             onClick={toggleTheme}
-            className={`flex items-center gap-3 w-full px-4 py-2 text-[10px] uppercase tracking-wider text-left font-bold transition-colors ${
+            className={`flex items-center gap-3 w-full px-3 py-2 text-[10px] uppercase tracking-wider text-left font-bold transition-colors rounded-md ${
               theme === "dark"
-                ? "text-stone-400 hover:text-white"
-                : "text-stone-500 hover:text-stone-900"
+                ? "text-stone-400 hover:bg-stone-900/60 hover:text-white"
+                : "text-stone-500 hover:bg-stone-100 hover:text-stone-900"
             }`}
           >
             {theme === "light" ? (
@@ -406,7 +432,7 @@ function AdminLayoutComponent() {
           {/* Sign out */}
           <button
             onClick={handleLogout}
-            className="flex items-center gap-3 w-full px-4 py-2 text-[#cb2026] hover:text-red-500 transition-colors text-[10px] uppercase tracking-wider text-left font-bold"
+            className="flex items-center gap-3 w-full px-3 py-2 text-[#cb2026] hover:bg-red-50 dark:hover:bg-red-950/30 transition-colors text-[10px] uppercase tracking-wider text-left font-bold rounded-md"
           >
             <LogOut size={14} className="text-[#cb2026]" />
             <span>Sign Out</span>
@@ -459,29 +485,36 @@ function AdminLayoutComponent() {
               theme === "dark" ? "bg-[#0C0C0D] text-white" : "bg-[#FAF9F6] text-stone-900"
             }`}
           >
-            <nav className="space-y-2 flex-1">
-              {menuItems.map((item) => {
-                const isActive =
-                  location.pathname === item.to ||
-                  (item.to !== "/admin" && location.pathname.startsWith(item.to));
-                return (
-                  <Link
-                    key={item.to}
-                    to={item.to}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className={`flex items-center gap-4 p-4 rounded-lg transition-all ${
-                      isActive
-                        ? "bg-[#cb2026]/10 text-stone-900 dark:text-white border-l-2 border-[#cb2026] font-bold"
-                        : theme === "dark"
-                          ? "text-stone-400 hover:bg-stone-900/50 hover:text-white"
-                          : "text-stone-600 hover:bg-stone-100/50 hover:text-stone-900"
-                    }`}
-                  >
-                    <item.icon size={18} className="text-[#cb2026]" />
-                    <span className="text-xs uppercase tracking-widest">{item.label}</span>
-                  </Link>
-                );
-              })}
+            <nav className="space-y-6 flex-1 overflow-y-auto">
+              {menuGroups.map((group) => (
+                <div key={group.title} className="space-y-1">
+                  <div className="px-3 text-[9px] uppercase tracking-widest font-bold text-stone-400 dark:text-stone-500 mb-1">
+                    {group.title}
+                  </div>
+                  {group.items.map((item) => {
+                    const isActive =
+                      location.pathname === item.to ||
+                      (item.to !== "/admin" && location.pathname.startsWith(item.to));
+                    return (
+                      <Link
+                        key={item.to}
+                        to={item.to}
+                        onClick={() => setIsMobileMenuOpen(false)}
+                        className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-all ${
+                          isActive
+                            ? "bg-[#cb2026]/10 text-stone-900 dark:text-white border-l-2 border-[#cb2026] font-bold"
+                            : theme === "dark"
+                              ? "text-stone-400 hover:bg-stone-900/50 hover:text-white"
+                              : "text-stone-600 hover:bg-stone-100/50 hover:text-stone-900"
+                        }`}
+                      >
+                        <item.icon size={16} className="text-[#cb2026]" />
+                        <span className="text-xs uppercase tracking-widest font-semibold">{item.label}</span>
+                      </Link>
+                    );
+                  })}
+                </div>
+              ))}
             </nav>
             <button
               onClick={() => {

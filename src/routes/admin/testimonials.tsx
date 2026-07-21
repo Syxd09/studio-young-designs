@@ -26,6 +26,7 @@ function TestimonialsComponent() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [saving, setSaving] = useState(false);
   const [editingItem, setEditingItem] = useState<Testimonial | null>(null);
+  const [activeFilter, setActiveFilter] = useState("all");
 
   // Form State
   const [customerName, setCustomerName] = useState("");
@@ -207,6 +208,15 @@ function TestimonialsComponent() {
     );
   }
 
+  const filteredItems = items.filter((item) => {
+    if (activeFilter === "approved") return item.is_approved === true;
+    if (activeFilter === "pending") return item.is_approved === false;
+    return true;
+  });
+
+  const pendingCount = items.filter((i) => !i.is_approved).length;
+  const approvedCount = items.filter((i) => i.is_approved).length;
+
   return (
     <div className="p-6 md:p-10 max-w-7xl mx-auto space-y-8 text-stone-850 dark:text-white">
       {/* Header */}
@@ -216,7 +226,7 @@ function TestimonialsComponent() {
             Testimonials Manager
           </h1>
           <p className="text-xs text-stone-400 dark:text-stone-500 mt-1">
-            Verify, edit, and toggle visibility of customer testimonies on the home page.
+            Verify, edit, approve, or hide customer testimonies on the main homepage.
           </p>
         </div>
         <button
@@ -231,9 +241,43 @@ function TestimonialsComponent() {
         </button>
       </header>
 
+      {/* Filter Tabs Bar */}
+      <div className="flex flex-wrap items-center gap-2 bg-white dark:bg-[#141416] border border-stone-200 dark:border-stone-850 p-2.5 rounded-xl shadow-sm">
+        <button
+          onClick={() => setActiveFilter("all")}
+          className={`px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
+            activeFilter === "all"
+              ? "bg-stone-900 dark:bg-white text-white dark:text-stone-950 shadow-sm"
+              : "text-stone-500 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-850"
+          }`}
+        >
+          All Reviews ({items.length})
+        </button>
+        <button
+          onClick={() => setActiveFilter("approved")}
+          className={`px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
+            activeFilter === "approved"
+              ? "bg-emerald-600 text-white shadow-sm"
+              : "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30 hover:bg-emerald-500/20"
+          }`}
+        >
+          Approved Live ({approvedCount})
+        </button>
+        <button
+          onClick={() => setActiveFilter("pending")}
+          className={`px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
+            activeFilter === "pending"
+              ? "bg-amber-500 text-white shadow-sm"
+              : "bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/30 hover:bg-amber-500/20"
+          }`}
+        >
+          Pending Approval ({pendingCount})
+        </button>
+      </div>
+
       {/* Reviews List */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-20">
-        {items.map((item) => (
+        {filteredItems.map((item) => (
           <div
             key={item.id}
             className={`border border-stone-200 dark:border-stone-850 bg-white dark:bg-[#141416] rounded-xl p-6 flex flex-col justify-between space-y-4 relative shadow-sm transition-all ${

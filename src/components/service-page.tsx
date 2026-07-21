@@ -204,6 +204,7 @@ export function ServicePageLayout({ data }: { data: ServicePageData }) {
                 <Link
                   to="/"
                   hash="contact"
+                  search={{ service: mergedData.title }}
                   className="group relative inline-flex items-center gap-3 overflow-hidden bg-white px-8 py-4 text-[11px] uppercase tracking-[0.28em] text-charcoal"
                 >
                   <span className="absolute inset-0 origin-left scale-x-0 bg-gold transition-transform duration-500 ease-out group-hover:scale-x-100" />

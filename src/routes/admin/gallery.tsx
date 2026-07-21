@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
+import { AdminSelect } from "@/components/ui/admin-select";
 
 export const Route = createFileRoute("/admin/gallery")({
   component: GalleryComponent,
@@ -44,6 +45,7 @@ function GalleryComponent() {
   const [editingItem, setEditingItem] = useState<GalleryItem | null>(null);
 
   const [categories, setCategories] = useState<{ slug: string; title: string }[]>([]);
+  const [activeFilter, setActiveFilter] = useState("all");
 
   // Form State
   const [title, setTitle] = useState("");
@@ -67,28 +69,33 @@ function GalleryComponent() {
         .order("display_order", { ascending: true });
       if (error) throw error;
       setCategories(data || []);
-      if (data && data.length > 0) {
-        setCategory(data[0].slug);
-      } else {
-        setCategory("kitchens");
-      }
     } catch (err) {
-      console.error("Failed to load categories:", err);
+      console.error(err);
     }
   };
 
   const fetchGallery = async () => {
     setLoading(true);
     try {
-      const { data, error } = await supabase
-        .from("gallery")
-        .select("*")
-        .order("display_order", { ascending: true });
+      const [galleryRes, configRes] = await Promise.all([
+        supabase.from("gallery").select("*").order("display_order", { ascending: true }),
+        supabase.from("site_config").select("value").eq("key", "homepage_selected_gallery_ids").maybeSingle(),
+      ]);
 
-      if (error) throw error;
-      setItems(data || []);
-    } catch (err) {
-      toast.error("Failed to load gallery items");
+      if (galleryRes.error) throw galleryRes.error;
+
+      const rawConfigVal = configRes.data?.value || "";
+      const selectedIds = rawConfigVal.split(",").map((s: string) => s.trim()).filter(Boolean);
+
+      const itemsWithFeatured = (galleryRes.data || []).map((item: any) => ({
+        ...item,
+        is_featured: selectedIds.includes(String(item.id)) || item.is_featured === true,
+      }));
+
+      setItems(itemsWithFeatured);
+    } catch (err: any) {
+      console.error(err);
+      toast.error("Failed to load gallery items.");
     } finally {
       setLoading(false);
     }
@@ -156,7 +163,6 @@ function GalleryComponent() {
           category,
           span,
           image_url: finalUrl,
-          is_featured: isFeatured,
         };
 
         const { error } = await supabase
@@ -164,21 +170,7 @@ function GalleryComponent() {
           .update(updatePayload)
           .eq("id", editingItem.id);
 
-        if (
-          error &&
-          (error.message?.includes("is_featured") ||
-            error.code === "PGRST204" ||
-            error.code === "42703")
-        ) {
-          delete updatePayload.is_featured;
-          const retry = await supabase
-            .from("gallery")
-            .update(updatePayload)
-            .eq("id", editingItem.id);
-          if (retry.error) throw retry.error;
-        } else if (error) {
-          throw error;
-        }
+        if (error) throw error;
 
         toast.success("Gallery item updated successfully");
       } else {
@@ -197,23 +189,10 @@ function GalleryComponent() {
           image_url: uploadedUrl,
           display_order: items.length,
           is_visible: true,
-          is_featured: isFeatured,
         };
 
         const { error } = await supabase.from("gallery").insert([insertPayload]);
-
-        if (
-          error &&
-          (error.message?.includes("is_featured") ||
-            error.code === "PGRST204" ||
-            error.code === "42703")
-        ) {
-          delete insertPayload.is_featured;
-          const retry = await supabase.from("gallery").insert([insertPayload]);
-          if (retry.error) throw retry.error;
-        } else if (error) {
-          throw error;
-        }
+        if (error) throw error;
 
         toast.success("New gallery item uploaded successfully.");
       }
@@ -246,19 +225,44 @@ function GalleryComponent() {
 
   const toggleFeatured = async (item: GalleryItem) => {
     try {
-      const nextFeatured = item.is_featured === false ? true : false;
-      const { error } = await supabase
-        .from("gallery")
-        .update({ is_featured: nextFeatured })
-        .eq("id", item.id);
+      const currentFeaturedIds = items.filter((i) => i.is_featured).map((i) => String(i.id));
+      const targetId = String(item.id);
 
-      if (error) throw error;
-      toast.success(
-        nextFeatured ? "Pinned to Homepage Selected Work!" : "Unpinned from Selected Work.",
+      let nextIds: string[];
+      let isNowFeatured: boolean;
+
+      if (currentFeaturedIds.includes(targetId)) {
+        nextIds = currentFeaturedIds.filter((id) => id !== targetId);
+        isNowFeatured = false;
+      } else {
+        nextIds = [...currentFeaturedIds, targetId];
+        isNowFeatured = true;
+      }
+
+      // Optimistically update local state so UI buttons respond immediately
+      setItems((prev) =>
+        prev.map((i) => (String(i.id) === targetId ? { ...i, is_featured: isNowFeatured } : i))
       );
-      fetchGallery();
+
+      // Save to site_config (guaranteed fail-proof)
+      const { error: configError } = await supabase
+        .from("site_config")
+        .upsert({ key: "homepage_selected_gallery_ids", value: nextIds.join(",") }, { onConflict: "key" });
+
+      if (configError) throw configError;
+
+      // Also try updating is_featured column if present in table schema
+      supabase.from("gallery").update({ is_featured: isNowFeatured }).eq("id", item.id).then();
+
+      toast.success(
+        isNowFeatured
+          ? "Pinned to Selected Works on Homepage!"
+          : "Unpinned from Homepage Selected Works.",
+      );
     } catch (err: any) {
+      console.error(err);
       toast.error("Failed to update homepage featured status.");
+      fetchGallery(); // rollback
     }
   };
 
@@ -329,6 +333,14 @@ function GalleryComponent() {
     );
   }
 
+  const filteredItems = items.filter((item) => {
+    if (activeFilter === "featured") return item.is_featured === true;
+    if (activeFilter !== "all") return item.category.toLowerCase() === activeFilter.toLowerCase();
+    return true;
+  });
+
+  const featuredCount = items.filter((i) => i.is_featured === true).length;
+
   return (
     <div className="p-6 md:p-10 max-w-7xl mx-auto space-y-8 text-stone-850 dark:text-white">
       {/* Header */}
@@ -338,7 +350,7 @@ function GalleryComponent() {
             Gallery Portfolio Manager
           </h1>
           <p className="text-xs text-stone-400 dark:text-stone-500 mt-1">
-            Add, edit, reorder, and control grid layouts for gallery projects.
+            Add, edit, reorder, and select which images display in Selected Works on the Homepage.
           </p>
         </div>
         <button
@@ -353,34 +365,93 @@ function GalleryComponent() {
         </button>
       </header>
 
+      {/* Top Metrics & Homepage Status */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="bg-white dark:bg-[#141416] border border-stone-200 dark:border-stone-850 p-5 rounded-xl shadow-sm">
+          <div className="text-[9px] uppercase tracking-widest text-stone-400 dark:text-stone-500 font-bold">
+            Total Portfolio Projects
+          </div>
+          <div className="text-2xl font-display font-semibold text-stone-900 dark:text-white mt-1">
+            {items.length} Images
+          </div>
+        </div>
+        <div className="bg-gradient-to-br from-amber-500/10 via-amber-500/5 to-transparent border border-amber-500/30 p-5 rounded-xl shadow-sm">
+          <div className="flex items-center justify-between">
+            <span className="text-[9px] uppercase tracking-widest text-amber-600 dark:text-amber-400 font-bold">
+              Homepage Selected Works
+            </span>
+            <Star size={14} className="text-amber-500 fill-amber-500" />
+          </div>
+          <div className="text-2xl font-display font-semibold text-amber-600 dark:text-amber-400 mt-1">
+            {featuredCount} Items Pinned
+          </div>
+        </div>
+        <div className="bg-white dark:bg-[#141416] border border-stone-200 dark:border-stone-850 p-5 rounded-xl shadow-sm">
+          <div className="text-[9px] uppercase tracking-widest text-stone-400 dark:text-stone-500 font-bold">
+            Live Website Status
+          </div>
+          <div className="text-2xl font-display font-semibold text-emerald-600 dark:text-emerald-400 mt-1">
+            {items.filter((i) => i.is_visible).length} Visible
+          </div>
+        </div>
+      </div>
+
+      {/* Luxury Segmented Category & Homepage Selection Bar */}
+      <div className="flex flex-wrap items-center gap-2 bg-white dark:bg-[#141416] border border-stone-200 dark:border-stone-850 p-2.5 rounded-xl shadow-sm">
+        <button
+          onClick={() => setActiveFilter("all")}
+          className={`px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
+            activeFilter === "all"
+              ? "bg-stone-900 dark:bg-white text-white dark:text-stone-950 shadow-sm"
+              : "text-stone-500 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-850"
+          }`}
+        >
+          All Projects ({items.length})
+        </button>
+        <button
+          onClick={() => setActiveFilter("featured")}
+          className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
+            activeFilter === "featured"
+              ? "bg-amber-500 text-white shadow-md shadow-amber-500/20"
+              : "bg-amber-500/10 text-amber-600 dark:text-amber-400 border border-amber-500/30 hover:bg-amber-500/20"
+          }`}
+        >
+          <Star size={13} className="fill-current" />
+          <span>Homepage Selected ({featuredCount})</span>
+        </button>
+
+        <div className="h-4 w-px bg-stone-200 dark:bg-stone-800 mx-1 hidden sm:block" />
+
+        {CATEGORIES.map((cat) => (
+          <button
+            key={cat}
+            onClick={() => setActiveFilter(cat)}
+            className={`px-4 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all cursor-pointer ${
+              activeFilter === cat
+                ? "bg-[#cb2026] text-white shadow-sm"
+                : "text-stone-500 dark:text-stone-400 hover:bg-stone-100 dark:hover:bg-stone-850"
+            }`}
+          >
+            {cat}
+          </button>
+        ))}
+      </div>
+
       {/* Grid of Portfolio Items */}
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {items.map((item, idx) => (
+        {filteredItems.map((item, idx) => (
           <div
             key={item.id}
-            className={`border border-stone-200 dark:border-stone-850 bg-white dark:bg-[#141416] rounded-xl overflow-hidden flex flex-col group relative shadow-sm transition-all ${
-              !item.is_visible ? "opacity-50" : ""
-            }`}
+            className={`border bg-white dark:bg-[#141416] rounded-xl overflow-hidden flex flex-col group relative shadow-sm transition-all ${
+              item.is_featured === true
+                ? "border-amber-500/50 shadow-amber-500/5 dark:border-amber-500/40"
+                : "border-stone-200 dark:border-stone-850"
+            } ${!item.is_visible ? "opacity-50" : ""}`}
           >
             {/* Visual Preview */}
             <div className="aspect-video w-full overflow-hidden relative bg-stone-100 dark:bg-stone-900">
               <img src={item.image_url} alt={item.title} className="w-full h-full object-cover" />
               <div className="absolute top-2 right-2 flex gap-1.5">
-                <button
-                  onClick={() => toggleFeatured(item)}
-                  className={`p-1.5 rounded shadow-sm border transition-all cursor-pointer ${
-                    item.is_featured !== false
-                      ? "bg-amber-500 text-white border-amber-600"
-                      : "bg-white/95 dark:bg-[#1C1C1F]/90 text-stone-400 border-stone-200/50 dark:border-stone-800"
-                  }`}
-                  title={
-                    item.is_featured !== false
-                      ? "Featured on Homepage Selected Work"
-                      : "Pin to Homepage Selected Work"
-                  }
-                >
-                  <Star size={12} className={item.is_featured !== false ? "fill-white" : ""} />
-                </button>
                 <button
                   onClick={() => toggleVisibility(item)}
                   className="p-1.5 rounded bg-white/95 dark:bg-[#1C1C1F]/90 text-stone-800 dark:text-stone-200 shadow-sm border border-stone-200/50 dark:border-stone-800 hover:bg-stone-50 dark:hover:bg-stone-900 transition-all cursor-pointer"
@@ -395,7 +466,7 @@ function GalleryComponent() {
             </div>
 
             {/* Content info */}
-            <div className="p-4 flex-1 flex flex-col justify-between">
+            <div className="p-4 flex-1 flex flex-col justify-between space-y-4">
               <div>
                 <h4 className="font-semibold text-sm text-stone-900 dark:text-stone-150 line-clamp-1">
                   {item.title}
@@ -405,8 +476,24 @@ function GalleryComponent() {
                 </p>
               </div>
 
-              {/* Action buttons */}
-              <div className="mt-4 pt-3 border-t border-stone-100 dark:border-stone-850 flex justify-between items-center">
+              {/* Homepage Pin Toggle Switch Button */}
+              <button
+                type="button"
+                onClick={() => toggleFeatured(item)}
+                className={`w-full flex items-center justify-center gap-2 px-3 py-2 rounded-lg text-xs font-bold uppercase tracking-wider transition-all cursor-pointer border ${
+                  item.is_featured === true
+                    ? "bg-amber-500 text-white border-amber-600 shadow-sm"
+                    : "bg-stone-50 dark:bg-stone-900/80 text-stone-600 dark:text-stone-300 border-stone-200 dark:border-stone-800 hover:border-amber-500/60 hover:text-amber-600 dark:hover:text-amber-400"
+                }`}
+              >
+                <Star size={13} className={item.is_featured === true ? "fill-white" : ""} />
+                <span>
+                  {item.is_featured === true ? "Featured on Homepage" : "+ Add to Homepage"}
+                </span>
+              </button>
+
+              {/* Order & Edit action buttons */}
+              <div className="pt-2 border-t border-stone-100 dark:border-stone-850 flex justify-between items-center">
                 <div className="flex gap-1">
                   <button
                     onClick={() => handleMove(item, "up")}
@@ -542,15 +629,11 @@ function GalleryComponent() {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-1">
-                    <label className="text-[9px] uppercase tracking-widest text-stone-400 dark:text-stone-500 font-bold block">
-                      Category
-                    </label>
-                    <select
+                    <AdminSelect
+                      label="Category"
                       value={category}
-                      onChange={(e) => setCategory(e.target.value)}
-                      className="w-full bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded p-2.5 text-xs text-stone-900 dark:text-white outline-none focus:border-[#cb2026] focus:bg-white dark:focus:bg-transparent"
-                    >
-                      {(categories.length > 0
+                      onChange={(val) => setCategory(val)}
+                      options={(categories.length > 0
                         ? categories
                         : [
                             { slug: "kitchens", title: "Kitchens" },
@@ -558,26 +641,23 @@ function GalleryComponent() {
                             { slug: "living", title: "Living Spaces" },
                             { slug: "interiors", title: "Turnkey Interiors" },
                           ]
-                      ).map((cat) => (
-                        <option key={cat.slug} value={cat.slug}>
-                          {cat.title.toUpperCase()}
-                        </option>
-                      ))}
-                    </select>
+                      ).map((cat) => ({
+                        value: cat.slug,
+                        label: cat.title.toUpperCase(),
+                      }))}
+                    />
                   </div>
                   <div className="space-y-1">
-                    <label className="text-[9px] uppercase tracking-widest text-stone-400 dark:text-stone-500 font-bold block">
-                      Grid Aspect Span
-                    </label>
-                    <select
+                    <AdminSelect
+                      label="Grid Aspect Span"
                       value={span}
-                      onChange={(e) => setSpan(e.target.value)}
-                      className="w-full bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded p-2.5 text-xs text-stone-900 dark:text-white outline-none focus:border-[#cb2026] focus:bg-white dark:focus:bg-transparent"
-                    >
-                      <option value="standard">Standard Square</option>
-                      <option value="tall">Tall Card</option>
-                      <option value="wide">Wide Card</option>
-                    </select>
+                      onChange={(val) => setSpan(val)}
+                      options={[
+                        { value: "standard", label: "Standard Square" },
+                        { value: "tall", label: "Tall Card" },
+                        { value: "wide", label: "Wide Card" },
+                      ]}
+                    />
                   </div>
                 </div>
 

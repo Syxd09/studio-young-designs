@@ -72,6 +72,7 @@ function ServicesComponent() {
 
   useEffect(() => {
     fetchServices();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchServices = async (preserveId?: string) => {

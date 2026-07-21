@@ -248,10 +248,31 @@ function DashboardComponent() {
             Studio Young Designs Luxury CMS
           </p>
         </div>
-        <div className="flex gap-3">
+        <div className="flex flex-wrap gap-2.5">
+          <Link
+            to="/admin/gallery"
+            className="flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-stone-900 dark:text-white bg-stone-100 dark:bg-stone-850 hover:bg-stone-200 dark:hover:bg-stone-800 px-3.5 py-2 rounded-lg transition-all font-bold"
+          >
+            <ImageIcon size={12} className="text-[#cb2026]" />
+            <span>+ Portfolio Item</span>
+          </Link>
+          <Link
+            to="/admin/journal"
+            className="flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-stone-900 dark:text-white bg-stone-100 dark:bg-stone-850 hover:bg-stone-200 dark:hover:bg-stone-800 px-3.5 py-2 rounded-lg transition-all font-bold"
+          >
+            <Briefcase size={12} className="text-[#cb2026]" />
+            <span>+ Write Article</span>
+          </Link>
+          <Link
+            to="/admin/enquiries"
+            className="flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-stone-900 dark:text-white bg-stone-100 dark:bg-stone-850 hover:bg-stone-200 dark:hover:bg-stone-800 px-3.5 py-2 rounded-lg transition-all font-bold"
+          >
+            <MessageSquare size={12} className="text-[#cb2026]" />
+            <span>Leads CRM</span>
+          </Link>
           <button
             onClick={fetchDashboardData}
-            className="text-[10px] uppercase tracking-widest text-[#cb2026] border border-[#cb2026]/40 hover:border-[#cb2026] px-4 py-2 rounded transition-all font-bold"
+            className="text-[10px] uppercase tracking-widest text-[#cb2026] border border-[#cb2026]/40 hover:border-[#cb2026] px-3.5 py-2 rounded-lg transition-all font-bold cursor-pointer"
           >
             Sync Server
           </button>

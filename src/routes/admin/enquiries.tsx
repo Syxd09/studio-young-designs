@@ -21,6 +21,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 import { format } from "date-fns";
 
+import { AdminSelect } from "@/components/ui/admin-select";
+
 export const Route = createFileRoute("/admin/enquiries")({
   component: EnquiriesComponent,
 });
@@ -237,17 +239,18 @@ function EnquiriesComponent() {
               className="bg-stone-50 dark:bg-[#1C1C1E] border border-stone-200 dark:border-stone-800 rounded pl-9 pr-4 py-2 text-xs text-stone-950 dark:text-white placeholder-stone-400 dark:placeholder-stone-600 focus:border-[#cb2026] focus:bg-white dark:focus:bg-transparent outline-none w-full md:w-60"
             />
           </div>
-          <select
+          <AdminSelect
             value={filter}
-            onChange={(e) => setFilter(e.target.value)}
-            className="bg-stone-50 dark:bg-[#1C1C1E] border border-stone-200 dark:border-stone-800 rounded px-4 py-2 text-xs text-stone-950 dark:text-white focus:border-[#cb2026] focus:bg-white dark:focus:bg-transparent outline-none cursor-pointer"
-          >
-            <option value="All">All Statuses</option>
-            <option value="New">New</option>
-            <option value="Contacted">Contacted</option>
-            <option value="Quoted">Quoted</option>
-            <option value="Closed">Closed</option>
-          </select>
+            onChange={(val) => setFilter(val)}
+            options={[
+              { value: "All", label: "All Statuses" },
+              { value: "New", label: "New", badge: `${newCount}` },
+              { value: "Contacted", label: "Contacted" },
+              { value: "Quoted", label: "Quoted" },
+              { value: "Closed", label: "Closed" },
+            ]}
+            className="w-44"
+          />
           <button
             onClick={exportToCSV}
             className="flex items-center gap-1.5 bg-stone-900 dark:bg-white dark:text-stone-950 hover:bg-stone-800 dark:hover:bg-stone-100 text-white px-4 py-2 rounded text-xs font-bold transition-all cursor-pointer"

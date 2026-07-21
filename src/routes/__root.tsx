@@ -86,7 +86,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
         content:
           "For over 40 years, Studio Young Designs has crafted timeless interiors, modular kitchens, and custom furniture across Bangalore.",
       },
-      { name: "robots", content: "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" },
+      {
+        name: "robots",
+        content: "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1",
+      },
       { name: "author", content: "Studio Young Designs" },
       { property: "og:title", content: "Studio Young Designs — 40+ Years of Bespoke Interiors" },
       {
@@ -220,7 +223,7 @@ function RootComponent() {
 
     let autoScrollTimer: any;
 
-    // Auto-scroll gently after 3.5s ONLY for inner subpages (About, Gallery, Services, Journal)
+    // Auto-scroll gently after 2s ONLY for inner subpages (About, Gallery, Services, Journal)
     if (!isHomePage) {
       autoScrollTimer = setTimeout(() => {
         if (!userTouched) {
@@ -230,7 +233,7 @@ function RootComponent() {
             behavior: "smooth",
           });
         }
-      }, 3500);
+      }, 2000);
     }
 
     const handleResetScroll = () => {

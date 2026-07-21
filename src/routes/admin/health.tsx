@@ -196,6 +196,7 @@ function HealthComponent() {
 
   useEffect(() => {
     runDiagnostics();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const runDiagnostics = async () => {

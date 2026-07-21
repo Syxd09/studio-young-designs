@@ -700,7 +700,10 @@ function ServiceRow({
       }`}
     >
       <div className="md:col-span-7">
-        <div ref={imgRef} className="relative aspect-[4/3] overflow-hidden rounded-sm bg-charcoal-light/60 shadow-2xl">
+        <div
+          ref={imgRef}
+          className="relative aspect-[4/3] overflow-hidden rounded-sm bg-charcoal-light/60 shadow-2xl"
+        >
           <motion.div
             initial={{ clipPath: clipFrom }}
             animate={imgInView ? { clipPath: clipTo } : {}}
@@ -768,7 +771,7 @@ function ServiceRow({
    PORTFOLIO — 3D Tilt hover cards with reflection
    ═══════════════════════════════════════════════════════════════ */
 
-function Portfolio() {
+function Portfolio({ config = {} }: { config?: Record<string, string> }) {
   const { data: dbGallery = [] } = useQuery<any[]>({
     queryKey: ["gallery"],
     queryFn: async () => {
@@ -784,10 +787,24 @@ function Portfolio() {
   });
 
   const pieces = useMemo(() => {
+    const rawSelectedIds = config.homepage_selected_gallery_ids || "";
+    const selectedIds = rawSelectedIds.split(",").map((s) => s.trim()).filter(Boolean);
+
     if (dbGallery.length > 0) {
-      const featuredItems = dbGallery.filter((item) => item.is_featured !== false);
-      const itemsToDisplay = featuredItems.length > 0 ? featuredItems : dbGallery;
-      return itemsToDisplay.slice(0, 6).map((item, i) => ({
+      // Filter ONLY items explicitly selected by admin in command center
+      const featuredItems = dbGallery.filter(
+        (item) => selectedIds.includes(String(item.id)) || item.is_featured === true
+      );
+
+      // If admin selected specific items, display ONLY those exact items!
+      const itemsToDisplay =
+        selectedIds.length > 0
+          ? featuredItems
+          : featuredItems.length > 0
+            ? featuredItems
+            : dbGallery.slice(0, 6);
+
+      return itemsToDisplay.map((item, i) => ({
         id: item.id,
         img: item.image_url,
         title: item.title,
@@ -801,7 +818,7 @@ function Portfolio() {
       { img: p3, title: "Cubbon Study", place: "Home Library", h: "short" },
       { img: p4, title: "Whitefield Villa", place: "Marble & Walnut Bath", h: "tall" },
     ];
-  }, [dbGallery]);
+  }, [dbGallery, config.homepage_selected_gallery_ids]);
 
   return (
     <section id="portfolio" className="relative bg-background py-32 md:py-40">
@@ -1199,7 +1216,10 @@ function Counters({ config = {} }: { config?: Record<string, string> }) {
     { n: yearsNum, s: yearsSuffix, label: config.stat_years_label || "Years of Experience" },
     { n: spacesNum, s: spacesSuffix, label: config.stat_spaces_label || "Projects Completed" },
     { n: artisansNum, s: artisansSuffix, label: config.stat_artisans_label || "Master Craftsmen" },
-    { text: config.stat_quality || "Premium", label: config.stat_quality_label || "Quality Materials" },
+    {
+      text: config.stat_quality || "Premium",
+      label: config.stat_quality_label || "Quality Materials",
+    },
   ];
   return (
     <section className="relative overflow-hidden bg-walnut-deep py-28 text-cream md:py-36">
@@ -1585,10 +1605,37 @@ function Contact({
   const [projectType, setProjectType] = useState("");
   const [submitting, setSubmitting] = useState(false);
 
-  const projectTypes =
-    services.length > 0
-      ? [...services.filter((s) => s.is_visible).map((s) => s.title), "Other"]
-      : ["Kitchens", "Wardrobes", "Living Spaces", "Interiors", "Other"];
+  const projectTypes = useMemo(
+    () =>
+      services.length > 0
+        ? [...services.filter((s) => s.is_visible).map((s) => s.title), "Other"]
+        : ["Kitchens", "Wardrobes", "Living Spaces", "Interiors", "Other"],
+    [services],
+  );
+
+  useEffect(() => {
+    const updateSelectedService = () => {
+      if (typeof window === "undefined") return;
+      const params = new URLSearchParams(window.location.search);
+      const svcParam = params.get("service");
+      if (svcParam) {
+        const normalized = svcParam.toLowerCase().trim();
+        const matched = projectTypes.find(
+          (opt) =>
+            opt.toLowerCase() === normalized ||
+            opt.toLowerCase().includes(normalized) ||
+            normalized.includes(opt.toLowerCase()),
+        );
+        if (matched) {
+          setProjectType(matched);
+        }
+      }
+    };
+
+    updateSelectedService();
+    window.addEventListener("popstate", updateSelectedService);
+    return () => window.removeEventListener("popstate", updateSelectedService);
+  }, [projectTypes]);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -1994,6 +2041,7 @@ function Home() {
       const { data, error } = await supabase
         .from("testimonials")
         .select("*")
+        .eq("is_approved", true)
         .order("display_order", { ascending: true });
       if (error) throw error;
       return data || [];
@@ -2024,7 +2072,7 @@ function Home() {
       />
       <Why config={config} items={whyItems} />
       <Services services={services} config={config} />
-      <Portfolio />
+      <Portfolio config={config} />
       <VideoShowcase config={config} />
       <Marquee
         dark

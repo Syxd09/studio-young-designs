@@ -16,6 +16,7 @@ import {
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
 import { format } from "date-fns";
+import { AdminSelect } from "@/components/ui/admin-select";
 
 export const Route = createFileRoute("/admin/journal")({
   component: JournalComponent,
@@ -459,19 +460,12 @@ function JournalComponent() {
 
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-1">
-                    <label className="text-[9px] uppercase tracking-widest text-stone-400 dark:text-stone-500 font-bold block">
-                      Category
-                    </label>
-                    <select
+                    <AdminSelect
+                      label="Category"
                       value={category}
-                      onChange={(e) => setCategory(e.target.value)}
-                      className="w-full bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded p-2.5 text-xs text-stone-900 dark:text-white outline-none focus:border-[#cb2026] focus:bg-white dark:focus:bg-transparent cursor-pointer"
-                      required
-                    >
-                      <option value="Guides & Manuals">Guides & Manuals</option>
-                      <option value="Material Studies">Material Studies</option>
-                      <option value="Design Philosophy">Design Philosophy</option>
-                    </select>
+                      onChange={(val) => setCategory(val)}
+                      options={["Guides & Manuals", "Material Studies", "Design Philosophy"]}
+                    />
                   </div>
                   <div className="space-y-1">
                     <label className="text-[9px] uppercase tracking-widest text-stone-400 dark:text-stone-550 font-bold block">
