@@ -7,15 +7,32 @@ import { Loader2 } from "lucide-react";
 export const Route = createFileRoute("/services/$slug")({
   head: ({ match }) => {
     const slug = match.params.slug;
-    const formattedTitle = slug.charAt(0).toUpperCase() + slug.slice(1);
+    const formattedTitle = slug
+      .split("-")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(" ");
+
     return {
       meta: [
         { title: `${formattedTitle} — Studio Young Designs` },
         {
           name: "description",
-          content: `Bespoke luxury ${slug} design and execution by Studio Young Designs.`,
+          content: `Bespoke luxury ${formattedTitle.toLowerCase()} design, custom manufacturing, and turnkey execution in Bangalore by Studio Young Designs.`,
         },
+        { property: "og:title", content: `${formattedTitle} — Studio Young Designs` },
+        {
+          property: "og:description",
+          content: `Bespoke luxury ${formattedTitle.toLowerCase()} design and execution in Bangalore.`,
+        },
+        { property: "og:image", content: "https://studioyoungdesigns.com/og.jpg" },
         { property: "og:url", content: `https://studioyoungdesigns.com/services/${slug}` },
+        { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:title", content: `${formattedTitle} — Studio Young Designs` },
+        {
+          name: "twitter:description",
+          content: `Bespoke luxury ${formattedTitle.toLowerCase()} design and execution in Bangalore.`,
+        },
+        { name: "twitter:image", content: "https://studioyoungdesigns.com/og.jpg" },
       ],
       links: [{ rel: "canonical", href: `https://studioyoungdesigns.com/services/${slug}` }],
     };

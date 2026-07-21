@@ -155,20 +155,28 @@ function EnquiriesComponent() {
       "Submitted At",
       "Notes",
     ];
+    const sanitizeCsvCell = (str: string) => {
+      const val = String(str || "").replace(/\n/g, " ");
+      if (/^[=+\-@]/.test(val)) {
+        return "'" + val;
+      }
+      return val;
+    };
+
     const rows = filteredEnquiries.map((e) => [
-      e.name,
-      e.email,
-      e.phone,
-      e.service,
-      e.message.replace(/\n/g, " "),
-      e.status,
-      format(new Date(e.created_at), "yyyy-MM-dd HH:mm:ss"),
-      (e.notes || localStorage.getItem(`lead_notes_${e.id}`) || "").replace(/\n/g, " "),
+      sanitizeCsvCell(e.name),
+      sanitizeCsvCell(e.email),
+      sanitizeCsvCell(e.phone),
+      sanitizeCsvCell(e.service),
+      sanitizeCsvCell(e.message),
+      sanitizeCsvCell(e.status),
+      sanitizeCsvCell(format(new Date(e.created_at), "yyyy-MM-dd HH:mm:ss")),
+      sanitizeCsvCell(e.notes || localStorage.getItem(`lead_notes_${e.id}`) || ""),
     ]);
 
     const csvContent =
       "data:text/csv;charset=utf-8," +
-      [headers.join(","), ...rows.map((r) => r.map((val) => `"${val}"`).join(","))].join("\n");
+      [headers.join(","), ...rows.map((r) => r.map((val) => `"${val.replace(/"/g, '""')}"`).join(","))].join("\n");
 
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");

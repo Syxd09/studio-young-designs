@@ -29,6 +29,12 @@ import { motion, AnimatePresence } from "framer-motion";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/admin")({
+  head: () => ({
+    meta: [
+      { name: "robots", content: "noindex, nofollow" },
+      { title: "Command Center — Studio Young Designs Admin" },
+    ],
+  }),
   component: AdminLayoutComponent,
 });
 
@@ -246,20 +252,8 @@ function AdminLayoutComponent() {
               </div>
             </div>
 
-            {/* Quick seeds helper for client debugging/testing */}
             <div className="flex justify-between items-center text-[10px]">
-              <span className="text-stone-400">Secure admin session</span>
-              <button
-                type="button"
-                onClick={() => {
-                  setEmail("admin@studioyoung.in");
-                  setPassword("#StudioYoung1981");
-                  toast.info("Credentials pre-filled");
-                }}
-                className="text-[#cb2026] hover:underline uppercase font-bold tracking-wider"
-              >
-                Pre-fill login
-              </button>
+              <span className="text-stone-400">Secure encrypted admin session</span>
             </div>
 
             <button
