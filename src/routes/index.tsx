@@ -809,14 +809,14 @@ function Portfolio({ config = {} }: { config?: Record<string, string> }) {
         img: item.image_url,
         title: item.title,
         place: item.subtitle || item.category,
-        h: item.span === "tall" || i % 2 === 0 ? "tall" : "short",
+        span: item.span || (i % 2 === 0 ? "tall" : "standard"),
       }));
     }
     return [
-      { img: p1, title: "Malabar Residence", place: "Dining · Bangalore", h: "tall" },
-      { img: p2, title: "Sadashivanagar House", place: "Master Bedroom", h: "short" },
-      { img: p3, title: "Cubbon Study", place: "Home Library", h: "short" },
-      { img: p4, title: "Whitefield Villa", place: "Marble & Walnut Bath", h: "tall" },
+      { id: "1", img: p1, title: "Malabar Residence", place: "Dining · Bangalore", span: "tall" },
+      { id: "2", img: p2, title: "Sadashivanagar House", place: "Master Bedroom", span: "standard" },
+      { id: "3", img: p3, title: "Cubbon Study", place: "Home Library", span: "standard" },
+      { id: "4", img: p4, title: "Whitefield Villa", place: "Marble & Walnut Bath", span: "tall" },
     ];
   }, [dbGallery, config.homepage_selected_gallery_ids]);
 
@@ -849,10 +849,11 @@ function Portfolio({ config = {} }: { config?: Record<string, string> }) {
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-8">
           {pieces.map((p, i) => (
             <Reveal3D
-              key={p.title}
+              key={p.id || p.title || i}
               delay={(i % 2) * 0.1}
               rotateX={12}
               rotateY={(i % 2 === 0 ? 1 : -1) * 6}
+              className={p.span === "wide" ? "md:col-span-2" : "md:col-span-1"}
             >
               <PortfolioCard piece={p} />
             </Reveal3D>
@@ -866,11 +867,17 @@ function Portfolio({ config = {} }: { config?: Record<string, string> }) {
 function PortfolioCard({
   piece,
 }: {
-  piece: { img: string; title: string; place: string; h: string };
+  piece: { img: string; title: string; place: string; span: string };
 }) {
   const ref = useRef<HTMLAnchorElement>(null);
   const { x, y } = useCursorTag(ref);
   const [hover, setHover] = useState(false);
+
+  const getAspectClass = (span: string) => {
+    if (span === "wide") return "aspect-[16/9] md:aspect-[21/9]";
+    if (span === "tall") return "aspect-[3/4] md:aspect-[4/5]";
+    return "aspect-[4/3] md:aspect-[1/1]"; // "standard" square
+  };
 
   return (
     <TiltCard intensity={6}>
@@ -879,9 +886,7 @@ function PortfolioCard({
         to="/gallery"
         onMouseEnter={() => setHover(true)}
         onMouseLeave={() => setHover(false)}
-        className={`group relative block overflow-hidden bg-muted ${
-          piece.h === "tall" ? "aspect-[4/5]" : "aspect-[4/3]"
-        }`}
+        className={`group relative block overflow-hidden bg-muted ${getAspectClass(piece.span)}`}
       >
         <motion.img
           src={piece.img}

@@ -266,6 +266,27 @@ function GalleryComponent() {
     }
   };
 
+  const updateCardSpan = async (item: GalleryItem, newSpan: "standard" | "tall" | "wide") => {
+    try {
+      // Optimistically update local state for instant feedback
+      setItems((prev) =>
+        prev.map((i) => (i.id === item.id ? { ...i, span: newSpan } : i))
+      );
+
+      const { error } = await supabase
+        .from("gallery")
+        .update({ span: newSpan })
+        .eq("id", item.id);
+
+      if (error) throw error;
+      toast.success(`Photo layout size updated to ${newSpan.toUpperCase()}!`);
+    } catch (err: any) {
+      console.error(err);
+      toast.error("Failed to update card size.");
+      fetchGallery(); // rollback
+    }
+  };
+
   const handleDelete = async (item: GalleryItem) => {
     if (!window.confirm("Are you sure you want to permanently delete this gallery item?")) return;
 
@@ -466,7 +487,7 @@ function GalleryComponent() {
             </div>
 
             {/* Content info */}
-            <div className="p-4 flex-1 flex flex-col justify-between space-y-4">
+            <div className="p-4 flex-1 flex flex-col justify-between space-y-3">
               <div>
                 <h4 className="font-semibold text-sm text-stone-900 dark:text-stone-150 line-clamp-1">
                   {item.title}
@@ -474,6 +495,49 @@ function GalleryComponent() {
                 <p className="text-[11px] text-stone-400 dark:text-stone-550 line-clamp-1 mt-0.5">
                   {item.subtitle}
                 </p>
+              </div>
+
+              {/* 1-Click Card Layout Size Selector */}
+              <div className="flex items-center gap-1 bg-stone-50 dark:bg-stone-900/60 p-1 rounded-lg border border-stone-200/70 dark:border-stone-800">
+                <span className="text-[9px] uppercase tracking-wider text-stone-400 dark:text-stone-500 font-bold px-1">
+                  Size:
+                </span>
+                <button
+                  type="button"
+                  onClick={() => updateCardSpan(item, "standard")}
+                  className={`flex-1 py-1 text-[9px] font-bold uppercase tracking-wider rounded transition-all cursor-pointer ${
+                    item.span === "standard" || !item.span
+                      ? "bg-[#cb2026] text-white shadow-xs"
+                      : "text-stone-500 dark:text-stone-400 hover:text-stone-900 dark:hover:text-white"
+                  }`}
+                  title="Square (1:1 aspect)"
+                >
+                  Square
+                </button>
+                <button
+                  type="button"
+                  onClick={() => updateCardSpan(item, "tall")}
+                  className={`flex-1 py-1 text-[9px] font-bold uppercase tracking-wider rounded transition-all cursor-pointer ${
+                    item.span === "tall"
+                      ? "bg-[#cb2026] text-white shadow-xs"
+                      : "text-stone-500 dark:text-stone-400 hover:text-stone-900 dark:hover:text-white"
+                  }`}
+                  title="Tall (3:4 aspect)"
+                >
+                  Tall
+                </button>
+                <button
+                  type="button"
+                  onClick={() => updateCardSpan(item, "wide")}
+                  className={`flex-1 py-1 text-[9px] font-bold uppercase tracking-wider rounded transition-all cursor-pointer ${
+                    item.span === "wide"
+                      ? "bg-[#cb2026] text-white shadow-xs"
+                      : "text-stone-500 dark:text-stone-400 hover:text-stone-900 dark:hover:text-white"
+                  }`}
+                  title="Wide (16:9 banner aspect)"
+                >
+                  Wide
+                </button>
               </div>
 
               {/* Homepage Pin Toggle Switch Button */}
