@@ -13,7 +13,7 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/utils/supabase";
 import { toast } from "sonner";
-import { Loader2, Star, X, Play, Youtube } from "lucide-react";
+import { Loader2, Star, X, Play, Youtube, CheckCircle2 } from "lucide-react";
 
 import {
   PageWrapper,
@@ -966,7 +966,7 @@ function VideoShowcase({ config = {} }: { config?: Record<string, string> }) {
       /(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})/,
     );
     if (match && match[1]) {
-      return `https://www.youtube-nocookie.com/embed/${match[1]}?autoplay=1&rel=0`;
+      return `https://www.youtube.com/embed/${match[1]}?autoplay=1&rel=0`;
     }
     return url;
   };
@@ -1620,6 +1620,13 @@ function Contact({
 }) {
   const [projectType, setProjectType] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [submittedData, setSubmittedData] = useState<{
+    name: string;
+    email: string;
+    phone: string;
+    service: string;
+    location: string;
+  } | null>(null);
 
   const projectTypes = useMemo(
     () =>
@@ -1655,15 +1662,16 @@ function Contact({
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const formElement = e.currentTarget;
     setSubmitting(true);
 
     try {
-      const formData = new FormData(e.currentTarget);
+      const formData = new FormData(formElement);
       const name = formData.get("name") as string;
       const email = formData.get("email") as string;
       const phone = formData.get("phone") as string;
       const location = formData.get("location") as string;
-      const service = projectType;
+      const service = projectType || "General Enquiry";
       const msgText =
         projectType === "Other"
           ? `[Specify: ${formData.get("specify_type")}] ${formData.get("specify_description")}`
@@ -1677,9 +1685,16 @@ function Contact({
 
       if (error) throw error;
 
-      toast.success("Thank you. We have received your request and will be in touch shortly.");
-      e.currentTarget.reset();
-      setProjectType("");
+      setSubmittedData({
+        name,
+        email,
+        phone,
+        service,
+        location: location || "Bangalore",
+      });
+
+      toast.success("Thank you! Your enquiry has been sent successfully.");
+      formElement?.reset?.();
     } catch (err: any) {
       console.error(err);
       toast.error(err.message || "Failed to submit enquiry. Please try again.");
@@ -1755,81 +1770,161 @@ function Contact({
         </div>
 
         <Reveal3D delay={0.15} rotateX={8} rotateY={6} className="md:col-span-6 md:col-start-7">
-          <form onSubmit={handleSubmit} className="space-y-8">
-            <div className="grid grid-cols-1 gap-8 sm:grid-cols-2">
-              <Field label="Name" name="name" required delay={0} />
-              <Field label="Email" name="email" type="email" required delay={0.1} />
-              <Field label="Phone" name="phone" required delay={0.2} />
-              <Field label="Location" name="location" required delay={0.3} />
-            </div>
-
-            <div>
-              <SelectField
-                label="Project type"
-                name="type"
-                options={projectTypes}
-                value={projectType}
-                onChange={setProjectType}
-                required
-                delay={0.4}
-              />
-            </div>
-
-            <AnimatePresence mode="wait">
-              {projectType === "Other" && (
-                <motion.div
-                  key="other-fields"
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: "auto" }}
-                  exit={{ opacity: 0, height: 0 }}
-                  transition={{ duration: 0.4, ease: EASE_SMOOTH }}
-                  className="space-y-8 overflow-hidden"
-                >
-                  <Field label="Specify what you want" name="specify_type" required delay={0} />
-                  <Field
-                    label="Custom project description"
-                    name="specify_description"
-                    textarea
-                    required
-                    delay={0.1}
-                  />
-                </motion.div>
-              )}
-
-              {projectType !== "Other" && (
-                <motion.div
-                  key="default-fields"
-                  initial={{ opacity: 0, height: 0 }}
-                  animate={{ opacity: 1, height: "auto" }}
-                  exit={{ opacity: 0, height: 0 }}
-                  transition={{ duration: 0.4, ease: EASE_SMOOTH }}
-                  className="overflow-hidden"
-                >
-                  <Field
-                    label="Tell us about your space"
-                    name="message"
-                    textarea
-                    required
-                    delay={0}
-                  />
-                </motion.div>
-              )}
-            </AnimatePresence>
-
-            <Magnetic>
-              <motion.button
-                type="submit"
-                className="mt-4 group inline-flex items-center gap-4 border border-cream/60 px-8 py-4 text-[11px] uppercase tracking-[0.28em] text-cream transition-all hover:border-gold hover:bg-gold hover:text-charcoal cursor-pointer"
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
+          <AnimatePresence mode="wait">
+            {submittedData ? (
+              <motion.div
+                key="submitted-success-card"
+                initial={{ opacity: 0, scale: 0.95, y: 20 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.95, y: -20 }}
+                transition={{ duration: 0.5, ease: EASE_SMOOTH }}
+                className="rounded-sm border border-gold/40 bg-cream/5 p-8 md:p-10 text-cream shadow-2xl backdrop-blur-sm space-y-6"
               >
-                Send Enquiry{" "}
-                <motion.span className="inline-block" whileHover={{ x: 4 }}>
-                  →
-                </motion.span>
-              </motion.button>
-            </Magnetic>
-          </form>
+                <div className="flex items-center gap-4">
+                  <div className="grid h-12 w-12 place-items-center rounded-full bg-gold/20 text-gold border border-gold/40 flex-shrink-0">
+                    <CheckCircle2 size={24} />
+                  </div>
+                  <div>
+                    <span className="eyebrow text-gold">Enquiry Transmitted</span>
+                    <h3 className="font-display text-2xl md:text-3xl text-cream mt-0.5">
+                      Thank You, {submittedData.name}
+                    </h3>
+                  </div>
+                </div>
+
+                <p className="text-sm leading-relaxed text-cream/80 border-t border-b border-cream/10 py-5">
+                  Your enquiry for <strong className="text-gold font-semibold">{submittedData.service}</strong> has been successfully received by Studio Young Designs. Our senior design team will review your project parameters and contact you at <span className="text-cream font-medium">{submittedData.phone}</span> or <span className="text-cream font-medium">{submittedData.email}</span> within 24 hours.
+                </p>
+
+                <div className="grid grid-cols-2 gap-4 bg-charcoal/60 p-4 rounded border border-cream/10 text-xs">
+                  <div>
+                    <span className="text-cream/50 text-[10px] uppercase tracking-wider block">Service</span>
+                    <span className="text-cream font-medium">{submittedData.service}</span>
+                  </div>
+                  <div>
+                    <span className="text-cream/50 text-[10px] uppercase tracking-wider block">Location</span>
+                    <span className="text-cream font-medium">{submittedData.location}</span>
+                  </div>
+                  <div>
+                    <span className="text-cream/50 text-[10px] uppercase tracking-wider block">Status</span>
+                    <span className="text-emerald-400 font-medium flex items-center gap-1.5">
+                      <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
+                      Received & Queued
+                    </span>
+                  </div>
+                  <div>
+                    <span className="text-cream/50 text-[10px] uppercase tracking-wider block">Est. Response</span>
+                    <span className="text-cream font-medium">Within 24 Hours</span>
+                  </div>
+                </div>
+
+                <div className="pt-2 flex flex-wrap gap-4">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSubmittedData(null);
+                      setProjectType("");
+                    }}
+                    className="inline-flex items-center gap-2 border border-cream/40 bg-transparent px-6 py-3.5 text-[11px] uppercase tracking-[0.24em] text-cream hover:border-gold hover:text-gold transition-colors cursor-pointer"
+                  >
+                    ← Send Another Enquiry
+                  </button>
+                  <Link
+                    to="/gallery"
+                    className="inline-flex items-center gap-2 bg-gold px-6 py-3.5 text-[11px] uppercase tracking-[0.24em] text-charcoal hover:bg-amber-400 transition-colors font-semibold cursor-pointer"
+                  >
+                    Explore Gallery →
+                  </Link>
+                </div>
+              </motion.div>
+            ) : (
+              <form onSubmit={handleSubmit} className="space-y-8">
+                <div className="grid grid-cols-1 gap-8 sm:grid-cols-2">
+                  <Field label="Name" name="name" required delay={0} />
+                  <Field label="Email" name="email" type="email" required delay={0.1} />
+                  <Field label="Phone" name="phone" required delay={0.2} />
+                  <Field label="Location" name="location" required delay={0.3} />
+                </div>
+
+                <div>
+                  <SelectField
+                    label="Project type"
+                    name="type"
+                    options={projectTypes}
+                    value={projectType}
+                    onChange={setProjectType}
+                    required
+                    delay={0.4}
+                  />
+                </div>
+
+                <AnimatePresence mode="wait">
+                  {projectType === "Other" && (
+                    <motion.div
+                      key="other-fields"
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: "auto" }}
+                      exit={{ opacity: 0, height: 0 }}
+                      transition={{ duration: 0.4, ease: EASE_SMOOTH }}
+                      className="space-y-8 overflow-hidden"
+                    >
+                      <Field label="Specify what you want" name="specify_type" required delay={0} />
+                      <Field
+                        label="Custom project description"
+                        name="specify_description"
+                        textarea
+                        required
+                        delay={0.1}
+                      />
+                    </motion.div>
+                  )}
+
+                  {projectType !== "Other" && (
+                    <motion.div
+                      key="default-fields"
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: "auto" }}
+                      exit={{ opacity: 0, height: 0 }}
+                      transition={{ duration: 0.4, ease: EASE_SMOOTH }}
+                      className="overflow-hidden"
+                    >
+                      <Field
+                        label="Tell us about your space"
+                        name="message"
+                        textarea
+                        required
+                        delay={0}
+                      />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+
+                <Magnetic>
+                  <motion.button
+                    type="submit"
+                    disabled={submitting}
+                    className="mt-4 group inline-flex items-center gap-4 border border-cream/60 px-8 py-4 text-[11px] uppercase tracking-[0.28em] text-cream transition-all hover:border-gold hover:bg-gold hover:text-charcoal cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                    whileHover={{ scale: submitting ? 1 : 1.02 }}
+                    whileTap={{ scale: submitting ? 1 : 0.98 }}
+                  >
+                    {submitting ? (
+                      <>
+                        <Loader2 size={16} className="animate-spin text-gold group-hover:text-charcoal" />
+                        <span>Sending Enquiry...</span>
+                      </>
+                    ) : (
+                      <>
+                        <span>Send Enquiry</span>
+                        <motion.span className="inline-block" whileHover={{ x: 4 }}>
+                          →
+                        </motion.span>
+                      </>
+                    )}
+                  </motion.button>
+                </Magnetic>
+              </form>
+            )}
+          </AnimatePresence>
         </Reveal3D>
       </div>
     </section>
