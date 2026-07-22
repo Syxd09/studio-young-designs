@@ -1,17 +1,15 @@
 import { createClient } from "@supabase/supabase-js";
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
+const DEFAULT_URL = "https://pacoywekwvdmhvtndqra.supabase.co";
+const DEFAULT_KEY = "sb_publishable_SeP0MxYk7Gk_h93a_nAFxg_fXXVQdnZ";
+
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || DEFAULT_URL;
 const supabaseAnonKey =
-  import.meta.env.VITE_SUPABASE_ANON_KEY || import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY;
+  import.meta.env.VITE_SUPABASE_ANON_KEY ||
+  import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY ||
+  DEFAULT_KEY;
 
 export const isSupabaseConfigured = () => !!(supabaseUrl && supabaseAnonKey);
-
-if (!isSupabaseConfigured() && typeof window !== "undefined") {
-  console.warn(
-    "Supabase environment variables (VITE_SUPABASE_URL / VITE_SUPABASE_ANON_KEY) are missing. " +
-      "CMS functions will fall back to mockup or static data. Please configure them in a .env or .env.local file.",
-  );
-}
 
 // Polyfill WebSocket on server-side Node.js environment to prevent Realtime constructor checks from throwing errors
 if (typeof window === "undefined") {
@@ -32,11 +30,9 @@ if (typeof window === "undefined") {
   }
 }
 
-export const supabase = isSupabaseConfigured()
-  ? createClient(supabaseUrl!, supabaseAnonKey!, {
-      auth: {
-        persistSession: typeof window !== "undefined",
-        detectSessionInUrl: typeof window !== "undefined",
-      },
-    })
-  : (null as unknown as ReturnType<typeof createClient>);
+export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+  auth: {
+    persistSession: typeof window !== "undefined",
+    detectSessionInUrl: typeof window !== "undefined",
+  },
+});
