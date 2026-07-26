@@ -1081,12 +1081,30 @@ function VideoShowcase({ config = {} }: { config?: Record<string, string> }) {
 
 function Process() {
   const steps = [
-    ["Consultation", "We listen. To how you live, entertain, work and rest."],
-    ["Concept Design", "Plans, mood and material stories drawn to your brief."],
-    ["Material Selection", "Woods, stones, metals and textiles — chosen in hand."],
-    ["Manufacturing", "Built in our own atelier by master carpenters."],
-    ["Installation", "Site executed by a single dedicated project team."],
-    ["Final Handover", "A quiet reveal. Followed by a lifetime of care."],
+    [
+      "Share Your Vision",
+      "Tell us about your home, lifestyle and aspirations. We listen first, then create.",
+    ],
+    [
+      "Design Consultation",
+      "Our designers transform your ideas into intelligent layouts, elegant concepts and timeless interiors.",
+    ],
+    [
+      "Design & Proposal",
+      "Detailed drawings, material selections, budgets and timelines are carefully prepared for your approval.",
+    ],
+    [
+      "In-House Manufacturing",
+      "Crafted with precision in our own manufacturing facility by experienced master craftsmen.",
+    ],
+    [
+      "Installation",
+      "Every detail is executed by our dedicated project team with meticulous supervision and uncompromising quality.",
+    ],
+    [
+      "Handover",
+      "Your home is professionally inspected, beautifully finished and ready to welcome you.",
+    ],
   ];
 
   const sectionRef = useRef<HTMLElement>(null);
