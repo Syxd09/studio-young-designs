@@ -24,6 +24,7 @@ interface ServiceItem {
   id: string;
   slug: string;
   title: string;
+  intro?: string;
   short_desc: string;
   description: string;
   image_url: string;
@@ -49,6 +50,7 @@ function ServicesComponent() {
   // Edit Form State
   const [title, setTitle] = useState("");
   const [slug, setSlug] = useState("");
+  const [intro, setIntro] = useState("");
   const [shortDesc, setShortDesc] = useState("");
   const [description, setDescription] = useState("");
   const [benefits, setBenefits] = useState<string[]>([]);
@@ -64,6 +66,7 @@ function ServicesComponent() {
   // Add New Form State
   const [newTitle, setNewTitle] = useState("");
   const [newSlug, setNewSlug] = useState("");
+  const [newIntro, setNewIntro] = useState("");
   const [newShortDesc, setNewShortDesc] = useState("");
   const [newDescription, setNewDescription] = useState("");
   const [newImageUrl, setNewImageUrl] = useState(
@@ -105,7 +108,7 @@ function ServicesComponent() {
     }
   };
 
-  const selectService = (service: ServiceItem) => {
+  const selectService = async (service: ServiceItem) => {
     setIsAddingNew(false);
     setSelectedService(service);
     setTitle(service.title);
@@ -113,6 +116,25 @@ function ServicesComponent() {
     setShortDesc(service.short_desc);
     setDescription(service.description);
     setBenefits(service.benefits || []);
+
+    const defaultIntros: Record<string, string> = {
+      wardrobes: "Storage elevated to an art form.",
+      kitchens: "The heart of the home, crafted with precision.",
+      "living-spaces": "Curated environments for connection and quiet.",
+      interiors: "Full-scale realization from drawing to handover.",
+    };
+
+    try {
+      const { data: configData } = await supabase
+        .from("site_config")
+        .select("value")
+        .eq("key", `service_intro_${service.slug}`)
+        .maybeSingle();
+
+      setIntro(configData?.value || service.intro || defaultIntros[service.slug] || "");
+    } catch (e) {
+      setIntro(service.intro || defaultIntros[service.slug] || "");
+    }
 
     // Parse features from serialized "Title:Description" format
     const parsedFeatures = (service.features || []).map((f: string) => {
@@ -168,11 +190,12 @@ function ServicesComponent() {
     const serializedFeatures = features.map((f) => `${f.title}:${f.description}`);
 
     try {
-      const { error } = await supabase
+      await supabase
         .from("services")
         .update({
           title,
           slug,
+          intro,
           short_desc: shortDesc,
           description,
           benefits,
@@ -182,7 +205,18 @@ function ServicesComponent() {
         })
         .eq("id", selectedService.id);
 
-      if (error) throw error;
+      if (intro.trim()) {
+        await supabase.from("site_config").upsert(
+          [
+            {
+              key: `service_intro_${slug}`,
+              value: intro.trim(),
+            },
+          ],
+          { onConflict: "key" },
+        );
+      }
+
       toast.success("Service updated successfully");
       fetchServices(selectedService.id);
     } catch (err: any) {
@@ -595,6 +629,19 @@ function ServicesComponent() {
                 </div>
 
                 <div className="space-y-1.5">
+                  <label className="text-[9px] uppercase tracking-widest text-[#cb2026] font-bold block">
+                    Overview Headline (Overview Section Heading)
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Storage elevated to an art form."
+                    value={newIntro}
+                    onChange={(e) => setNewIntro(e.target.value)}
+                    className="w-full bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded p-3 text-xs text-stone-900 dark:text-white placeholder-stone-400 dark:placeholder-stone-600 focus:border-[#cb2026] focus:bg-white dark:focus:bg-transparent outline-none font-semibold"
+                  />
+                </div>
+
+                <div className="space-y-1.5">
                   <label className="text-[9px] uppercase tracking-widest text-stone-400 dark:text-stone-550 font-bold block">
                     Detailed Story Description
                   </label>
@@ -728,6 +775,23 @@ function ServicesComponent() {
                     className="w-full bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded p-3 text-xs text-stone-900 dark:text-white placeholder-stone-400 focus:border-[#cb2026] focus:bg-white dark:focus:bg-transparent outline-none font-semibold"
                     required
                   />
+                </div>
+
+                {/* Overview Headline (Intro) */}
+                <div className="space-y-1.5">
+                  <label className="text-[9px] uppercase tracking-widest text-[#cb2026] font-bold block">
+                    Overview Headline (Overview Section Heading)
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Storage elevated to an art form."
+                    value={intro}
+                    onChange={(e) => setIntro(e.target.value)}
+                    className="w-full bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded p-3 text-xs text-stone-900 dark:text-white placeholder-stone-400 focus:border-[#cb2026] focus:bg-white dark:focus:bg-transparent outline-none font-semibold"
+                  />
+                  <p className="text-[10px] text-stone-400 dark:text-stone-550 italic">
+                    The large main headline shown in the Overview section of this service detail page.
+                  </p>
                 </div>
 
                 {/* Detailed Description */}

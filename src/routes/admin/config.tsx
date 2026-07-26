@@ -595,6 +595,45 @@ function ConfigComponent() {
                   </p>
                 </div>
 
+                <div className="space-y-2 pt-4 border-t border-stone-200/50 dark:border-stone-800/50">
+                  <label className="text-[10px] uppercase tracking-widest text-[#cb2026] font-bold">
+                    Signature Services Eyebrow
+                  </label>
+                  <input
+                    type="text"
+                    value={config.services_section_eyebrow || ""}
+                    onChange={(e) => handleTextChange("services_section_eyebrow", e.target.value)}
+                    placeholder="OUR SIGNATURE SERVICES"
+                    className="w-full bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded p-3 text-stone-900 dark:text-white focus:border-[#cb2026] focus:bg-white dark:focus:bg-transparent outline-none text-sm font-semibold"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-[10px] uppercase tracking-widest text-[#cb2026] font-bold">
+                    Signature Services Main Heading
+                  </label>
+                  <input
+                    type="text"
+                    value={config.services_section_heading || ""}
+                    onChange={(e) => handleTextChange("services_section_heading", e.target.value)}
+                    placeholder="Thoughtfully designed. Expertly crafted. Flawlessly executed."
+                    className="w-full bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded p-3 text-stone-900 dark:text-white focus:border-[#cb2026] focus:bg-white dark:focus:bg-transparent outline-none text-sm font-semibold"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-[10px] uppercase tracking-widest text-[#cb2026] font-bold">
+                    Signature Services Description
+                  </label>
+                  <textarea
+                    value={config.services_section_desc || ""}
+                    onChange={(e) => handleTextChange("services_section_desc", e.target.value)}
+                    rows={3}
+                    placeholder="For over 45 years, Studio Young Designs has created bespoke interiors..."
+                    className="w-full bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded p-3 text-stone-900 dark:text-white focus:border-[#cb2026] focus:bg-white dark:focus:bg-transparent outline-none text-xs leading-relaxed"
+                  />
+                </div>
+
                 <div className="h-px bg-stone-100 dark:bg-stone-850 my-6" />
 
                 <div className="space-y-2">

@@ -350,10 +350,9 @@ function Hero({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1.4, delay: 1.8 }}
-            className="hidden max-w-[220px] text-xs leading-relaxed md:block pointer-events-auto md:ml-auto md:mr-16 text-right"
+            className="hidden max-w-[240px] text-xs leading-relaxed md:block pointer-events-auto md:ml-auto md:mr-16 text-right"
           >
-            A quiet devotion to material, proportion and light — carried through four generations of
-            craft.
+            Four Decades of Trust. An Enduring Legacy of Excellence.
           </motion.div>
           <motion.div
             initial={{ opacity: 0, y: 10 }}
@@ -474,41 +473,18 @@ function About({
             </div>
           </Reveal3D>
 
-          <div className="mt-16">
-            <div className="hairline mb-8" />
-            <div className="grid gap-8">
-              {milestones.map(([year, text], i) => (
-                <Reveal3D key={year} delay={i * 0.12} rotateX={10} rotateY={i % 2 === 0 ? 5 : -5}>
-                  <div className="grid grid-cols-[minmax(0,110px)_1fr] items-baseline gap-6 md:grid-cols-[minmax(0,140px)_1fr]">
-                    <motion.div
-                      className="font-display text-3xl text-walnut md:text-4xl"
-                      whileHover={{ scale: 1.05, color: "#cb2026" }}
-                      transition={{ type: "spring", stiffness: 300 }}
-                    >
-                      {year}
-                    </motion.div>
-                    <div className="text-sm leading-relaxed text-foreground/70 md:text-base">
-                      {text}
-                    </div>
-                  </div>
-                  <div className="hairline mt-6" />
-                </Reveal3D>
-              ))}
-            </div>
-
-            <div className="mt-12">
-              <Magnetic>
-                <Link
-                  to="/about"
-                  className="group inline-flex items-center gap-3 bg-charcoal text-cream px-7 py-4 text-xs font-semibold uppercase tracking-[0.24em] hover:bg-gold hover:text-charcoal transition-all duration-300"
-                >
-                  <span>Discover Our Full Story</span>
-                  <span className="transition-transform duration-300 group-hover:translate-x-1">
-                    →
-                  </span>
-                </Link>
-              </Magnetic>
-            </div>
+          <div className="mt-12">
+            <Magnetic>
+              <Link
+                to="/about"
+                className="group inline-flex items-center gap-3 bg-charcoal text-cream px-7 py-4 text-xs font-semibold uppercase tracking-[0.24em] hover:bg-gold hover:text-charcoal transition-all duration-300"
+              >
+                <span>Discover Our Full Story</span>
+                <span className="transition-transform duration-300 group-hover:translate-x-1">
+                  →
+                </span>
+              </Link>
+            </Magnetic>
           </div>
         </div>
       </div>
@@ -1195,14 +1171,37 @@ function Process() {
    COUNTERS — 3D Flip Counter (Departure Board Style)
    ═══════════════════════════════════════════════════════════════ */
 
+interface StatParsed {
+  n: number | null;
+  s: string;
+  text: string | null;
+}
+
+function parseStatValue(raw: string | undefined, defaultNum: number, defaultSuffix: string): StatParsed {
+  if (!raw || !raw.trim()) {
+    return { n: isNaN(defaultNum) ? null : defaultNum, s: defaultSuffix, text: null };
+  }
+  const str = raw.trim();
+  const digitsMatch = str.match(/^(\d+)(.*)/);
+  if (digitsMatch) {
+    const num = parseInt(digitsMatch[1], 10);
+    const suffix = digitsMatch[2];
+    if (!isNaN(num)) {
+      return { n: num, s: suffix, text: null };
+    }
+  }
+  return { n: null, s: "", text: str };
+}
+
 function CountUp({ to, suffix = "" }: { to: number; suffix?: string }) {
   const ref = useRef<HTMLSpanElement>(null);
   const inView = useInView(ref, { once: true, margin: "-80px" });
   const mv = useMotionValue(0);
   const smooth = useSpring(mv, { duration: 2000, bounce: 0 });
   const [val, setVal] = useState(0);
+
   useEffect(() => {
-    if (!inView) return;
+    if (!inView || typeof to !== "number" || isNaN(to)) return;
     const controls = animate(mv, to, { duration: 2.2, ease: [0.22, 1, 0.36, 1] });
     const unsub = smooth.on("change", (v) => setVal(Math.round(v)));
     return () => {
@@ -1210,6 +1209,11 @@ function CountUp({ to, suffix = "" }: { to: number; suffix?: string }) {
       unsub();
     };
   }, [inView, to, mv, smooth]);
+
+  if (typeof to !== "number" || isNaN(to)) {
+    return <span>{suffix}</span>;
+  }
+
   return (
     <span ref={ref}>
       {val}
@@ -1219,24 +1223,23 @@ function CountUp({ to, suffix = "" }: { to: number; suffix?: string }) {
 }
 
 function Counters({ config = {} }: { config?: Record<string, string> }) {
-  const yearsNum = config.stat_years ? parseInt(config.stat_years.replace(/\D/g, "")) : 40;
-  const yearsSuffix = config.stat_years ? config.stat_years.replace(/\d/g, "") : "+";
-
-  const spacesNum = config.stat_spaces ? parseInt(config.stat_spaces.replace(/\D/g, "")) : 700;
-  const spacesSuffix = config.stat_spaces ? config.stat_spaces.replace(/\d/g, "") : "+";
-
-  const artisansNum = config.stat_artisans ? parseInt(config.stat_artisans.replace(/\D/g, "")) : 35;
-  const artisansSuffix = config.stat_artisans ? config.stat_artisans.replace(/\d/g, "") : "+";
+  const stat1 = parseStatValue(config.stat_years, 40, "+");
+  const stat2 = parseStatValue(config.stat_spaces, 700, "+");
+  const stat3 = parseStatValue(config.stat_artisans, 35, "+");
+  const stat4 = parseStatValue(config.stat_quality, NaN, "");
 
   const stats = [
-    { n: yearsNum, s: yearsSuffix, label: config.stat_years_label || "Years of Experience" },
-    { n: spacesNum, s: spacesSuffix, label: config.stat_spaces_label || "Projects Completed" },
-    { n: artisansNum, s: artisansSuffix, label: config.stat_artisans_label || "Master Craftsmen" },
+    { ...stat1, label: config.stat_years_label || "Years of Experience" },
+    { ...stat2, label: config.stat_spaces_label || "Projects Completed" },
+    { ...stat3, label: config.stat_artisans_label || "Master Craftsmen" },
     {
-      text: config.stat_quality || "Premium",
+      n: stat4.n,
+      s: stat4.s,
+      text: stat4.text || "Premium",
       label: config.stat_quality_label || "Quality Materials",
     },
   ];
+
   return (
     <section className="relative overflow-hidden bg-walnut-deep py-28 text-cream md:py-36">
       <motion.div
@@ -1254,23 +1257,32 @@ function Counters({ config = {} }: { config?: Record<string, string> }) {
             </span>
           </div>
         </Reveal3D>
-        <div className="grid grid-cols-1 gap-12 border-t border-cream/15 sm:grid-cols-2 md:grid-cols-4">
-          {stats.map((st, i) => (
-            <Reveal3D key={i} delay={i * 0.12} rotateX={15} rotateY={(i - 1.5) * 5}>
-              <div className="pt-10">
-                <div className="font-display text-6xl leading-none md:text-7xl">
-                  {"n" in st && typeof st.n === "number" ? (
-                    <CountUp to={st.n} suffix={st.s} />
-                  ) : (
-                    st.text
-                  )}
+        <div className="grid grid-cols-1 gap-12 border-t border-cream/15 sm:grid-cols-2 md:grid-cols-4 items-stretch">
+          {stats.map((st, i) => {
+            const isNumeric = typeof st.n === "number" && !isNaN(st.n);
+            const displayText = st.text || st.s || "";
+
+            return (
+              <Reveal3D key={i} delay={i * 0.12} rotateX={15} rotateY={(i - 1.5) * 5} className="h-full">
+                <div className="flex h-full flex-col justify-between pt-10">
+                  <div className="flex min-h-[5rem] items-end pb-1">
+                    <span
+                      className={
+                        isNumeric
+                          ? "font-display text-5xl leading-none md:text-6xl lg:text-7xl text-cream"
+                          : "font-display text-3xl leading-none md:text-4xl lg:text-5xl tracking-tight text-cream"
+                      }
+                    >
+                      {isNumeric ? <CountUp to={st.n!} suffix={st.s} /> : displayText}
+                    </span>
+                  </div>
+                  <div className="mt-6 text-xs uppercase tracking-[0.28em] text-cream/60">
+                    {st.label}
+                  </div>
                 </div>
-                <div className="mt-6 text-xs uppercase tracking-[0.28em] text-cream/60">
-                  {st.label}
-                </div>
-              </div>
-            </Reveal3D>
-          ))}
+              </Reveal3D>
+            );
+          })}
         </div>
       </div>
     </section>
@@ -1312,7 +1324,7 @@ function Testimonials({ testimonials = [] }: { testimonials?: any[] }) {
       : defaultItems;
 
   const [active, setActive] = useState(0);
-  const [isMobile, setIsMobile] = useState(true);
+  const [isMobile, setIsMobile] = useState(false);
 
   // Review Modal State
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
@@ -1330,10 +1342,17 @@ function Testimonials({ testimonials = [] }: { testimonials?: any[] }) {
   }, []);
 
   useEffect(() => {
-    if (isMobile) return;
     const id = setInterval(() => setActive((a) => (a + 1) % items.length), 5000);
     return () => clearInterval(id);
-  }, [items.length, isMobile]);
+  }, [items.length]);
+
+  const handleDragEnd = (_: any, info: { offset: { x: number } }) => {
+    if (info.offset.x < -40) {
+      setActive((prev) => (prev + 1) % items.length);
+    } else if (info.offset.x > 40) {
+      setActive((prev) => (prev - 1 + items.length) % items.length);
+    }
+  };
 
   const handleReviewSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -1406,39 +1425,35 @@ function Testimonials({ testimonials = [] }: { testimonials?: any[] }) {
 
         <div className="relative" style={{ perspective: "1000px" }}>
           <div
-            className="flex flex-col gap-6 md:flex-row md:gap-0 md:justify-center md:items-center"
-            style={{ minHeight: isMobile ? "auto" : 340 }}
+            className="relative flex justify-center items-center overflow-visible"
+            style={{ minHeight: 340 }}
           >
             {items.map((t, i) => {
               const offset = i - active;
               const isActive = i === active;
+              const isVisible = Math.abs(offset) <= 1;
+
               return (
                 <motion.figure
-                  key={t.n}
-                  onClick={() => !isMobile && setActive(i)}
-                  animate={
-                    isMobile
-                      ? {
-                          z: 0,
-                          x: "0%",
-                          scale: 1,
-                          opacity: 1,
-                          rotateY: 0,
-                        }
-                      : {
-                          z: isActive ? 50 : -100,
-                          x: `${offset * 105}%`,
-                          scale: isActive ? 1 : 0.85,
-                          opacity: isActive ? 1 : 0.4,
-                          rotateY: offset * -10,
-                        }
-                  }
+                  key={t.n || i}
+                  onClick={() => setActive(i)}
+                  drag="x"
+                  dragConstraints={{ left: 0, right: 0 }}
+                  dragElastic={0.15}
+                  onDragEnd={handleDragEnd}
+                  animate={{
+                    z: isActive ? 50 : -100,
+                    x: `${offset * (isMobile ? 88 : 105)}%`,
+                    scale: isActive ? 1 : 0.85,
+                    opacity: isActive ? 1 : isVisible ? 0.35 : 0,
+                    rotateY: offset * -10,
+                  }}
                   transition={{ duration: 0.8, ease: EASE_SMOOTH }}
-                  className={`flex-shrink-0 w-full md:w-[440px] md:absolute md:left-1/2 md:-translate-x-1/2 flex flex-col justify-between border pt-8 p-8 min-h-[300px] h-[300px] rounded-sm ${
-                    isActive && !isMobile
-                      ? "shadow-2xl bg-cream border-gold/30 text-charcoal"
-                      : "bg-background border-border/60 text-foreground"
-                  }`}
+                  className={`absolute left-1/2 -translate-x-1/2 w-[86vw] sm:w-[380px] md:w-[440px] flex flex-col justify-between border pt-8 p-8 min-h-[300px] h-[300px] rounded-sm cursor-pointer touch-pan-y ${
+                    isActive
+                      ? "shadow-2xl bg-cream border-gold/30 text-charcoal z-20"
+                      : "bg-background border-border/60 text-foreground z-10 hover:border-gold/40"
+                  } ${!isVisible ? "pointer-events-none" : ""}`}
                   style={{ transformStyle: "preserve-3d" }}
                 >
                   <blockquote className="font-display text-xl leading-relaxed md:text-2xl line-clamp-4 overflow-hidden">
@@ -1462,22 +1477,20 @@ function Testimonials({ testimonials = [] }: { testimonials?: any[] }) {
             })}
           </div>
 
-          {!isMobile && (
-            <div className="mt-12 flex items-center justify-center gap-3">
-              {items.map((_, i) => (
-                <motion.button
-                  key={i}
-                  onClick={() => setActive(i)}
-                  className="relative h-2 rounded-full bg-border"
-                  animate={{
-                    width: i === active ? 32 : 8,
-                    backgroundColor: i === active ? "var(--gold)" : undefined,
-                  }}
-                  transition={{ duration: 0.4 }}
-                />
-              ))}
-            </div>
-          )}
+          <div className="mt-12 flex items-center justify-center gap-3">
+            {items.map((_, i) => (
+              <motion.button
+                key={i}
+                onClick={() => setActive(i)}
+                className="relative h-2 rounded-full bg-border cursor-pointer"
+                animate={{
+                  width: i === active ? 32 : 8,
+                  backgroundColor: i === active ? "var(--gold)" : undefined,
+                }}
+                transition={{ duration: 0.4 }}
+              />
+            ))}
+          </div>
         </div>
       </div>
 
@@ -1715,15 +1728,15 @@ function Contact({
               </span>
             </div>
             <SplitHeading
-              text="Begin a considered conversation."
+              text={config.contact_heading || "Let's Create Something Exceptional"}
               className="text-4xl text-cream md:text-5xl"
             />
           </Reveal3D>
 
           <Reveal3D delay={0.2} rotateX={8}>
             <p className="mt-8 max-w-md text-base leading-relaxed text-cream/70">
-              Tell us a little about your space. We reply personally, usually within a day, and
-              arrange a quiet visit to your home or our Bangalore studio.
+              {config.contact_desc ||
+                "Every remarkable home begins with a conversation. Share your vision, and our design team will personally guide you through the journey—from understanding your lifestyle and space to planning, design, manufacturing, and flawless execution. We respond within 24 hours to schedule a consultation at your home or our Bengaluru studio."}
             </p>
           </Reveal3D>
 
@@ -2178,22 +2191,10 @@ function Home() {
       <Loader />
       <Hero config={config} images={images} />
       <About config={config} images={images} />
-      <Marquee
-        items={["Since 1981", "Bespoke Interiors", `40+ Years`, "Bangalore", "Timeless Craft"]}
-      />
       <Why config={config} items={whyItems} />
       <Services services={services} config={config} />
       <Portfolio config={config} />
       <VideoShowcase config={config} />
-      <Marquee
-        dark
-        items={[
-          `${config.stat_spaces || "700+"} Homes`,
-          "Turnkey Execution",
-          "Walnut · Stone · Brass",
-          "In-House Atelier",
-        ]}
-      />
       <Process />
       <Counters config={config} />
       <Testimonials testimonials={testimonials} />

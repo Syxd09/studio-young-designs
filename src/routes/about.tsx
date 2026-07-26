@@ -400,9 +400,6 @@ function AboutPage() {
         </div>
       </section>
 
-      {/* Marquee Divider */}
-      <Marquee items={marqueeItems} />
-
       {/* Pillars of Craftsmanship Section */}
       <section className="bg-charcoal py-28 md:py-36 text-cream">
         <div className="mx-auto max-w-[1400px] px-6 md:px-10">
@@ -438,53 +435,6 @@ function AboutPage() {
                     {pillar.desc}
                   </p>
                 </TiltCard>
-              </Reveal3D>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Interactive Milestone History Section */}
-      <section className="bg-cream py-28 md:py-36 text-foreground">
-        <div className="mx-auto max-w-[1200px] px-6 md:px-10">
-          <div className="text-center max-w-3xl mx-auto mb-20">
-            <Reveal3D rotateX={10}>
-              <div className="mb-4 flex justify-center items-center gap-3">
-                <span className="gold-rule" />
-                <span className="eyebrow">
-                  <TextScramble text="Chronology" />
-                </span>
-                <span className="gold-rule" />
-              </div>
-            </Reveal3D>
-            <SplitHeading
-              text="Forty years in five chapters."
-              className="text-3xl md:text-5xl justify-center font-display text-charcoal"
-            />
-          </div>
-
-          <div className="space-y-12">
-            {milestones.map((m, i) => (
-              <Reveal3D key={m.year} delay={i * 0.1} rotateX={6}>
-                <div className="grid grid-cols-1 md:grid-cols-12 items-start gap-6 border-b border-border/50 pb-10 group">
-                  <div className="md:col-span-3">
-                    <motion.span
-                      className="font-display text-5xl md:text-6xl text-walnut block cursor-pointer transition-colors"
-                      whileHover={{ scale: 1.05, color: "#cb2026" }}
-                      transition={{ type: "spring", stiffness: 300 }}
-                    >
-                      {m.year}
-                    </motion.span>
-                  </div>
-                  <div className="md:col-span-9 space-y-2">
-                    <h4 className="font-display text-2xl md:text-3xl text-charcoal group-hover:text-[#cb2026] transition-colors">
-                      {m.title}
-                    </h4>
-                    <p className="text-base text-foreground/75 leading-relaxed font-sans max-w-2xl">
-                      {m.desc}
-                    </p>
-                  </div>
-                </div>
               </Reveal3D>
             ))}
           </div>

@@ -75,11 +75,22 @@ export function ServicePageLayout({ data }: { data: ServicePageData }) {
     staleTime: 60 * 1000,
   });
 
+  const { data: siteConfig = {} } = useQuery<Record<string, string>>({
+    queryKey: ["site_config"],
+    queryFn: async () => {
+      const { data: res, error } = await supabase.from("site_config").select("key, value");
+      if (error) throw error;
+      return (res || []).reduce((acc, curr) => ({ ...acc, [curr.key]: curr.value }), {});
+    },
+    staleTime: 60 * 1000,
+  });
+
   const mergedData: ServicePageData = {
     ...data,
     title: dbService?.title || data.title,
     subtitle: dbService?.short_desc || data.subtitle,
     heroImage: dbService?.image_url || data.heroImage,
+    intro: siteConfig[`service_intro_${data.slug}`] || dbService?.intro || data.intro,
     description: dbService?.description || data.description,
     features:
       dbService?.features && dbService.features.length > 0
@@ -180,9 +191,6 @@ export function ServicePageLayout({ data }: { data: ServicePageData }) {
           </div>
         </div>
       </section>
-
-      {/* Marquee */}
-      <Marquee items={mergedData.marqueeItems} dark />
 
       {/* Gallery */}
       <ServiceGallery images={mergedData.gallery} />

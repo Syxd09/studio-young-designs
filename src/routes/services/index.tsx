@@ -1,6 +1,4 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useRef, useState } from "react";
-import { motion, useInView } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/utils/supabase";
 import {
@@ -9,28 +7,19 @@ import {
   Reveal3D,
   SplitHeading,
   TextScramble,
-  TiltCard,
   Magnetic,
-  Marquee,
-  EASE_SMOOTH,
-  EASE_OUT_EXPO,
-  useCursorTag,
 } from "@/components/shared-animations";
 
-import svcKitchen from "@/assets/service-kitchen.jpg";
-import svcWardrobe from "@/assets/service-wardrobe.jpg";
-import svcLiving from "@/assets/service-living.jpg";
-import svcComplete from "@/assets/service-complete.jpg";
 import heroImg from "@/assets/hero.jpg";
 
 export const Route = createFileRoute("/services/")({
   head: () => ({
     meta: [
-      { title: "Services — Studio Young Designs" },
+      { title: "Our Signature Services — Studio Young Designs" },
       {
         name: "description",
         content:
-          "Explore our bespoke interior design services: Kitchens, Wardrobes, Living Spaces, and Complete Interiors.",
+          "Thoughtfully designed. Expertly crafted. Flawlessly executed. Discover Studio Young Designs signature services.",
       },
       { property: "og:url", content: "https://studioyoungdesigns.com/services" },
     ],
@@ -39,47 +28,73 @@ export const Route = createFileRoute("/services/")({
   component: ServicesPage,
 });
 
-interface ServiceItem {
+interface SignatureService {
   num: string;
   title: string;
   description: string;
-  image: string;
   href: string;
-  aspect: "tall" | "short";
 }
 
-const defaultServices: ServiceItem[] = [
+const signatureServices: SignatureService[] = [
   {
     num: "01",
-    title: "Kitchens",
-    description: "Custom modular kitchens built around the way your family cooks and gathers.",
-    image: svcKitchen,
+    title: "Premium Modular Kitchens",
+    description: "Precision-engineered kitchens tailored for modern luxury.",
     href: "/services/kitchens",
-    aspect: "tall",
   },
   {
     num: "02",
-    title: "Wardrobes",
-    description: "Bespoke wardrobes in walnut, oak and lacquer with brushed metal hardware.",
-    image: svcWardrobe,
+    title: "Luxury Wardrobes & Walk-in Closets",
+    description: "Bespoke storage solutions designed around your lifestyle.",
     href: "/services/wardrobes",
-    aspect: "short",
   },
   {
     num: "03",
-    title: "Living Spaces",
-    description: "Living, dining and lounging rooms composed as considered whole environments.",
-    image: svcLiving,
-    href: "/services/living-spaces",
-    aspect: "short",
+    title: "Luxury Home Interiors",
+    description: "Complete interior design and turnkey execution for exceptional homes.",
+    href: "/services/interiors",
   },
   {
     num: "04",
-    title: "Interiors",
-    description: "End-to-end interior design and execution for residences and commercial spaces.",
-    image: svcComplete,
+    title: "Living Room Interiors",
+    description: "Sophisticated spaces crafted for comfort and entertaining.",
+    href: "/services/living-spaces",
+  },
+  {
+    num: "05",
+    title: "Bedroom Interiors",
+    description: "Elegant private spaces designed for everyday luxury.",
+    href: "/services/living-spaces",
+  },
+  {
+    num: "06",
+    title: "Genuine Leather Furniture",
+    description: "Handcrafted leather sofas and furniture, made to last for generations.",
     href: "/services/interiors",
-    aspect: "tall",
+  },
+  {
+    num: "07",
+    title: "Custom Furniture",
+    description: "Made-to-order furniture designed exclusively for your home.",
+    href: "/services/interiors",
+  },
+  {
+    num: "08",
+    title: "Dining & Bar Spaces",
+    description: "Refined spaces for memorable gatherings.",
+    href: "/services/living-spaces",
+  },
+  {
+    num: "09",
+    title: "TV & Entertainment Units",
+    description: "Contemporary media walls with seamless functionality.",
+    href: "/services/living-spaces",
+  },
+  {
+    num: "10",
+    title: "Turnkey Interior Solutions",
+    description: "From concept to completion, managed under one roof.",
+    href: "/services/interiors",
   },
 ];
 
@@ -117,19 +132,21 @@ function ServicesPage() {
     staleTime: 60 * 1000,
   });
 
-  const servicesList: ServiceItem[] =
+  const servicesList: SignatureService[] =
     dbServices.length > 0
       ? dbServices
-          .filter((s) => s.is_visible)
+          .filter((s) => s.is_visible !== false)
           .map((s, idx) => ({
-            num: `0${idx + 1}`,
+            num: String(idx + 1).padStart(2, "0"),
             title: s.title,
-            description: s.short_desc,
-            image: s.image_url,
-            href: `/services/${s.slug}`,
-            aspect: idx === 0 || idx === 3 ? "tall" : "short",
+            description: s.short_desc || s.description || "",
+            href: s.slug
+              ? s.slug.startsWith("/")
+                ? s.slug
+                : `/services/${s.slug}`
+              : "/services/interiors",
           }))
-      : defaultServices;
+      : signatureServices;
 
   return (
     <PageWrapper>
@@ -138,53 +155,72 @@ function ServicesPage() {
         title="Our Services"
         subtitle={
           siteConfig.services_subtitle ||
-          "Four disciplines. One studio. Forty years of quiet excellence."
+          "Thoughtfully designed. Expertly crafted. Flawlessly executed."
         }
         breadcrumbs={[{ label: "Home", to: "/" }, { label: "Services" }]}
       />
 
-      {/* Services Grid */}
+      {/* Signature Services Numbered List */}
       <section className="bg-cream py-24 md:py-32">
         <div className="mx-auto max-w-[1400px] px-6 md:px-10">
-          <div className="mb-20 grid grid-cols-1 items-end gap-8 md:grid-cols-12">
+          <div className="mb-16 grid grid-cols-1 items-end gap-8 md:grid-cols-12">
             <div className="md:col-span-7">
               <Reveal3D rotateX={10}>
                 <div className="mb-6 flex items-center gap-3">
                   <span className="gold-rule" />
                   <span className="eyebrow">
-                    <TextScramble text="What We Do" />
+                    <TextScramble
+                      text={siteConfig.services_section_eyebrow || "OUR SIGNATURE SERVICES"}
+                    />
                   </span>
                 </div>
               </Reveal3D>
               <SplitHeading
-                text="Spaces shaped by forty years of listening."
+                text={
+                  siteConfig.services_section_heading ||
+                  "Thoughtfully designed. Expertly crafted. Flawlessly executed."
+                }
                 className="text-4xl md:text-6xl"
               />
             </div>
-            <Reveal3D delay={0.2} rotateX={6} className="md:col-span-4 md:col-start-9">
+            <Reveal3D delay={0.2} rotateX={6} className="md:col-span-5 md:col-start-8">
               <p className="text-base leading-relaxed text-foreground/70">
-                Each discipline draws on four decades of working with wood, stone, metal and light —
-                always in dialogue with the people who will inhabit the space.
+                {siteConfig.services_section_desc ||
+                  "For over 45 years, Studio Young Designs has created bespoke interiors that combine timeless design, meticulous craftsmanship, and flawless execution. From a single handcrafted kitchen to complete luxury residences, every project is designed, manufactured, and delivered with uncompromising attention to detail."}
               </p>
             </Reveal3D>
           </div>
 
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-8">
-            {servicesList.map((svc, i) => (
-              <Reveal3D
-                key={svc.title}
-                delay={(i % 2) * 0.12}
-                rotateX={12}
-                rotateY={(i % 2 === 0 ? 1 : -1) * 6}
-              >
-                <ServiceCard service={svc} />
+          {/* Clean luxury numbered list */}
+          <div className="mt-16 space-y-0 border-t border-border/40">
+            {servicesList.map((item, idx) => (
+              <Reveal3D key={item.num} delay={idx * 0.04} rotateX={4}>
+                <Link
+                  to={item.href}
+                  className="group relative flex flex-col gap-4 border-b border-border/40 py-8 px-4 transition-all duration-300 hover:bg-white/80 md:flex-row md:items-center md:justify-between md:py-10 md:px-8"
+                >
+                  <div className="flex items-baseline gap-6 md:gap-10 md:w-1/2">
+                    <span className="font-display text-2xl font-light text-gold md:text-3xl">
+                      {item.num}
+                    </span>
+                    <h3 className="font-display text-2xl text-charcoal group-hover:text-gold transition-colors duration-300 md:text-3xl lg:text-4xl">
+                      {item.title}
+                    </h3>
+                  </div>
+                  <div className="flex items-center justify-between gap-6 md:w-1/2 md:justify-end">
+                    <p className="max-w-md text-sm leading-relaxed text-foreground/70 md:text-base">
+                      {item.description}
+                    </p>
+                    <span className="text-xl text-gold/60 transition-transform duration-300 group-hover:translate-x-2 group-hover:text-gold md:text-2xl">
+                      →
+                    </span>
+                  </div>
+                </Link>
               </Reveal3D>
             ))}
           </div>
         </div>
       </section>
-
-      <Marquee items={["Kitchens", "Wardrobes", "Living Spaces", "Interiors", "Since 1981"]} />
 
       {/* Why Section */}
       <section className="bg-charcoal py-24 text-cream md:py-32">
@@ -217,65 +253,5 @@ function ServicesPage() {
         </div>
       </section>
     </PageWrapper>
-  );
-}
-
-function ServiceCard({ service }: { service: ServiceItem }) {
-  const ref = useRef<HTMLAnchorElement>(null);
-  const { x, y } = useCursorTag(ref);
-  const [hover, setHover] = useState(false);
-
-  return (
-    <TiltCard intensity={6}>
-      <Link
-        ref={ref}
-        to={service.href}
-        onMouseEnter={() => setHover(true)}
-        onMouseLeave={() => setHover(false)}
-        className={`group relative block overflow-hidden bg-muted ${
-          service.aspect === "tall" ? "aspect-[4/5]" : "aspect-[4/3]"
-        }`}
-      >
-        <motion.img
-          src={service.image}
-          alt={service.title}
-          loading="lazy"
-          className="h-full w-full object-cover"
-          whileHover={{ scale: 1.06 }}
-          transition={{ duration: 1.4, ease: EASE_OUT_EXPO }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-80 transition-opacity duration-500 group-hover:opacity-95" />
-
-        {/* Cursor tag */}
-        <motion.div
-          style={{ x, y }}
-          animate={{ opacity: hover ? 1 : 0, scale: hover ? 1 : 0.6 }}
-          transition={{ duration: 0.35, ease: EASE_SMOOTH }}
-          className="pointer-events-none absolute left-0 top-0 -translate-x-1/2 -translate-y-1/2"
-        >
-          <span className="grid h-24 w-24 place-items-center rounded-full bg-gold font-display text-sm uppercase tracking-[0.24em] text-charcoal">
-            View
-          </span>
-        </motion.div>
-
-        <div className="absolute inset-x-0 bottom-0 p-6 md:p-8">
-          <div className="eyebrow text-white/60 mb-1">{service.num}</div>
-          <div className="overflow-hidden">
-            <motion.h3
-              className="font-display text-3xl text-white md:text-4xl"
-              whileHover={{ y: -4 }}
-            >
-              {service.title}
-            </motion.h3>
-          </div>
-          <p className="mt-3 max-w-sm text-sm text-white/70">{service.description}</p>
-          <motion.span
-            className="mt-4 block h-px bg-gold"
-            initial={{ width: 32 }}
-            whileHover={{ width: 96 }}
-          />
-        </div>
-      </Link>
-    </TiltCard>
   );
 }
