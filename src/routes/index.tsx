@@ -299,11 +299,11 @@ function Hero({
           >
             <Magnetic>
               <Link
-                to="/gallery"
+                to="/portfolio"
                 className="group relative inline-flex items-center gap-3 overflow-hidden bg-white px-7 py-4 text-[11px] uppercase tracking-[0.28em] text-charcoal"
               >
                 <span className="absolute inset-0 origin-left scale-x-0 bg-gold transition-transform duration-500 ease-out group-hover:scale-x-100" />
-                <span className="relative">Explore Gallery</span>
+                <span className="relative">Explore Portfolio</span>
                 <motion.span
                   className="relative"
                   whileHover={{ x: 4 }}
@@ -422,8 +422,8 @@ function About({
             <Reveal3D delay={0.1} rotateY={-8}>
               <div className="mb-6 flex items-center gap-3">
                 <span className="gold-rule" />
-                <span className="eyebrow">
-                  <TextScramble text="The Studio" />
+                <span className="eyebrow text-[#cb2026] font-semibold tracking-[0.25em]">
+                  <TextScramble text="SINCE 1981 · BANGALORE, INDIA" />
                 </span>
               </div>
             </Reveal3D>
@@ -446,13 +446,13 @@ function About({
                 height={1600}
                 className="h-[115%] w-full object-cover"
               />
-              {/* Gold accent border that grows in */}
+              {/* Red accent border that grows in */}
               <motion.div
                 initial={{ scaleY: 0 }}
                 animate={imgInView ? { scaleY: 1 } : {}}
                 transition={{ duration: 1, ease: EASE_SMOOTH, delay: 0.8 }}
                 style={{ transformOrigin: "top" }}
-                className="absolute right-0 top-0 h-full w-1 bg-gold/60"
+                className="absolute right-0 top-0 h-full w-1 bg-[#cb2026]"
               />
             </div>
           </div>
@@ -460,32 +460,56 @@ function About({
 
         <div className="md:col-span-7 md:pl-8">
           <SplitHeading
-            text={config.about_heading || "Four decades. One quiet obsession — space that lasts."}
+            text="Crafted with Purpose. Built to Endure."
             className="text-4xl md:text-6xl"
           />
           <Reveal3D delay={0.2} rotateX={8}>
-            <div className="mt-10 max-w-xl text-lg leading-relaxed text-foreground/75 space-y-4">
+            <div className="mt-10 max-w-xl text-lg leading-relaxed text-foreground/75 space-y-6">
               <p>
-                {config.about_desc_1 ||
-                  "Studio Young Designs began in 1981 as a small atelier in Bangalore, drawing on the region's tradition of fine joinery. Today, we design and build complete interiors — from the residence's first sketch to the last brass detail — for families who value restraint, honest materials and craftsmanship that ages beautifully."}
+                For more than 45 years, Studio Young Designs has been shaping extraordinary homes
+                through timeless design, precision engineering, and master craftsmanship. Every detail is
+                thoughtfully considered, every material carefully selected, and every project executed
+                with uncompromising standards.
               </p>
-              {config.about_desc_2 && <p>{config.about_desc_2}</p>}
+              <p>
+                Our integrated design, manufacturing, and execution model allows us to deliver
+                bespoke interiors with exceptional quality and complete accountability. From luxury
+                kitchens and custom wardrobes to handcrafted furniture and complete home interiors, we
+                create spaces that embody elegance, functionality, and enduring value.
+              </p>
+              <p className="font-display italic text-xl text-stone-600 pt-2 border-t border-border/40">
+                &ldquo;Luxury is not what we add. It is how we build.&rdquo;
+              </p>
+
+              {/* Key Heritage Highlights Bar */}
+              <div className="grid grid-cols-3 gap-6 pt-6 border-t border-border/40">
+                <div>
+                  <span className="font-display text-2xl font-light text-gold md:text-3xl lg:text-4xl">
+                    45+
+                  </span>
+                  <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.18em] text-stone-500 md:text-[11px]">
+                    Years of Craftsmanship
+                  </p>
+                </div>
+                <div>
+                  <span className="font-display text-2xl font-light text-gold md:text-3xl lg:text-4xl">
+                    On-Time
+                  </span>
+                  <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.18em] text-stone-500 md:text-[11px]">
+                    Project Delivery
+                  </p>
+                </div>
+                <div>
+                  <span className="font-display text-2xl font-light text-gold md:text-3xl lg:text-4xl">
+                    In-House
+                  </span>
+                  <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.18em] text-stone-500 md:text-[11px]">
+                    Manufacturing Excellence
+                  </p>
+                </div>
+              </div>
             </div>
           </Reveal3D>
-
-          <div className="mt-12">
-            <Magnetic>
-              <Link
-                to="/about"
-                className="group inline-flex items-center gap-3 bg-charcoal text-cream px-7 py-4 text-xs font-semibold uppercase tracking-[0.24em] hover:bg-gold hover:text-charcoal transition-all duration-300"
-              >
-                <span>Discover Our Full Story</span>
-                <span className="transition-transform duration-300 group-hover:translate-x-1">
-                  →
-                </span>
-              </Link>
-            </Magnetic>
-          </div>
         </div>
       </div>
     </section>
@@ -745,7 +769,7 @@ function ServiceRow({
               to={item.href}
               className="inline-flex items-center gap-3 border-b border-cream/40 pb-2 text-[11px] uppercase tracking-[0.28em] text-cream transition-colors hover:border-gold hover:text-gold"
             >
-              Explore service <span>→</span>
+              Explore <span>→</span>
             </Link>
           </motion.div>
         </Reveal3D>
@@ -810,25 +834,25 @@ function Portfolio({ config = {} }: { config?: Record<string, string> }) {
   return (
     <section id="portfolio" className="relative bg-background py-32 md:py-40">
       <div className="mx-auto max-w-[1400px] px-6 md:px-10">
-        <div className="mb-20 flex flex-wrap items-end justify-between gap-8">
-          <div>
+        <div className="mb-20 grid grid-cols-1 items-end gap-8 md:grid-cols-12">
+          <div className="md:col-span-7">
             <Reveal3D rotateX={10}>
               <div className="mb-6 flex items-center gap-3">
                 <span className="gold-rule" />
                 <span className="eyebrow">
-                  <TextScramble text="Selected Work" />
+                  <TextScramble text="SELECTED WORK" />
                 </span>
               </div>
             </Reveal3D>
             <SplitHeading
-              text="A quiet portfolio of considered homes."
+              text="A Portfolio Built on Craftsmanship"
               className="text-4xl md:text-6xl"
             />
           </div>
-          <Reveal3D className="max-w-sm" rotateX={6}>
-            <p className="text-sm leading-relaxed text-foreground/65">
-              A small selection from seven hundred completed projects — chosen to show how our
-              language of material and light adapts to each family.
+          <Reveal3D delay={0.2} rotateX={6} className="md:col-span-5 md:col-start-8">
+            <p className="text-base leading-relaxed text-foreground/75 font-sans">
+              Every project reflects our commitment to timeless design, meticulous detailing and
+              uncompromising execution. Here is a curated selection of homes crafted over 45 years.
             </p>
           </Reveal3D>
         </div>
@@ -870,7 +894,7 @@ function PortfolioCard({
     <TiltCard intensity={6}>
       <Link
         ref={ref}
-        to="/gallery"
+        to="/portfolio"
         onMouseEnter={() => setHover(true)}
         onMouseLeave={() => setHover(false)}
         className={`group relative block overflow-hidden bg-muted ${getAspectClass(piece.span)}`}
@@ -930,7 +954,15 @@ function PortfolioCard({
    STUDIO VIDEO SHOWCASE — 16:9 Cinema Frame with Gold Accents
    ═══════════════════════════════════════════════════════════════ */
 
-function VideoShowcase({ config = {} }: { config?: Record<string, string> }) {
+export function VideoShowcase({
+  config = {},
+  eyebrow = "Film & Crafts",
+  className = "py-32 md:py-40",
+}: {
+  config?: Record<string, string>;
+  eyebrow?: string;
+  className?: string;
+}) {
   const [isPlaying, setIsPlaying] = useState(false);
   const rawUrl = config.youtube_video_url || "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
 
@@ -955,7 +987,7 @@ function VideoShowcase({ config = {} }: { config?: Record<string, string> }) {
   const videoPoster = config.video_poster_url || p1;
 
   return (
-    <section className="relative bg-charcoal text-cream py-32 md:py-40 overflow-hidden">
+    <section className={`relative bg-charcoal text-cream overflow-hidden ${className}`}>
       {/* Background Ambient Glow */}
       <div className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-[500px] w-[500px] rounded-full bg-gold/10 blur-[120px]" />
 
@@ -966,7 +998,7 @@ function VideoShowcase({ config = {} }: { config?: Record<string, string> }) {
               <div className="mb-6 flex items-center gap-3">
                 <span className="gold-rule" />
                 <span className="eyebrow text-cream/60">
-                  <TextScramble text="Film & Crafts" className="eyebrow text-cream/60" />
+                  <TextScramble text={eyebrow} className="eyebrow text-cream/60" />
                 </span>
               </div>
             </Reveal3D>
@@ -1861,10 +1893,10 @@ function Contact({
                     ← Send Another Enquiry
                   </button>
                   <Link
-                    to="/gallery"
+                    to="/portfolio"
                     className="inline-flex items-center gap-2 bg-gold px-6 py-3.5 text-[11px] uppercase tracking-[0.24em] text-charcoal hover:bg-amber-400 transition-colors font-semibold cursor-pointer"
                   >
-                    Explore Gallery →
+                    Explore Portfolio →
                   </Link>
                 </div>
               </motion.div>

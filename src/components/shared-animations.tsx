@@ -392,7 +392,7 @@ const NAV_LINKS: Array<{ label: string; to: string; hash?: string }> = [
   { label: "Home", to: "/" },
   { label: "About Us", to: "/about" },
   { label: "Services", to: "/services" },
-  { label: "Gallery", to: "/gallery" },
+  { label: "Portfolio", to: "/portfolio" },
   { label: "Journal", to: "/journal" },
   { label: "Contact Us", to: "/", hash: "contact" },
 ];
@@ -632,7 +632,8 @@ export function Footer() {
 
             {/* Description */}
             <p className="font-display text-2xl text-cream/90 max-w-md italic leading-relaxed">
-              Studio Young Designs is a Furniture and Interior Design Firm with a strong legacy.
+              Studio Young Designs <br />
+              Is Crafting Bespoke Interiors Since 1981.
             </p>
 
             {/* Social Links with magnetic and staggered animation */}

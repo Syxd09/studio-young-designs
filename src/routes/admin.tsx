@@ -294,7 +294,7 @@ function AdminLayoutComponent() {
       items: [
         { label: "About Page", icon: BookOpen, to: "/admin/about" },
         { label: "Services Page", icon: Briefcase, to: "/admin/services" },
-        { label: "Gallery Portfolio", icon: ImageIcon, to: "/admin/gallery" },
+        { label: "Portfolio Manager", icon: ImageIcon, to: "/admin/portfolio" },
         { label: "Journal Articles", icon: PenTool, to: "/admin/journal" },
         { label: "Testimonials", icon: Users, to: "/admin/testimonials" },
         { label: "Why Choose Us", icon: Award, to: "/admin/why" },

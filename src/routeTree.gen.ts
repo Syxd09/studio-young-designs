@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as ServicesRouteImport } from './routes/services'
+import { Route as PortfolioRouteImport } from './routes/portfolio'
 import { Route as JournalRouteImport } from './routes/journal'
 import { Route as GalleryRouteImport } from './routes/gallery'
 import { Route as AdminRouteImport } from './routes/admin'
@@ -25,6 +26,7 @@ import { Route as ServicesSlugRouteImport } from './routes/services/$slug'
 import { Route as AdminWhyRouteImport } from './routes/admin/why'
 import { Route as AdminTestimonialsRouteImport } from './routes/admin/testimonials'
 import { Route as AdminServicesRouteImport } from './routes/admin/services'
+import { Route as AdminPortfolioRouteImport } from './routes/admin/portfolio'
 import { Route as AdminJournalRouteImport } from './routes/admin/journal'
 import { Route as AdminHealthRouteImport } from './routes/admin/health'
 import { Route as AdminGalleryRouteImport } from './routes/admin/gallery'
@@ -35,6 +37,11 @@ import { Route as AdminAboutRouteImport } from './routes/admin/about'
 const ServicesRoute = ServicesRouteImport.update({
   id: '/services',
   path: '/services',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PortfolioRoute = PortfolioRouteImport.update({
+  id: '/portfolio',
+  path: '/portfolio',
   getParentRoute: () => rootRouteImport,
 } as any)
 const JournalRoute = JournalRouteImport.update({
@@ -112,6 +119,11 @@ const AdminServicesRoute = AdminServicesRouteImport.update({
   path: '/services',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminPortfolioRoute = AdminPortfolioRouteImport.update({
+  id: '/portfolio',
+  path: '/portfolio',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminJournalRoute = AdminJournalRouteImport.update({
   id: '/journal',
   path: '/journal',
@@ -149,6 +161,7 @@ export interface FileRoutesByFullPath {
   '/admin': typeof AdminRouteWithChildren
   '/gallery': typeof GalleryRoute
   '/journal': typeof JournalRoute
+  '/portfolio': typeof PortfolioRoute
   '/services': typeof ServicesRouteWithChildren
   '/admin/about': typeof AdminAboutRoute
   '/admin/config': typeof AdminConfigRoute
@@ -156,6 +169,7 @@ export interface FileRoutesByFullPath {
   '/admin/gallery': typeof AdminGalleryRoute
   '/admin/health': typeof AdminHealthRoute
   '/admin/journal': typeof AdminJournalRoute
+  '/admin/portfolio': typeof AdminPortfolioRoute
   '/admin/services': typeof AdminServicesRoute
   '/admin/testimonials': typeof AdminTestimonialsRoute
   '/admin/why': typeof AdminWhyRoute
@@ -172,12 +186,14 @@ export interface FileRoutesByTo {
   '/about': typeof AboutRoute
   '/gallery': typeof GalleryRoute
   '/journal': typeof JournalRoute
+  '/portfolio': typeof PortfolioRoute
   '/admin/about': typeof AdminAboutRoute
   '/admin/config': typeof AdminConfigRoute
   '/admin/enquiries': typeof AdminEnquiriesRoute
   '/admin/gallery': typeof AdminGalleryRoute
   '/admin/health': typeof AdminHealthRoute
   '/admin/journal': typeof AdminJournalRoute
+  '/admin/portfolio': typeof AdminPortfolioRoute
   '/admin/services': typeof AdminServicesRoute
   '/admin/testimonials': typeof AdminTestimonialsRoute
   '/admin/why': typeof AdminWhyRoute
@@ -196,6 +212,7 @@ export interface FileRoutesById {
   '/admin': typeof AdminRouteWithChildren
   '/gallery': typeof GalleryRoute
   '/journal': typeof JournalRoute
+  '/portfolio': typeof PortfolioRoute
   '/services': typeof ServicesRouteWithChildren
   '/admin/about': typeof AdminAboutRoute
   '/admin/config': typeof AdminConfigRoute
@@ -203,6 +220,7 @@ export interface FileRoutesById {
   '/admin/gallery': typeof AdminGalleryRoute
   '/admin/health': typeof AdminHealthRoute
   '/admin/journal': typeof AdminJournalRoute
+  '/admin/portfolio': typeof AdminPortfolioRoute
   '/admin/services': typeof AdminServicesRoute
   '/admin/testimonials': typeof AdminTestimonialsRoute
   '/admin/why': typeof AdminWhyRoute
@@ -222,6 +240,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/gallery'
     | '/journal'
+    | '/portfolio'
     | '/services'
     | '/admin/about'
     | '/admin/config'
@@ -229,6 +248,7 @@ export interface FileRouteTypes {
     | '/admin/gallery'
     | '/admin/health'
     | '/admin/journal'
+    | '/admin/portfolio'
     | '/admin/services'
     | '/admin/testimonials'
     | '/admin/why'
@@ -245,12 +265,14 @@ export interface FileRouteTypes {
     | '/about'
     | '/gallery'
     | '/journal'
+    | '/portfolio'
     | '/admin/about'
     | '/admin/config'
     | '/admin/enquiries'
     | '/admin/gallery'
     | '/admin/health'
     | '/admin/journal'
+    | '/admin/portfolio'
     | '/admin/services'
     | '/admin/testimonials'
     | '/admin/why'
@@ -268,6 +290,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/gallery'
     | '/journal'
+    | '/portfolio'
     | '/services'
     | '/admin/about'
     | '/admin/config'
@@ -275,6 +298,7 @@ export interface FileRouteTypes {
     | '/admin/gallery'
     | '/admin/health'
     | '/admin/journal'
+    | '/admin/portfolio'
     | '/admin/services'
     | '/admin/testimonials'
     | '/admin/why'
@@ -293,6 +317,7 @@ export interface RootRouteChildren {
   AdminRoute: typeof AdminRouteWithChildren
   GalleryRoute: typeof GalleryRoute
   JournalRoute: typeof JournalRoute
+  PortfolioRoute: typeof PortfolioRoute
   ServicesRoute: typeof ServicesRouteWithChildren
 }
 
@@ -303,6 +328,13 @@ declare module '@tanstack/react-router' {
       path: '/services'
       fullPath: '/services'
       preLoaderRoute: typeof ServicesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/portfolio': {
+      id: '/portfolio'
+      path: '/portfolio'
+      fullPath: '/portfolio'
+      preLoaderRoute: typeof PortfolioRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/journal': {
@@ -410,6 +442,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminServicesRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/portfolio': {
+      id: '/admin/portfolio'
+      path: '/portfolio'
+      fullPath: '/admin/portfolio'
+      preLoaderRoute: typeof AdminPortfolioRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/journal': {
       id: '/admin/journal'
       path: '/journal'
@@ -462,6 +501,7 @@ interface AdminRouteChildren {
   AdminGalleryRoute: typeof AdminGalleryRoute
   AdminHealthRoute: typeof AdminHealthRoute
   AdminJournalRoute: typeof AdminJournalRoute
+  AdminPortfolioRoute: typeof AdminPortfolioRoute
   AdminServicesRoute: typeof AdminServicesRoute
   AdminTestimonialsRoute: typeof AdminTestimonialsRoute
   AdminWhyRoute: typeof AdminWhyRoute
@@ -475,6 +515,7 @@ const AdminRouteChildren: AdminRouteChildren = {
   AdminGalleryRoute: AdminGalleryRoute,
   AdminHealthRoute: AdminHealthRoute,
   AdminJournalRoute: AdminJournalRoute,
+  AdminPortfolioRoute: AdminPortfolioRoute,
   AdminServicesRoute: AdminServicesRoute,
   AdminTestimonialsRoute: AdminTestimonialsRoute,
   AdminWhyRoute: AdminWhyRoute,
@@ -511,6 +552,7 @@ const rootRouteChildren: RootRouteChildren = {
   AdminRoute: AdminRouteWithChildren,
   GalleryRoute: GalleryRoute,
   JournalRoute: JournalRoute,
+  PortfolioRoute: PortfolioRoute,
   ServicesRoute: ServicesRouteWithChildren,
 }
 export const routeTree = rootRouteImport

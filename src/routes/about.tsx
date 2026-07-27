@@ -28,6 +28,7 @@ import svcKitchen from "@/assets/service-kitchen.jpg";
 import svcWardrobe from "@/assets/service-wardrobe.jpg";
 import svcLiving from "@/assets/service-living.jpg";
 import svcComplete from "@/assets/service-complete.jpg";
+import { VideoShowcase } from "./index";
 
 export const Route = createFileRoute("/about")({
   head: () => ({
@@ -249,30 +250,28 @@ function AboutPage() {
           <div className="md:col-span-7 md:pl-6 space-y-8">
             <Reveal3D rotateX={6}>
               <span className="text-xs uppercase tracking-[0.28em] text-[#cb2026] font-bold">
-                Since 1981 · Bangalore, India
+                The Atelier Story · Established 1981
               </span>
             </Reveal3D>
 
             <SplitHeading
-              text={config.about_heading || "Four decades. One quiet obsession — space that lasts."}
+              text="Four Decades of Mastery. An Unwavering Obsession with Space."
               className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-charcoal font-display leading-[1.1]"
             />
 
             <Reveal3D delay={0.2} rotateX={8}>
               <div className="space-y-6 text-base md:text-lg leading-relaxed text-foreground/80 font-sans">
                 <p>
-                  {config.about_desc_1 ||
-                    "Studio Young Designs was founded in 1981 in Bangalore with a single conviction: that every home deserves an interior conceived and built to endure — in structure, in beauty, in daily use."}
+                  Studio Young Designs was established in Bangalore with a singular conviction: to bridge architectural restraint with the quiet soul of handcrafted wood joinery. What began as an intimate atelier has evolved into South India&apos;s premier integrated interior design studio.
                 </p>
                 <p>
-                  {config.about_desc_2 ||
-                    "Four decades later, that founding principle remains. We design modular kitchens, custom wardrobes, living spaces and complete interiors — each one drawn, refined and handcrafted in our own atelier."}
+                  We believe true luxury isn&apos;t born from excessive ornamentation, but from harmony — how natural morning light falls across quarter-sawn walnut, how a custom wardrobe glides without sound, and how an entire residence reflects the daily rhythm of the family within.
                 </p>
-                <p className="text-stone-600 dark:text-stone-400 italic font-display text-xl pt-2">
-                  "
-                  {config.about_quote ||
-                    "We remain a small studio by choice. It lets us stay close to the drawing, to the wood, to the client — and to the uncompromising standards we set ourselves in 1981."}
-                  "
+                <p>
+                  Every project is conceived and brought to life under one roof. Our architects, interior designers, master carpenters, and site engineers collaborate seamlessly, eliminating third-party friction and bringing uncompromising precision to every detail.
+                </p>
+                <p className="text-stone-600 dark:text-stone-400 italic font-display text-xl pt-2 border-t border-border/40">
+                  &ldquo;We remain an intimate studio by choice. Staying close to the drawing, the raw material, and the family who will live there ensures every home we touch ages gracefully for generations.&rdquo;
                 </p>
               </div>
             </Reveal3D>
@@ -441,8 +440,22 @@ function AboutPage() {
         </div>
       </section>
 
+      {/* Atelier Studio Video Showcase Section */}
+      <VideoShowcase
+        config={{
+          youtube_video_url: config.about_video_url || config.youtube_video_url,
+          video_title: config.about_video_title || "Inside Our Atelier",
+          video_subtitle:
+            config.about_video_subtitle ||
+            "Step inside our Bangalore manufacturing facility and experience the precision of master craftspeople working with solid timber, natural stone, and fine brass details.",
+          video_poster_url: config.about_video_poster_url || layoutImages.about_img || aboutImg,
+        }}
+        eyebrow="Atelier In Motion"
+        className="pt-24 pb-8 md:pt-32 md:pb-12"
+      />
+
       {/* Call To Action Banner */}
-      <section className="relative bg-charcoal py-24 text-cream overflow-hidden">
+      <section className="relative bg-charcoal pt-8 pb-24 text-cream overflow-hidden border-t border-cream/10">
         <div className="mx-auto max-w-[1200px] px-6 text-center md:px-10 relative z-10 space-y-8">
           <Reveal3D rotateX={10}>
             <span className="eyebrow text-gold">Visit Our Atelier</span>
@@ -456,7 +469,7 @@ function AboutPage() {
             kitchen setups, wardrobe systems, and timber samples with our principal design team.
           </p>
 
-          <div className="pt-4 flex flex-wrap justify-center gap-4">
+          <div className="pt-4 flex justify-center">
             <Magnetic>
               <Link
                 to="/"
@@ -465,14 +478,6 @@ function AboutPage() {
               >
                 <span>Book Experience Visit</span>
                 <span>→</span>
-              </Link>
-            </Magnetic>
-            <Magnetic>
-              <Link
-                to="/gallery"
-                className="group relative inline-flex items-center gap-3 overflow-hidden border border-cream/40 px-8 py-4 text-xs font-semibold uppercase tracking-[0.24em] text-cream hover:border-gold hover:text-gold transition-colors"
-              >
-                <span>Explore Portfolio</span>
               </Link>
             </Magnetic>
           </div>

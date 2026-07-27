@@ -18,6 +18,7 @@ import {
   Type,
   FileText,
   Users,
+  Video,
 } from "lucide-react";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
@@ -104,7 +105,7 @@ function AdminAboutComponent() {
   ]);
 
   const [activeTab, setActiveTab] = useState<
-    "story" | "founders" | "marquee" | "ethos" | "milestones"
+    "story" | "video" | "founders" | "marquee" | "ethos" | "milestones"
   >("story");
   const [newMarqueeInput, setNewMarqueeInput] = useState("");
 
@@ -367,11 +368,12 @@ function AdminAboutComponent() {
   }
 
   const sections: Array<{
-    id: "story" | "founders" | "marquee" | "ethos" | "milestones";
+    id: "story" | "video" | "founders" | "marquee" | "ethos" | "milestones";
     label: string;
     icon: any;
   }> = [
     { id: "story", label: "Story & Copy", icon: FileText },
+    { id: "video", label: "Atelier Video Showcase", icon: Video },
     { id: "founders", label: "Founders & Leadership", icon: Users },
     { id: "marquee", label: "Marquee Ticker", icon: Sparkles },
     { id: "ethos", label: "Our Ethos (Pillars)", icon: Layers },
@@ -518,6 +520,82 @@ function AdminAboutComponent() {
                     placeholder="We remain a small studio by choice..."
                     className="w-full bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded p-3 text-stone-900 dark:text-white focus:border-[#cb2026] outline-none text-xs leading-relaxed italic"
                   />
+                </div>
+              </motion.div>
+            )}
+
+            {/* ATELIER VIDEO SHOWCASE */}
+            {activeTab === "video" && (
+              <motion.div
+                key="video"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 10 }}
+                transition={{ duration: 0.3 }}
+                className="space-y-6 max-w-3xl"
+              >
+                <div>
+                  <span className="text-[10px] uppercase tracking-widest text-[#cb2026] font-bold">
+                    About Page Atelier Video Showcase
+                  </span>
+                  <p className="text-[10px] text-stone-400 dark:text-stone-500 mt-1">
+                    Manage the featured video showcase section displayed right after &quot;Our Ethos&quot; on the About Us page.
+                  </p>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-[10px] uppercase tracking-widest text-[#cb2026] font-bold">
+                    YouTube Video Link / URL
+                  </label>
+                  <input
+                    type="text"
+                    value={config.about_video_url || ""}
+                    onChange={(e) => handleConfigChange("about_video_url", e.target.value)}
+                    placeholder="e.g. https://www.youtube.com/watch?v=dQw4w9WgXcQ or https://youtu.be/..."
+                    className="w-full bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded p-3 text-stone-900 dark:text-white focus:border-[#cb2026] outline-none text-sm font-semibold"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-[10px] uppercase tracking-widest text-[#cb2026] font-bold">
+                    Video Section Title
+                  </label>
+                  <input
+                    type="text"
+                    value={config.about_video_title || ""}
+                    onChange={(e) => handleConfigChange("about_video_title", e.target.value)}
+                    placeholder="e.g. Inside Our Atelier"
+                    className="w-full bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded p-3 text-stone-900 dark:text-white focus:border-[#cb2026] outline-none text-sm font-semibold"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-[10px] uppercase tracking-widest text-[#cb2026] font-bold">
+                    Video Subtitle / Description
+                  </label>
+                  <textarea
+                    rows={3}
+                    value={config.about_video_subtitle || ""}
+                    onChange={(e) => handleConfigChange("about_video_subtitle", e.target.value)}
+                    placeholder="e.g. Step inside our Bangalore manufacturing facility..."
+                    className="w-full bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded p-3 text-stone-900 dark:text-white focus:border-[#cb2026] outline-none text-xs leading-relaxed"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-[10px] uppercase tracking-widest text-[#cb2026] font-bold">
+                    Video Cover / Thumbnail Image URL
+                  </label>
+                  <input
+                    type="text"
+                    value={config.about_video_poster_url || ""}
+                    onChange={(e) => handleConfigChange("about_video_poster_url", e.target.value)}
+                    placeholder="https://images.unsplash.com/... or custom thumbnail image URL"
+                    className="w-full bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded p-3 text-stone-900 dark:text-white focus:border-[#cb2026] outline-none text-sm font-semibold"
+                  />
+                  <p className="text-[10px] text-stone-400 dark:text-stone-550 italic">
+                    The background preview image shown before clicking Play on the About page video.
+                  </p>
                 </div>
               </motion.div>
             )}

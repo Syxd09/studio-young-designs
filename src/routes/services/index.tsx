@@ -152,7 +152,7 @@ function ServicesPage() {
     <PageWrapper>
       <PageHero
         image={layoutImages.hero_bg || heroImg}
-        title="Our Services"
+        title={siteConfig.services_title || "From Concept to Completion. Seamlessly Managed."}
         subtitle={
           siteConfig.services_subtitle ||
           "Thoughtfully designed. Expertly crafted. Flawlessly executed."

@@ -250,7 +250,7 @@ function DashboardComponent() {
         </div>
         <div className="flex flex-wrap gap-2.5">
           <Link
-            to="/admin/gallery"
+            to="/admin/portfolio"
             className="flex items-center gap-1.5 text-[10px] uppercase tracking-widest text-stone-900 dark:text-white bg-stone-100 dark:bg-stone-850 hover:bg-stone-200 dark:hover:bg-stone-800 px-3.5 py-2 rounded-lg transition-all font-bold"
           >
             <ImageIcon size={12} className="text-[#cb2026]" />
