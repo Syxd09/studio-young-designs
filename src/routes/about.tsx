@@ -453,36 +453,6 @@ function AboutPage() {
         eyebrow="Atelier In Motion"
         className="pt-24 pb-8 md:pt-32 md:pb-12"
       />
-
-      {/* Call To Action Banner */}
-      <section className="relative bg-charcoal pt-8 pb-24 text-cream overflow-hidden border-t border-cream/10">
-        <div className="mx-auto max-w-[1200px] px-6 text-center md:px-10 relative z-10 space-y-8">
-          <Reveal3D rotateX={10}>
-            <span className="eyebrow text-gold">Visit Our Atelier</span>
-          </Reveal3D>
-          <SplitHeading
-            text="Experience the warmth of walnut, stone and brass in person."
-            className="text-3xl sm:text-4xl md:text-5xl justify-center text-cream font-display max-w-3xl mx-auto"
-          />
-          <p className="text-base md:text-lg text-cream/70 max-w-xl mx-auto font-sans">
-            Visit our Bangalore Experience Store at Richmond Road. Walk through fully realized
-            kitchen setups, wardrobe systems, and timber samples with our principal design team.
-          </p>
-
-          <div className="pt-4 flex justify-center">
-            <Magnetic>
-              <Link
-                to="/"
-                hash="contact"
-                className="group relative inline-flex items-center gap-3 overflow-hidden bg-gold px-8 py-4 text-xs font-semibold uppercase tracking-[0.24em] text-charcoal hover:bg-white transition-colors"
-              >
-                <span>Book Experience Visit</span>
-                <span>→</span>
-              </Link>
-            </Magnetic>
-          </div>
-        </div>
-      </section>
     </PageWrapper>
   );
 }

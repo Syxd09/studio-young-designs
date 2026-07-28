@@ -1835,9 +1835,16 @@ function Contact({
                 </div>
               </div>
               <div>
-                <div className="eyebrow text-cream/50">Hours</div>
-                <div className="mt-2 text-base space-y-1">
-                  <div>{config.contact_hours || "Mon–Sat · 10:30 AM – 8:00 PM"}</div>
+                <div className="eyebrow text-cream/50">Atelier Hours</div>
+                <div className="mt-2 text-xs sm:text-sm text-cream/80 space-y-1 font-sans">
+                  <div className="flex items-center gap-2">
+                    <span className="text-cream/60">Mon – Sat:</span>
+                    <span className="font-semibold text-cream">10:30 AM – 8:00 PM</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-cream/60">Sunday:</span>
+                    <span className="font-semibold text-cream">11:00 AM – 6:00 PM</span>
+                  </div>
                 </div>
               </div>
             </div>
