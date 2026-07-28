@@ -57,23 +57,44 @@ export function ServicePageLayout({ data }: { data: ServicePageData }) {
       if (error) throw error;
       return res;
     },
-    staleTime: 60 * 1000,
+    staleTime: 0,
   });
 
-  const { data: dbGallery = [] } = useQuery<any[]>({
-    queryKey: ["service_gallery", data.slug],
+  const { data: allGallery = [] } = useQuery<any[]>({
+    queryKey: ["service_gallery_all"],
     queryFn: async () => {
       const { data: res, error } = await supabase
         .from("gallery")
         .select("*")
-        .eq("category", data.slug)
         .eq("is_visible", true)
         .order("display_order", { ascending: true });
       if (error) throw error;
       return res || [];
     },
-    staleTime: 60 * 1000,
+    staleTime: 0,
   });
+
+  const matchesCategory = (itemCategory?: string, targetFilter?: string) => {
+    if (!targetFilter) return true;
+    if (!itemCategory) return false;
+    const c1 = itemCategory.toLowerCase().trim();
+    const c2 = targetFilter.toLowerCase().trim();
+    if (c1 === c2) return true;
+    if ((c1 === "living" || c1 === "living-spaces") && (c2 === "living" || c2 === "living-spaces"))
+      return true;
+    if ((c1 === "kitchens" || c1 === "kitchen") && (c2 === "kitchens" || c2 === "kitchen"))
+      return true;
+    if ((c1 === "wardrobes" || c1 === "wardrobe") && (c2 === "wardrobes" || c2 === "wardrobe"))
+      return true;
+    if (
+      (c1 === "interiors" || c1 === "turnkey-interiors") &&
+      (c2 === "interiors" || c2 === "turnkey-interiors")
+    )
+      return true;
+    return false;
+  };
+
+  const dbGallery = allGallery.filter((g: any) => matchesCategory(g.category, data.slug));
 
   const { data: siteConfig = {} } = useQuery<Record<string, string>>({
     queryKey: ["site_config"],
@@ -82,7 +103,7 @@ export function ServicePageLayout({ data }: { data: ServicePageData }) {
       if (error) throw error;
       return (res || []).reduce((acc, curr) => ({ ...acc, [curr.key]: curr.value }), {});
     },
-    staleTime: 60 * 1000,
+    staleTime: 0,
   });
 
   const mergedData: ServicePageData = {
@@ -101,12 +122,19 @@ export function ServicePageLayout({ data }: { data: ServicePageData }) {
         : data.features,
     gallery:
       dbGallery.length > 0
-        ? dbGallery.map((g: any) => ({
-            src: g.image_url,
-            alt: g.title || "Gallery Image",
-            title: g.title || g.subtitle || "",
-            span: g.span === "wide" || g.span === "tall" ? g.span : "normal",
-          }))
+        ? Array.from(
+            new Map(
+              dbGallery.map((g: any) => [
+                g.image_url,
+                {
+                  src: g.image_url,
+                  alt: g.title || "Gallery Image",
+                  title: g.title || g.subtitle || "",
+                  span: g.span === "wide" || g.span === "tall" ? g.span : "normal",
+                },
+              ]),
+            ).values(),
+          )
         : data.gallery,
     marqueeItems:
       dbService?.benefits && dbService.benefits.length > 0 ? dbService.benefits : data.marqueeItems,

@@ -482,29 +482,41 @@ function About({
               </p>
 
               {/* Key Heritage Highlights Bar */}
-              <div className="grid grid-cols-3 gap-6 pt-6 border-t border-border/40">
-                <div>
-                  <span className="font-display text-2xl font-light text-gold md:text-3xl lg:text-4xl">
-                    45+
-                  </span>
-                  <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.18em] text-stone-500 md:text-[11px]">
-                    Years of Craftsmanship
+              <div className="grid grid-cols-3 pt-8 border-t border-border/40 w-full divide-x divide-stone-300/50">
+                <div className="flex flex-col pr-4 sm:pr-6">
+                  <div className="h-10 sm:h-12 flex items-end mb-1.5">
+                    <span className="font-display text-2xl sm:text-3xl lg:text-4xl font-normal text-[#cb2026] tracking-tight">
+                      45+
+                    </span>
+                  </div>
+                  <p className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.16em] text-stone-600 leading-snug">
+                    YEARS OF
+                    <br />
+                    CRAFTSMANSHIP
                   </p>
                 </div>
-                <div>
-                  <span className="font-display text-2xl font-light text-gold md:text-3xl lg:text-4xl">
-                    On-Time
-                  </span>
-                  <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.18em] text-stone-500 md:text-[11px]">
-                    Project Delivery
+                <div className="flex flex-col px-4 sm:px-6">
+                  <div className="h-10 sm:h-12 flex items-end mb-1.5">
+                    <span className="font-display text-2xl sm:text-3xl lg:text-4xl font-normal text-[#cb2026] tracking-tight whitespace-nowrap">
+                      On-Time
+                    </span>
+                  </div>
+                  <p className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.16em] text-stone-600 leading-snug">
+                    PROJECT
+                    <br />
+                    DELIVERY
                   </p>
                 </div>
-                <div>
-                  <span className="font-display text-2xl font-light text-gold md:text-3xl lg:text-4xl">
-                    In-House
-                  </span>
-                  <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.18em] text-stone-500 md:text-[11px]">
-                    Manufacturing Excellence
+                <div className="flex flex-col pl-4 sm:pl-6">
+                  <div className="h-10 sm:h-12 flex items-end mb-1.5">
+                    <span className="font-display text-2xl sm:text-3xl lg:text-4xl font-normal text-[#cb2026] tracking-tight whitespace-nowrap">
+                      In-House
+                    </span>
+                  </div>
+                  <p className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.16em] text-stone-600 leading-snug">
+                    MANUFACTURING
+                    <br />
+                    EXCELLENCE
                   </p>
                 </div>
               </div>

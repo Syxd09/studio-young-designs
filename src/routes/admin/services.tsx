@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { supabase } from "@/utils/supabase";
 import {
   Loader2,
@@ -40,6 +41,7 @@ interface FeatureItem {
 }
 
 function ServicesComponent() {
+  const queryClient = useQueryClient();
   const [services, setServices] = useState<ServiceItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedService, setSelectedService] = useState<ServiceItem | null>(null);
@@ -217,8 +219,13 @@ function ServicesComponent() {
         );
       }
 
+      await queryClient.invalidateQueries({ queryKey: ["services"] });
+      await queryClient.invalidateQueries({ queryKey: ["services_active"] });
+      await queryClient.invalidateQueries({ queryKey: ["service_detail"] });
+      await queryClient.invalidateQueries({ queryKey: ["site_config"] });
+
       toast.success("Service updated successfully");
-      fetchServices(selectedService.id);
+      await fetchServices(selectedService.id);
     } catch (err: any) {
       toast.error("Failed to save service: " + err.message);
     } finally {

@@ -354,9 +354,38 @@ function PortfolioAdminComponent() {
     );
   }
 
+  const matchesCategory = (itemCategory?: string, targetFilter?: string) => {
+    if (!targetFilter || targetFilter === "all") return true;
+    if (!itemCategory) return false;
+    const c1 = itemCategory.toLowerCase().trim();
+    const c2 = targetFilter.toLowerCase().trim();
+    if (c1 === c2) return true;
+    if (
+      (c1 === "living" || c1 === "living-spaces") &&
+      (c2 === "living" || c2 === "living-spaces")
+    )
+      return true;
+    if (
+      (c1 === "kitchens" || c1 === "kitchen") &&
+      (c2 === "kitchens" || c2 === "kitchen")
+    )
+      return true;
+    if (
+      (c1 === "wardrobes" || c1 === "wardrobe") &&
+      (c2 === "wardrobes" || c2 === "wardrobe")
+    )
+      return true;
+    if (
+      (c1 === "interiors" || c1 === "turnkey-interiors") &&
+      (c2 === "interiors" || c2 === "turnkey-interiors")
+    )
+      return true;
+    return false;
+  };
+
   const filteredItems = items.filter((item) => {
     if (activeFilter === "featured") return item.is_featured === true;
-    if (activeFilter !== "all") return item.category.toLowerCase() === activeFilter.toLowerCase();
+    if (activeFilter !== "all") return matchesCategory(item.category, activeFilter);
     return true;
   });
 
