@@ -636,23 +636,6 @@ export function Footer() {
               Is Crafting Bespoke Interiors Since 1981.
             </p>
 
-            {/* Atelier Operating Hours */}
-            <div className="space-y-1.5 text-xs text-cream/75 font-sans pt-2">
-              <span className="text-[10px] uppercase tracking-[0.24em] text-gold font-bold block mb-1">
-                Atelier Operating Hours
-              </span>
-              <div className="space-y-1 text-[11px] text-cream/80">
-                <div className="flex items-center gap-2">
-                  <span className="text-cream/60">Mon – Sat:</span>
-                  <span className="font-semibold text-cream">10:30 AM – 8:00 PM</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="text-cream/60">Sunday:</span>
-                  <span className="font-semibold text-cream">11:00 AM – 6:00 PM</span>
-                </div>
-              </div>
-            </div>
-
             {/* Social Links with magnetic and staggered animation */}
             <motion.div
               initial="hidden"
