@@ -413,6 +413,23 @@ export function Nav() {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  const handleNavClick = (link: (typeof NAV_LINKS)[0], e?: React.MouseEvent) => {
+    if (link.to === "/" && !link.hash) {
+      handleHomeClick();
+    } else if (link.hash === "contact") {
+      setMobileOpen(false);
+      if (window.location.pathname === "/") {
+        if (e) e.preventDefault();
+        const el = document.getElementById("contact");
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth" });
+        }
+      }
+    } else {
+      setMobileOpen(false);
+    }
+  };
+
   return (
     <header
       className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ${
@@ -439,7 +456,7 @@ export function Nav() {
               <Link
                 to={link.to}
                 hash={link.hash}
-                onClick={link.to === "/" && !link.hash ? handleHomeClick : undefined}
+                onClick={(e) => handleNavClick(link, e)}
                 className={`text-xs uppercase tracking-[0.24em] transition-colors duration-500 ${
                   scrolled
                     ? "text-foreground/70 hover:text-foreground"
@@ -510,9 +527,7 @@ export function Nav() {
                 <Link
                   to={link.to}
                   hash={link.hash}
-                  onClick={
-                    link.to === "/" && !link.hash ? handleHomeClick : () => setMobileOpen(false)
-                  }
+                  onClick={(e) => handleNavClick(link, e)}
                   className="font-display text-4xl"
                 >
                   {link.label}

@@ -1856,7 +1856,7 @@ function Contact({
   };
 
   return (
-    <section id="contact" className="relative bg-charcoal pt-32 pb-0 text-cream md:pt-40 md:pb-0">
+    <section id="contact" className="relative bg-charcoal pt-8 pb-0 text-cream md:pt-10 md:pb-0 scroll-mt-20">
       <div className="mx-auto grid max-w-[1400px] grid-cols-1 gap-16 px-6 md:grid-cols-12 md:px-10">
         <div className="md:col-span-5">
           <Reveal3D rotateX={10} rotateY={-6}>
