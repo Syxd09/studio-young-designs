@@ -242,7 +242,12 @@ function PortfolioPage() {
   return (
     <PageWrapper>
       <PageHero
-        image={layoutImages.hero_bg || heroImg}
+        image={
+          layoutImages.portfolio_hero_bg ||
+          layoutImages.portfolio_img ||
+          layoutImages.hero_bg ||
+          heroImg
+        }
         title="Our Portfolio"
         subtitle="Every project reflects our commitment to timeless design, meticulous detailing and uncompromising execution."
         breadcrumbs={[{ label: "Home", to: "/" }, { label: "Portfolio" }]}

@@ -292,6 +292,7 @@ function AdminLayoutComponent() {
     {
       title: "Content & Pages",
       items: [
+        { label: "Page Hero Banners", icon: ImageIcon, to: "/admin/banners" },
         { label: "About Page", icon: BookOpen, to: "/admin/about" },
         { label: "Services Page", icon: Briefcase, to: "/admin/services" },
         { label: "Portfolio Manager", icon: ImageIcon, to: "/admin/portfolio" },

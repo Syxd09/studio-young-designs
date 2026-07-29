@@ -32,6 +32,7 @@ import { Route as AdminHealthRouteImport } from './routes/admin/health'
 import { Route as AdminGalleryRouteImport } from './routes/admin/gallery'
 import { Route as AdminEnquiriesRouteImport } from './routes/admin/enquiries'
 import { Route as AdminConfigRouteImport } from './routes/admin/config'
+import { Route as AdminBannersRouteImport } from './routes/admin/banners'
 import { Route as AdminAboutRouteImport } from './routes/admin/about'
 
 const ServicesRoute = ServicesRouteImport.update({
@@ -149,6 +150,11 @@ const AdminConfigRoute = AdminConfigRouteImport.update({
   path: '/config',
   getParentRoute: () => AdminRoute,
 } as any)
+const AdminBannersRoute = AdminBannersRouteImport.update({
+  id: '/banners',
+  path: '/banners',
+  getParentRoute: () => AdminRoute,
+} as any)
 const AdminAboutRoute = AdminAboutRouteImport.update({
   id: '/about',
   path: '/about',
@@ -164,6 +170,7 @@ export interface FileRoutesByFullPath {
   '/portfolio': typeof PortfolioRoute
   '/services': typeof ServicesRouteWithChildren
   '/admin/about': typeof AdminAboutRoute
+  '/admin/banners': typeof AdminBannersRoute
   '/admin/config': typeof AdminConfigRoute
   '/admin/enquiries': typeof AdminEnquiriesRoute
   '/admin/gallery': typeof AdminGalleryRoute
@@ -188,6 +195,7 @@ export interface FileRoutesByTo {
   '/journal': typeof JournalRoute
   '/portfolio': typeof PortfolioRoute
   '/admin/about': typeof AdminAboutRoute
+  '/admin/banners': typeof AdminBannersRoute
   '/admin/config': typeof AdminConfigRoute
   '/admin/enquiries': typeof AdminEnquiriesRoute
   '/admin/gallery': typeof AdminGalleryRoute
@@ -215,6 +223,7 @@ export interface FileRoutesById {
   '/portfolio': typeof PortfolioRoute
   '/services': typeof ServicesRouteWithChildren
   '/admin/about': typeof AdminAboutRoute
+  '/admin/banners': typeof AdminBannersRoute
   '/admin/config': typeof AdminConfigRoute
   '/admin/enquiries': typeof AdminEnquiriesRoute
   '/admin/gallery': typeof AdminGalleryRoute
@@ -243,6 +252,7 @@ export interface FileRouteTypes {
     | '/portfolio'
     | '/services'
     | '/admin/about'
+    | '/admin/banners'
     | '/admin/config'
     | '/admin/enquiries'
     | '/admin/gallery'
@@ -267,6 +277,7 @@ export interface FileRouteTypes {
     | '/journal'
     | '/portfolio'
     | '/admin/about'
+    | '/admin/banners'
     | '/admin/config'
     | '/admin/enquiries'
     | '/admin/gallery'
@@ -293,6 +304,7 @@ export interface FileRouteTypes {
     | '/portfolio'
     | '/services'
     | '/admin/about'
+    | '/admin/banners'
     | '/admin/config'
     | '/admin/enquiries'
     | '/admin/gallery'
@@ -484,6 +496,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AdminConfigRouteImport
       parentRoute: typeof AdminRoute
     }
+    '/admin/banners': {
+      id: '/admin/banners'
+      path: '/banners'
+      fullPath: '/admin/banners'
+      preLoaderRoute: typeof AdminBannersRouteImport
+      parentRoute: typeof AdminRoute
+    }
     '/admin/about': {
       id: '/admin/about'
       path: '/about'
@@ -496,6 +515,7 @@ declare module '@tanstack/react-router' {
 
 interface AdminRouteChildren {
   AdminAboutRoute: typeof AdminAboutRoute
+  AdminBannersRoute: typeof AdminBannersRoute
   AdminConfigRoute: typeof AdminConfigRoute
   AdminEnquiriesRoute: typeof AdminEnquiriesRoute
   AdminGalleryRoute: typeof AdminGalleryRoute
@@ -510,6 +530,7 @@ interface AdminRouteChildren {
 
 const AdminRouteChildren: AdminRouteChildren = {
   AdminAboutRoute: AdminAboutRoute,
+  AdminBannersRoute: AdminBannersRoute,
   AdminConfigRoute: AdminConfigRoute,
   AdminEnquiriesRoute: AdminEnquiriesRoute,
   AdminGalleryRoute: AdminGalleryRoute,

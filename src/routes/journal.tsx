@@ -248,7 +248,12 @@ function JournalPage() {
   return (
     <PageWrapper>
       <PageHero
-        image={layoutImages.about_img || aboutImg}
+        image={
+          layoutImages.journal_hero_bg ||
+          layoutImages.journal_img ||
+          layoutImages.about_img ||
+          aboutImg
+        }
         title="Journal"
         subtitle="Insights on living gracefully. Musings on materials, space planning, and the art of design."
         breadcrumbs={[{ label: "Home", to: "/" }, { label: "Journal" }]}

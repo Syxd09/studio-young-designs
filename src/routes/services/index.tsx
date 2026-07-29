@@ -151,7 +151,12 @@ function ServicesPage() {
   return (
     <PageWrapper>
       <PageHero
-        image={layoutImages.hero_bg || heroImg}
+        image={
+          layoutImages.services_hero_bg ||
+          layoutImages.services_img ||
+          layoutImages.hero_bg ||
+          heroImg
+        }
         title={siteConfig.services_title || "From Concept to Completion. Seamlessly Managed."}
         subtitle={
           siteConfig.services_subtitle ||

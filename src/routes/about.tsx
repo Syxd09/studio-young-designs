@@ -191,7 +191,7 @@ function AboutPage() {
     <PageWrapper>
       {/* Hero Header */}
       <PageHero
-        image={layoutImages.about_img || aboutImg}
+        image={layoutImages.about_hero_bg || layoutImages.about_img || aboutImg}
         title="Our Legacy"
         subtitle={
           config.about_heading ||
