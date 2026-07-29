@@ -255,23 +255,23 @@ function AboutPage() {
             </Reveal3D>
 
             <SplitHeading
-              text="Four Decades of Mastery. An Unwavering Obsession with Space."
+              text={config.about_title || "Crafted with Purpose. Perfected Through Experience."}
               className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-charcoal font-display leading-[1.1]"
             />
 
             <Reveal3D delay={0.2} rotateX={8}>
               <div className="space-y-6 text-base md:text-lg leading-relaxed text-foreground/80 font-sans">
                 <p>
-                  Studio Young Designs was established in Bangalore with a singular conviction: to bridge architectural restraint with the quiet soul of handcrafted wood joinery. What began as an intimate atelier has evolved into South India&apos;s premier integrated interior design studio.
+                  {config.about_p1 ||
+                    "For over 45 years, Studio Young Designs has been creating bespoke interiors that combine timeless design, exceptional craftsmanship, and uncompromising quality. Since 1981, we have transformed residences into refined living spaces where every detail is thoughtfully designed, meticulously crafted, and built to stand the test of time."}
                 </p>
                 <p>
-                  We believe true luxury isn&apos;t born from excessive ornamentation, but from harmony — how natural morning light falls across quarter-sawn walnut, how a custom wardrobe glides without sound, and how an entire residence reflects the daily rhythm of the family within.
+                  {config.about_p2 ||
+                    "Our strength lies in complete in-house execution. From premium modular kitchens, custom wardrobes, and handcrafted furniture to full-home interiors, every project is managed by our own team of designers, master craftsmen, and installation specialists. This integrated approach ensures complete quality control, seamless coordination, and precision at every stage of the journey."}
                 </p>
                 <p>
-                  Every project is conceived and brought to life under one roof. Our architects, interior designers, master carpenters, and site engineers collaborate seamlessly, eliminating third-party friction and bringing uncompromising precision to every detail.
-                </p>
-                <p className="text-stone-600 dark:text-stone-400 italic font-display text-xl pt-2 border-t border-border/40">
-                  &ldquo;We remain an intimate studio by choice. Staying close to the drawing, the raw material, and the family who will live there ensures every home we touch ages gracefully for generations.&rdquo;
+                  {config.about_p3 ||
+                    "At Studio Young Designs, we believe true luxury is measured not by extravagance, but by flawless execution, enduring materials, and spaces that enrich everyday living. Every home we create reflects our commitment to craftsmanship, innovation, and trust—delivering timeless interiors that families will cherish for generations."}
                 </p>
               </div>
             </Reveal3D>
