@@ -1389,6 +1389,7 @@ function Testimonials({ testimonials = [] }: { testimonials?: any[] }) {
   const [isMobile, setIsMobile] = useState(false);
 
   // Review Modal State
+  const [expandedReview, setExpandedReview] = useState<any | null>(null);
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
   const [submittingReview, setSubmittingReview] = useState(false);
   const [customerName, setCustomerName] = useState("");
@@ -1422,8 +1423,8 @@ function Testimonials({ testimonials = [] }: { testimonials?: any[] }) {
       toast.error("Please enter your name and review words.");
       return;
     }
-    if (reviewContent.length > 220) {
-      toast.error("Review content must be 220 characters or less for uniform card presentation.");
+    if (reviewContent.length > 7500) {
+      toast.error("Review content must be 1200 words (7500 characters) or less.");
       return;
     }
     setSubmittingReview(true);
@@ -1511,18 +1512,36 @@ function Testimonials({ testimonials = [] }: { testimonials?: any[] }) {
                     rotateY: offset * -10,
                   }}
                   transition={{ duration: 0.8, ease: EASE_SMOOTH }}
-                  className={`absolute left-1/2 -translate-x-1/2 w-[86vw] sm:w-[380px] md:w-[440px] flex flex-col justify-between border pt-8 p-8 min-h-[300px] h-[300px] rounded-sm cursor-pointer touch-pan-y ${
+                  className={`absolute left-1/2 -translate-x-1/2 w-[86vw] sm:w-[380px] md:w-[440px] flex flex-col justify-between border pt-8 p-8 min-h-[310px] h-auto rounded-sm cursor-pointer touch-pan-y ${
                     isActive
                       ? "shadow-2xl bg-cream border-gold/30 text-charcoal z-20"
                       : "bg-background border-border/60 text-foreground z-10 hover:border-gold/40"
                   } ${!isVisible ? "pointer-events-none" : ""}`}
                   style={{ transformStyle: "preserve-3d" }}
                 >
-                  <blockquote className="font-display text-xl leading-relaxed md:text-2xl line-clamp-4 overflow-hidden">
-                    <span className="text-gold">"</span>
-                    {t.q}
-                    <span className="text-gold">"</span>
-                  </blockquote>
+                  {(() => {
+                    const isLong = t.q && t.q.length > 250;
+                    const displayText = isLong ? t.q.slice(0, 250).trim() + "..." : t.q;
+                    return (
+                      <blockquote className="font-display text-lg leading-relaxed md:text-xl text-stone-900">
+                        <span className="text-[#cb2026] font-serif mr-1">"</span>
+                        {displayText}
+                        <span className="text-[#cb2026] font-serif ml-1">"</span>
+                        {isLong && (
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setExpandedReview(t);
+                            }}
+                            className="inline-block font-sans text-xs font-bold uppercase tracking-wider text-[#cb2026] hover:underline ml-2 cursor-pointer"
+                          >
+                            See More...
+                          </button>
+                        )}
+                      </blockquote>
+                    );
+                  })()}
                   <figcaption className="mt-6 border-t border-border/20 pt-4 flex items-center justify-between">
                     <div>
                       <div className="text-sm font-medium">{t.n}</div>
@@ -1555,6 +1574,64 @@ function Testimonials({ testimonials = [] }: { testimonials?: any[] }) {
           </div>
         </div>
       </div>
+
+      {/* Full Review Expanded Modal */}
+      <AnimatePresence>
+        {expandedReview && (
+          <div
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm"
+            onClick={() => setExpandedReview(null)}
+          >
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 15 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 15 }}
+              transition={{ duration: 0.3, ease: EASE_SMOOTH }}
+              onClick={(e) => e.stopPropagation()}
+              className="relative w-full max-w-xl overflow-hidden rounded-xl border border-gold/40 bg-cream p-6 md:p-8 text-charcoal shadow-2xl space-y-6"
+            >
+              <div className="flex justify-between items-center border-b border-stone-200 pb-4">
+                <div className="flex items-center gap-1 text-[#cb2026]">
+                  {[...Array(5)].map((_, idx) => (
+                    <Star key={idx} size={16} className="fill-[#cb2026] text-[#cb2026]" />
+                  ))}
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setExpandedReview(null)}
+                  className="text-stone-400 hover:text-stone-900 text-2xl font-bold transition-colors cursor-pointer"
+                >
+                  ×
+                </button>
+              </div>
+
+              <blockquote className="font-display text-xl md:text-2xl leading-relaxed text-stone-900">
+                <span className="text-[#cb2026] font-serif mr-1">"</span>
+                {expandedReview.q}
+                <span className="text-[#cb2026] font-serif ml-1">"</span>
+              </blockquote>
+
+              <div className="border-t border-stone-200 pt-4 flex items-center justify-between">
+                <div>
+                  <div className="font-display text-lg font-semibold text-stone-900">
+                    {expandedReview.n}
+                  </div>
+                  <div className="text-xs uppercase tracking-widest text-[#cb2026] font-semibold mt-0.5">
+                    {expandedReview.p}
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setExpandedReview(null)}
+                  className="bg-[#cb2026] text-white px-5 py-2 rounded text-xs font-bold uppercase tracking-wider hover:bg-[#df383e] transition-colors cursor-pointer"
+                >
+                  Close
+                </button>
+              </div>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
 
       {/* Public Review Submission Modal */}
       <AnimatePresence>

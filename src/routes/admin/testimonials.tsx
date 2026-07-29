@@ -480,21 +480,21 @@ function TestimonialsComponent() {
                 <div className="space-y-1">
                   <div className="flex justify-between items-center">
                     <label className="text-[9px] uppercase tracking-widest text-stone-400 dark:text-stone-500 font-bold block">
-                      Review Content (Max 220 Chars)
+                      Review Content (Up to 1200 words)
                     </label>
                     <span
-                      className={`text-[10px] ${content.length >= 200 ? "text-[#cb2026] font-bold" : "text-stone-400"}`}
+                      className={`text-[10px] ${content.length >= 7000 ? "text-[#cb2026] font-bold" : "text-stone-400"}`}
                     >
-                      {content.length} / 220
+                      {content.length} / 7500 chars
                     </span>
                   </div>
                   <textarea
                     value={content}
-                    maxLength={220}
+                    maxLength={7500}
                     onChange={(e) => setContent(e.target.value)}
-                    rows={4}
-                    placeholder="Describe their experience (max 220 characters for uniform card size)..."
-                    className="w-full bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded p-2.5 text-xs text-stone-900 dark:text-white placeholder-stone-400 dark:placeholder-stone-600 outline-none focus:border-[#cb2026] focus:bg-white dark:focus:bg-transparent leading-relaxed resize-none"
+                    rows={6}
+                    placeholder="Enter detailed client testimonial (up to 1200 words)..."
+                    className="w-full bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded p-2.5 text-xs text-stone-900 dark:text-white placeholder-stone-400 dark:placeholder-stone-600 outline-none focus:border-[#cb2026] focus:bg-white dark:focus:bg-transparent leading-relaxed"
                     required
                   />
                 </div>
