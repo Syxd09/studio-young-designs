@@ -50,9 +50,17 @@ function DynamicServicePage() {
   } = useQuery<any>({
     queryKey: ["service_detail", slug],
     queryFn: async () => {
-      const { data, error } = await supabase.from("services").select("*").eq("slug", slug).single();
-      if (error) throw error;
-      return data;
+      const { data } = await supabase.from("services").select("*").eq("slug", slug).maybeSingle();
+      if (data) return data;
+
+      const altSlug = slug.endsWith("s")
+        ? slug.slice(0, -1)
+        : slug === "living-spaces"
+          ? "living"
+          : `${slug}s`;
+
+      const { data: altRes } = await supabase.from("services").select("*").eq("slug", altSlug).maybeSingle();
+      return altRes || null;
     },
   });
 

@@ -368,14 +368,13 @@ function AdminAboutComponent() {
   }
 
   const sections: Array<{
-    id: "story" | "video" | "founders" | "marquee" | "ethos" | "milestones";
+    id: "story" | "video" | "founders" | "ethos" | "milestones";
     label: string;
     icon: any;
   }> = [
     { id: "story", label: "Story & Copy", icon: FileText },
     { id: "video", label: "Atelier Video Showcase", icon: Video },
     { id: "founders", label: "Founders & Leadership", icon: Users },
-    { id: "marquee", label: "Marquee Ticker", icon: Sparkles },
     { id: "ethos", label: "Our Ethos (Pillars)", icon: Layers },
     { id: "milestones", label: "Milestones Timeline", icon: Clock },
   ];
@@ -759,78 +758,6 @@ function AdminAboutComponent() {
                       </label>
                     </div>
                   </div>
-                </div>
-              </motion.div>
-            )}
-
-            {/* 2. MARQUEE TICKER */}
-            {activeTab === "marquee" && (
-              <motion.div
-                key="marquee"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: 10 }}
-                transition={{ duration: 0.3 }}
-                className="space-y-6 max-w-3xl"
-              >
-                <div>
-                  <span className="text-[10px] uppercase tracking-widest text-[#cb2026] font-bold">
-                    Marquee Ticker Phrases
-                  </span>
-                  <p className="text-[10px] text-stone-400 dark:text-stone-500 mt-1">
-                    Phrases that scroll infinitely in the Marquee band across the About page.
-                  </p>
-                </div>
-
-                {/* Add Marquee Item */}
-                <div className="flex gap-2">
-                  <input
-                    type="text"
-                    value={newMarqueeInput}
-                    onChange={(e) => setNewMarqueeInput(e.target.value)}
-                    placeholder="Add new phrase (e.g. Handmade in Bangalore)..."
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") {
-                        e.preventDefault();
-                        handleAddMarqueeItem();
-                      }
-                    }}
-                    className="flex-1 bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded px-3 py-2 text-xs font-semibold focus:border-[#cb2026] outline-none text-stone-900 dark:text-white"
-                  />
-                  <button
-                    type="button"
-                    onClick={handleAddMarqueeItem}
-                    className="flex items-center gap-1.5 bg-[#cb2026] text-white px-4 py-2 rounded text-xs font-bold hover:bg-[#df383e] transition-colors cursor-pointer"
-                  >
-                    <Plus size={14} />
-                    <span>Add Phrase</span>
-                  </button>
-                </div>
-
-                {/* List of Phrases */}
-                <div className="space-y-3">
-                  {marqueeItems.map((item, idx) => (
-                    <div
-                      key={idx}
-                      className="flex items-center gap-3 border border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-900/40 p-3 rounded-lg"
-                    >
-                      <span className="text-xs font-bold text-stone-400">#{idx + 1}</span>
-                      <input
-                        type="text"
-                        value={item}
-                        onChange={(e) => handleUpdateMarqueeItem(idx, e.target.value)}
-                        className="flex-1 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded px-3 py-1.5 text-xs font-semibold focus:border-[#cb2026] outline-none text-stone-900 dark:text-white"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => handleDeleteMarqueeItem(idx)}
-                        className="text-stone-400 hover:text-red-600 p-1.5 rounded transition-colors cursor-pointer"
-                        title="Remove phrase"
-                      >
-                        <Trash2 size={15} />
-                      </button>
-                    </div>
-                  ))}
                 </div>
               </motion.div>
             )}

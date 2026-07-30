@@ -192,12 +192,11 @@ function ServicesComponent() {
     const serializedFeatures = features.map((f) => `${f.title}:${f.description}`);
 
     try {
-      await supabase
+      const { error: updateError } = await supabase
         .from("services")
         .update({
           title,
           slug,
-          intro,
           short_desc: shortDesc,
           description,
           benefits,
@@ -206,6 +205,8 @@ function ServicesComponent() {
           image_url: imageUrl,
         })
         .eq("id", selectedService.id);
+
+      if (updateError) throw updateError;
 
       if (intro.trim()) {
         await supabase.from("site_config").upsert(
@@ -490,7 +491,11 @@ function ServicesComponent() {
                 Service Illustration
               </span>
               <div className="relative aspect-video rounded-lg overflow-hidden border border-stone-200 dark:border-stone-800 bg-stone-100 dark:bg-stone-900 group">
-                <img src={imageUrl} alt={title} className="w-full h-full object-cover" />
+                {imageUrl ? (
+                  <img src={imageUrl} alt={title} className="w-full h-full object-cover" />
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-stone-400 text-xs">No image set</div>
+                )}
                 <label className="absolute inset-0 bg-stone-950/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-1.5 cursor-pointer text-xs font-bold text-white">
                   {uploading ? (
                     <Loader2 size={16} className="animate-spin text-[#cb2026]" />
@@ -820,7 +825,7 @@ function ServicesComponent() {
                   {/* Benefits List */}
                   <div className="space-y-4">
                     <span className="text-[9px] uppercase tracking-widest text-[#cb2026] font-bold block">
-                      Atelier Marquee Items
+                      Atelier Key Highlights / Features
                     </span>
 
                     {/* Add Input */}

@@ -49,13 +49,29 @@ export function ServicePageLayout({ data }: { data: ServicePageData }) {
   const { data: dbService } = useQuery<any>({
     queryKey: ["service_detail", data.slug],
     queryFn: async () => {
-      const { data: res, error } = await supabase
+      // Try exact slug match first
+      const { data: res } = await supabase
         .from("services")
         .select("*")
         .eq("slug", data.slug)
-        .single();
-      if (error) throw error;
-      return res;
+        .maybeSingle();
+
+      if (res) return res;
+
+      // Fallback slug matching (e.g. kitchens vs kitchen, living-spaces vs living)
+      const altSlug = data.slug.endsWith("s")
+        ? data.slug.slice(0, -1)
+        : data.slug === "living-spaces"
+          ? "living"
+          : `${data.slug}s`;
+
+      const { data: altRes } = await supabase
+        .from("services")
+        .select("*")
+        .eq("slug", altSlug)
+        .maybeSingle();
+
+      return altRes || null;
     },
     staleTime: 0,
   });
@@ -114,11 +130,17 @@ export function ServicePageLayout({ data }: { data: ServicePageData }) {
     intro: siteConfig[`service_intro_${data.slug}`] || dbService?.intro || data.intro,
     description: dbService?.description || data.description,
     features:
-      dbService?.features && dbService.features.length > 0
-        ? dbService.features.map((f: string, idx: number) => ({
-            title: f.split(":")[0] || `Specification ${idx + 1}`,
-            description: f.split(":")[1] || f,
-          }))
+      dbService?.features !== undefined && Array.isArray(dbService.features) && dbService.features.length > 0
+        ? dbService.features.map((f: string, idx: number) => {
+            const colonIdx = typeof f === "string" ? f.indexOf(":") : -1;
+            if (colonIdx === -1) {
+              return { title: f || `Specification 0${idx + 1}`, description: f };
+            }
+            return {
+              title: f.substring(0, colonIdx).trim(),
+              description: f.substring(colonIdx + 1).trim(),
+            };
+          })
         : data.features,
     gallery:
       dbGallery.length > 0
@@ -192,29 +214,30 @@ export function ServicePageLayout({ data }: { data: ServicePageData }) {
           </Reveal3D>
           <div className="grid grid-cols-1 gap-px bg-border/60 border border-border/60 md:grid-cols-2">
             {mergedData.features.map((feat, i) => (
-              <Reveal3D
-                key={feat.title}
-                delay={i * 0.1}
-                rotateX={10}
-                rotateY={(i % 2 === 0 ? 1 : -1) * 5}
-              >
-                <TiltCard intensity={6}>
-                  <div className="group flex h-full flex-col bg-background p-8 transition-colors duration-500 hover:bg-cream md:p-12">
-                    <div className="flex items-center justify-between">
-                      <span className="font-display text-xl text-walnut">
-                        {String(i + 1).padStart(2, "0")}
-                      </span>
-                      <span className="h-px w-6 bg-gold transition-all duration-500 group-hover:w-14" />
+              <div key={feat.title + i} className="bg-background">
+                <Reveal3D
+                  delay={i * 0.1}
+                  rotateX={10}
+                  rotateY={(i % 2 === 0 ? 1 : -1) * 5}
+                >
+                  <TiltCard intensity={6}>
+                    <div className="group flex h-full flex-col bg-background p-8 transition-colors duration-500 hover:bg-cream md:p-12">
+                      <div className="flex items-center justify-between">
+                        <span className="font-display text-xl text-walnut">
+                          {String(i + 1).padStart(2, "0")}
+                        </span>
+                        <span className="h-px w-6 bg-gold transition-all duration-500 group-hover:w-14" />
+                      </div>
+                      <div className="mt-10">
+                        <h3 className="font-display text-2xl md:text-3xl">{feat.title}</h3>
+                        <p className="mt-4 text-sm leading-relaxed text-foreground/65 md:text-base">
+                          {feat.description}
+                        </p>
+                      </div>
                     </div>
-                    <div className="mt-10">
-                      <h3 className="font-display text-2xl md:text-3xl">{feat.title}</h3>
-                      <p className="mt-4 text-sm leading-relaxed text-foreground/65 md:text-base">
-                        {feat.description}
-                      </p>
-                    </div>
-                  </div>
-                </TiltCard>
-              </Reveal3D>
+                  </TiltCard>
+                </Reveal3D>
+              </div>
             ))}
           </div>
         </div>
