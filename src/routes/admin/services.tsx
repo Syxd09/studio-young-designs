@@ -38,6 +38,9 @@ interface ServiceItem {
 interface FeatureItem {
   title: string;
   description: string;
+  image?: string;
+  size?: "half" | "full";
+  theme?: "light" | "dark";
 }
 
 function ServicesComponent() {
@@ -61,6 +64,10 @@ function ServicesComponent() {
   const [newBenefit, setNewBenefit] = useState("");
   const [newFeatureTitle, setNewFeatureTitle] = useState("");
   const [newFeatureDesc, setNewFeatureDesc] = useState("");
+  const [newFeatureImage, setNewFeatureImage] = useState("");
+  const [newFeatureSize, setNewFeatureSize] = useState<"half" | "full">("half");
+  const [newFeatureTheme, setNewFeatureTheme] = useState<"light" | "dark">("light");
+  const [cardUploadingIdx, setCardUploadingIdx] = useState<number | null | "new">(null);
 
   const [visible, setVisible] = useState(true);
   const [imageUrl, setImageUrl] = useState("");
@@ -138,16 +145,45 @@ function ServicesComponent() {
       setIntro(service.intro || defaultIntros[service.slug] || "");
     }
 
-    // Parse features from serialized "Title:Description" format
-    const parsedFeatures = (service.features || []).map((f: string) => {
-      const idx = f.indexOf(":");
-      if (idx === -1) {
-        return { title: f, description: f };
+    // Parse features (JSON or Legacy string format)
+    const parsedFeatures: FeatureItem[] = (service.features || []).map((f: any, idx: number) => {
+      if (typeof f === "object" && f !== null) {
+        return {
+          title: f.title || `Offer Card 0${idx + 1}`,
+          description: f.description || "",
+          image: f.image || f.image_url || "",
+          size: (f.size === "full" ? "full" : "half") as "half" | "full",
+          theme: (f.theme === "dark" ? "dark" : "light") as "light" | "dark",
+        };
       }
-      return {
-        title: f.substring(0, idx),
-        description: f.substring(idx + 1),
-      };
+      if (typeof f === "string") {
+        if (f.trim().startsWith("{")) {
+          try {
+            const parsed = JSON.parse(f);
+            return {
+              title: parsed.title || `Offer Card 0${idx + 1}`,
+              description: parsed.description || "",
+              image: parsed.image || parsed.image_url || "",
+              size: (parsed.size === "full" ? "full" : "half") as "half" | "full",
+              theme: (parsed.theme === "dark" ? "dark" : "light") as "light" | "dark",
+            };
+          } catch (e) {
+            // fallback below
+          }
+        }
+        const idxOf = f.indexOf(":");
+        if (idxOf === -1) {
+          return { title: f || `Offer Card 0${idx + 1}`, description: f, image: "", size: "half" as const, theme: "light" as const };
+        }
+        return {
+          title: f.substring(0, idxOf).trim(),
+          description: f.substring(idxOf + 1).trim(),
+          image: "",
+          size: "half" as const,
+          theme: "light" as const,
+        };
+      }
+      return { title: `Offer Card 0${idx + 1}`, description: "", image: "", size: "half" as const, theme: "light" as const };
     });
     setFeatures(parsedFeatures);
 
@@ -173,13 +209,60 @@ function ServicesComponent() {
     const titleVal = newFeatureTitle.trim();
     const descVal = newFeatureDesc.trim() || titleVal;
 
-    setFeatures((prev) => [...prev, { title: titleVal, description: descVal }]);
+    setFeatures((prev) => [
+      ...prev,
+      {
+        title: titleVal,
+        description: descVal,
+        image: newFeatureImage,
+        size: newFeatureSize,
+        theme: newFeatureTheme,
+      },
+    ]);
     setNewFeatureTitle("");
     setNewFeatureDesc("");
+    setNewFeatureImage("");
+    setNewFeatureSize("half");
+    setNewFeatureTheme("light");
   };
 
   const handleRemoveFeature = (index: number) => {
     setFeatures((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const handleCardImageUpload = async (file: File, targetIdx: number | "new") => {
+    if (!file) return;
+    setCardUploadingIdx(targetIdx);
+    try {
+      const ext = file.name.split(".").pop() || "jpg";
+      const fileName = `offer_cards/card_${Date.now()}.${ext}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from("studio-young-assets")
+        .upload(fileName, file, { upsert: true });
+
+      if (uploadError) throw uploadError;
+
+      const { data: publicData } = supabase.storage
+        .from("studio-young-assets")
+        .getPublicUrl(fileName);
+
+      const publicUrl = publicData.publicUrl;
+
+      if (targetIdx === "new") {
+        setNewFeatureImage(publicUrl);
+      } else {
+        setFeatures((prev) =>
+          prev.map((f, i) => (i === targetIdx ? { ...f, image: publicUrl } : f)),
+        );
+      }
+      toast.success("Card image uploaded successfully!");
+    } catch (err: any) {
+      console.error(err);
+      toast.error(err.message || "Failed to upload card image.");
+    } finally {
+      setCardUploadingIdx(null);
+    }
   };
 
   const handleSave = async (e: React.FormEvent) => {
@@ -188,8 +271,16 @@ function ServicesComponent() {
 
     setSaving(true);
 
-    // Serialize features into "Title:Description" format for database
-    const serializedFeatures = features.map((f) => `${f.title}:${f.description}`);
+    // Serialize features into JSON strings
+    const serializedFeatures = features.map((f) =>
+      JSON.stringify({
+        title: f.title,
+        description: f.description,
+        image: f.image || "",
+        size: f.size || "half",
+        theme: f.theme || "light",
+      }),
+    );
 
     try {
       const { error: updateError } = await supabase
@@ -876,17 +967,22 @@ function ServicesComponent() {
                     </div>
                   </div>
 
-                  {/* Features List */}
+                  {/* Offer Cards List */}
                   <div className="space-y-4">
-                    <span className="text-[9px] uppercase tracking-widest text-[#cb2026] font-bold block">
-                      What We Offer Cards
-                    </span>
+                    <div className="flex items-center justify-between">
+                      <span className="text-[9px] uppercase tracking-widest text-[#cb2026] font-bold block">
+                        What We Offer Cards (Customizable Layout, Size, Theme & Images)
+                      </span>
+                    </div>
 
-                    {/* Add Input */}
-                    <div className="border border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-[#1E1E21]/50 p-3 rounded space-y-2 shadow-sm">
+                    {/* Add New Offer Card Form */}
+                    <div className="border border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-[#1E1E21]/50 p-3.5 rounded-lg space-y-3 shadow-sm">
+                      <div className="font-bold text-[11px] text-stone-700 dark:text-stone-300">
+                        + Add New Offer Card
+                      </div>
                       <input
                         type="text"
-                        placeholder="Card Title (e.g., In-house project managers)"
+                        placeholder="Card Title (e.g., Bespoke Kitchen Design)"
                         value={newFeatureTitle}
                         onChange={(e) => setNewFeatureTitle(e.target.value)}
                         className="w-full bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded px-3 py-2 text-xs text-stone-900 dark:text-white placeholder-stone-400 outline-none focus:border-[#cb2026]"
@@ -898,60 +994,231 @@ function ServicesComponent() {
                         rows={2}
                         className="w-full bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded px-3 py-2 text-xs text-stone-900 dark:text-white placeholder-stone-400 outline-none focus:border-[#cb2026] resize-none"
                       />
+
+                      {/* Image Upload for New Card */}
+                      <div className="space-y-1.5">
+                        <label className="text-[10px] font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider block">
+                          Card Image
+                        </label>
+                        <div className="flex items-center gap-2">
+                          <input
+                            type="text"
+                            placeholder="Image URL or upload file..."
+                            value={newFeatureImage}
+                            onChange={(e) => setNewFeatureImage(e.target.value)}
+                            className="flex-1 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded px-2.5 py-1.5 text-xs text-stone-900 dark:text-white outline-none focus:border-[#cb2026]"
+                          />
+                          <label className="bg-stone-200 dark:bg-stone-800 hover:bg-stone-300 dark:hover:bg-stone-700 text-stone-800 dark:text-stone-200 px-3 py-1.5 rounded text-xs font-bold flex items-center gap-1 cursor-pointer transition-colors">
+                            {cardUploadingIdx === "new" ? (
+                              <Loader2 size={12} className="animate-spin text-[#cb2026]" />
+                            ) : (
+                              <Upload size={12} />
+                            )}
+                            <span>Upload</span>
+                            <input
+                              type="file"
+                              accept="image/*"
+                              className="hidden"
+                              onChange={(e) => {
+                                const f = e.target.files?.[0];
+                                if (f) handleCardImageUpload(f, "new");
+                              }}
+                            />
+                          </label>
+                        </div>
+                        {newFeatureImage && (
+                          <div className="relative aspect-[16/9] w-24 rounded overflow-hidden border border-stone-200 dark:border-stone-800">
+                            <img src={newFeatureImage} alt="Preview" className="w-full h-full object-cover" />
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Size & Theme Toggles */}
+                      <div className="grid grid-cols-2 gap-3 pt-1">
+                        <div>
+                          <label className="text-[10px] font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider block mb-1">
+                            Card Layout Width
+                          </label>
+                          <select
+                            value={newFeatureSize}
+                            onChange={(e) => setNewFeatureSize(e.target.value as "half" | "full")}
+                            className="w-full bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded px-2.5 py-1.5 text-xs text-stone-900 dark:text-white outline-none focus:border-[#cb2026]"
+                          >
+                            <option value="half">Half Width (50%)</option>
+                            <option value="full">Full Width (100%)</option>
+                          </select>
+                        </div>
+                        <div>
+                          <label className="text-[10px] font-bold text-stone-500 dark:text-stone-400 uppercase tracking-wider block mb-1">
+                            Card Theme Style
+                          </label>
+                          <select
+                            value={newFeatureTheme}
+                            onChange={(e) => setNewFeatureTheme(e.target.value as "light" | "dark")}
+                            className="w-full bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded px-2.5 py-1.5 text-xs text-stone-900 dark:text-white outline-none focus:border-[#cb2026]"
+                          >
+                            <option value="light">Light Theme (Cream)</option>
+                            <option value="dark">Dark Theme (Charcoal)</option>
+                          </select>
+                        </div>
+                      </div>
+
                       <button
                         type="button"
                         onClick={handleAddFeature}
-                        className="w-full flex items-center justify-center gap-1.5 bg-[#cb2026] hover:bg-[#df383e] text-white py-2 rounded text-xs font-bold transition-all cursor-pointer"
+                        className="w-full flex items-center justify-center gap-1.5 bg-[#cb2026] hover:bg-[#df383e] text-white py-2 rounded text-xs font-bold transition-all cursor-pointer mt-2"
                       >
                         <Plus size={14} />
                         <span>Add Offer Card</span>
                       </button>
                     </div>
 
-                    {/* List View */}
-                    <div className="space-y-3 max-h-80 overflow-y-auto pr-1">
+                    {/* Existing Offer Cards List */}
+                    <div className="space-y-4 max-h-[500px] overflow-y-auto pr-1">
                       {features.map((feat, idx) => (
                         <div
                           key={idx}
-                          className="bg-stone-50 dark:bg-[#1E1E21]/50 p-3 rounded border border-stone-200 dark:border-stone-800 space-y-2"
+                          className="bg-stone-50 dark:bg-[#1E1E21]/60 p-3.5 rounded-lg border border-stone-200 dark:border-stone-800 space-y-3 shadow-sm"
                         >
-                          <div className="flex justify-between items-center">
-                            <span className="text-[9px] text-[#cb2026] font-bold uppercase tracking-wider">
-                              Offer Card 0{idx + 1}
+                          <div className="flex justify-between items-center border-b border-stone-200 dark:border-stone-800/80 pb-2">
+                            <span className="text-[10px] text-[#cb2026] font-bold uppercase tracking-wider flex items-center gap-2">
+                              <span>Offer Card 0{idx + 1}</span>
+                              <span className="px-1.5 py-0.5 rounded text-[9px] bg-stone-200 dark:bg-stone-800 text-stone-700 dark:text-stone-300 font-semibold">
+                                {feat.size === "full" ? "100% Full Width" : "50% Half Width"}
+                              </span>
+                              <span className="px-1.5 py-0.5 rounded text-[9px] bg-stone-200 dark:bg-stone-800 text-stone-700 dark:text-stone-300 font-semibold">
+                                {feat.theme === "dark" ? "Dark Theme" : "Light Theme"}
+                              </span>
                             </span>
                             <button
                               type="button"
                               onClick={() => handleRemoveFeature(idx)}
                               className="text-red-500 hover:text-red-700 p-1 hover:bg-red-50 dark:hover:bg-red-950/20 rounded transition-all cursor-pointer"
+                              title="Delete Card"
                             >
-                              <X size={12} />
+                              <X size={14} />
                             </button>
                           </div>
-                          <div className="space-y-1.5">
-                            <input
-                              type="text"
-                              value={feat.title}
-                              onChange={(e) => {
-                                const val = e.target.value;
-                                setFeatures((prev) =>
-                                  prev.map((f, i) => (i === idx ? { ...f, title: val } : f)),
-                                );
-                              }}
-                              placeholder="Offer Card Title"
-                              className="w-full bg-white dark:bg-stone-900 border border-stone-205 dark:border-stone-800 rounded px-2.5 py-1 text-xs text-stone-900 dark:text-white outline-none focus:border-[#cb2026]/45 font-semibold"
-                            />
-                            <textarea
-                              value={feat.description}
-                              onChange={(e) => {
-                                const val = e.target.value;
-                                setFeatures((prev) =>
-                                  prev.map((f, i) => (i === idx ? { ...f, description: val } : f)),
-                                );
-                              }}
-                              placeholder="Offer Card Description"
-                              rows={2}
-                              className="w-full bg-white dark:bg-stone-900 border border-stone-205 dark:border-stone-800 rounded px-2.5 py-1 text-xs text-stone-850 dark:text-stone-300 outline-none focus:border-[#cb2026]/45 resize-none leading-relaxed"
-                            />
+
+                          <div className="space-y-2">
+                            <div>
+                              <label className="text-[9px] font-bold text-stone-400 uppercase tracking-wider block mb-0.5">
+                                Title
+                              </label>
+                              <input
+                                type="text"
+                                value={feat.title}
+                                onChange={(e) => {
+                                  const val = e.target.value;
+                                  setFeatures((prev) =>
+                                    prev.map((f, i) => (i === idx ? { ...f, title: val } : f)),
+                                  );
+                                }}
+                                placeholder="Offer Card Title"
+                                className="w-full bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded px-2.5 py-1.5 text-xs text-stone-900 dark:text-white outline-none focus:border-[#cb2026]/45 font-semibold"
+                              />
+                            </div>
+
+                            <div>
+                              <label className="text-[9px] font-bold text-stone-400 uppercase tracking-wider block mb-0.5">
+                                Description
+                              </label>
+                              <textarea
+                                value={feat.description}
+                                onChange={(e) => {
+                                  const val = e.target.value;
+                                  setFeatures((prev) =>
+                                    prev.map((f, i) => (i === idx ? { ...f, description: val } : f)),
+                                  );
+                                }}
+                                placeholder="Offer Card Description"
+                                rows={2}
+                                className="w-full bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded px-2.5 py-1.5 text-xs text-stone-850 dark:text-stone-300 outline-none focus:border-[#cb2026]/45 resize-none leading-relaxed"
+                              />
+                            </div>
+
+                            {/* Image field & Upload for card */}
+                            <div>
+                              <label className="text-[9px] font-bold text-stone-400 uppercase tracking-wider block mb-0.5">
+                                Card Image
+                              </label>
+                              <div className="flex items-center gap-2">
+                                <input
+                                  type="text"
+                                  value={feat.image || ""}
+                                  onChange={(e) => {
+                                    const val = e.target.value;
+                                    setFeatures((prev) =>
+                                      prev.map((f, i) => (i === idx ? { ...f, image: val } : f)),
+                                    );
+                                  }}
+                                  placeholder="Image URL or upload..."
+                                  className="flex-1 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded px-2.5 py-1.5 text-xs text-stone-900 dark:text-white outline-none focus:border-[#cb2026]"
+                                />
+                                <label className="bg-stone-200 dark:bg-stone-800 hover:bg-stone-300 dark:hover:bg-stone-700 text-stone-800 dark:text-stone-200 px-2.5 py-1.5 rounded text-xs font-bold flex items-center gap-1 cursor-pointer transition-colors">
+                                  {cardUploadingIdx === idx ? (
+                                    <Loader2 size={12} className="animate-spin text-[#cb2026]" />
+                                  ) : (
+                                    <Upload size={12} />
+                                  )}
+                                  <span>Upload</span>
+                                  <input
+                                    type="file"
+                                    accept="image/*"
+                                    className="hidden"
+                                    onChange={(e) => {
+                                      const f = e.target.files?.[0];
+                                      if (f) handleCardImageUpload(f, idx);
+                                    }}
+                                  />
+                                </label>
+                              </div>
+                              {feat.image && (
+                                <div className="mt-1.5 relative aspect-[16/9] w-24 rounded overflow-hidden border border-stone-200 dark:border-stone-800">
+                                  <img src={feat.image} alt={feat.title} className="w-full h-full object-cover" />
+                                </div>
+                              )}
+                            </div>
+
+                            {/* Controls for Size & Theme */}
+                            <div className="grid grid-cols-2 gap-2 pt-1">
+                              <div>
+                                <label className="text-[9px] font-bold text-stone-400 uppercase tracking-wider block mb-0.5">
+                                  Width
+                                </label>
+                                <select
+                                  value={feat.size || "half"}
+                                  onChange={(e) => {
+                                    const val = e.target.value as "half" | "full";
+                                    setFeatures((prev) =>
+                                      prev.map((f, i) => (i === idx ? { ...f, size: val } : f)),
+                                    );
+                                  }}
+                                  className="w-full bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded px-2 py-1 text-xs text-stone-900 dark:text-white outline-none focus:border-[#cb2026]"
+                                >
+                                  <option value="half">Half Width (50%)</option>
+                                  <option value="full">Full Width (100%)</option>
+                                </select>
+                              </div>
+                              <div>
+                                <label className="text-[9px] font-bold text-stone-400 uppercase tracking-wider block mb-0.5">
+                                  Style Theme
+                                </label>
+                                <select
+                                  value={feat.theme || "light"}
+                                  onChange={(e) => {
+                                    const val = e.target.value as "light" | "dark";
+                                    setFeatures((prev) =>
+                                      prev.map((f, i) => (i === idx ? { ...f, theme: val } : f)),
+                                    );
+                                  }}
+                                  className="w-full bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded px-2 py-1 text-xs text-stone-900 dark:text-white outline-none focus:border-[#cb2026]"
+                                >
+                                  <option value="light">Light Theme (Cream)</option>
+                                  <option value="dark">Dark Theme (Charcoal)</option>
+                                </select>
+                              </div>
+                            </div>
                           </div>
                         </div>
                       ))}

@@ -31,41 +31,35 @@ export const Route = createFileRoute("/services/kitchens")({
 const data: ServicePageData = {
   slug: "kitchens",
   title: "Kitchens",
-  subtitle: "Custom modular kitchens built around the way your family cooks and gathers.",
+  subtitle: "Every kitchen we create is a perfect balance of beauty, functionality and enduring quality.",
   heroImage: svcKitchen,
-  intro: "Where every meal begins with beautiful design.",
+  intro: "Thoughtful Kitchens. Timeless Living.",
   description:
-    "Our kitchens are conceived as the heart of the home — spaces where cooking, gathering, and daily ritual overlap. We design every cabinet, countertop, and detail from scratch, using sustainably sourced hardwoods, natural stone, and handmade hardware. Each kitchen is unique to the family it serves.",
+    "Our kitchens are conceived as the heart of the home — spaces where cooking, gathering, and daily ritual overlap. We design every cabinet, countertop, and detail from scratch, using sustainably sourced hardwoods, natural stone, and handmade hardware.",
   features: [
     {
-      title: "Custom Cabinetry",
+      title: "Bespoke Kitchen Design",
       description:
-        "Handcrafted cabinets in walnut, oak and lacquer finishes — built to your exact specifications with soft-close hinges and premium internals.",
+        "Every kitchen is thoughtfully designed around your lifestyle, blending timeless aesthetics with intelligent functionality.",
+      image: svcKitchen,
+      size: "half",
+      theme: "light",
     },
     {
-      title: "Stone Countertops",
+      title: "Tailored to You",
       description:
-        "Italian marble, Brazilian quartzite, and locally sourced granite — each slab hand-selected for grain and character.",
+        "Custom-designed layouts that maximize space, comfort and everyday efficiency.",
+      image: p2,
+      size: "half",
+      theme: "dark",
     },
     {
-      title: "Integrated Appliances",
+      title: "Designed for Living",
       description:
-        "Seamless integration of premium appliances from Miele, Gaggenau, and Bosch — hidden behind cabinetry for a clean, unified aesthetic.",
-    },
-    {
-      title: "Smart Storage",
-      description:
-        "Corner carousels, pull-out pantries, drawer organisers, and custom spice racks — every centimetre of space made purposeful.",
-    },
-    {
-      title: "Island & Breakfast Bars",
-      description:
-        "Statement islands in bookmatched stone with waterfall edges, designed for cooking, dining, and conversation.",
-    },
-    {
-      title: "Lighting Design",
-      description:
-        "Layered lighting with under-cabinet LEDs, pendant features, and dimmable ambiance — tuned to the time of day.",
+        "Beautifully planned kitchens that balance elegance, practicality and lasting value.",
+      image: p1,
+      size: "full",
+      theme: "light",
     },
   ],
   gallery: [

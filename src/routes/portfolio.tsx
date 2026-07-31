@@ -4,7 +4,7 @@
  */
 
 import { createFileRoute } from "@tanstack/react-router";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/utils/supabase";
@@ -124,9 +124,39 @@ export function PortfolioTrack({
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
 
+  // Triple items array for seamless infinite looping
+  const displayItems = useMemo(() => {
+    if (!items || items.length === 0) return [];
+    if (items.length < 4) {
+      return [...items, ...items, ...items, ...items, ...items, ...items];
+    }
+    return [...items, ...items, ...items];
+  }, [items]);
+
+  // Set initial scroll position to middle set
+  useEffect(() => {
+    if (containerRef.current && displayItems.length > 0) {
+      const singleSetWidth = containerRef.current.scrollWidth / 3;
+      containerRef.current.scrollLeft = singleSetWidth;
+    }
+  }, [displayItems]);
+
+  const handleScroll = () => {
+    if (!containerRef.current) return;
+    const { scrollLeft, scrollWidth } = containerRef.current;
+    const singleSetWidth = scrollWidth / 3;
+
+    // Wrap around seamlessly when hitting boundaries
+    if (scrollLeft >= singleSetWidth * 2) {
+      containerRef.current.scrollLeft = scrollLeft - singleSetWidth;
+    } else if (scrollLeft <= 10) {
+      containerRef.current.scrollLeft = scrollLeft + singleSetWidth;
+    }
+  };
+
   const scroll = (direction: "left" | "right") => {
     if (containerRef.current) {
-      const scrollAmount = containerRef.current.clientWidth * 0.75;
+      const scrollAmount = containerRef.current.clientWidth * 0.7;
       containerRef.current.scrollBy({
         left: direction === "left" ? -scrollAmount : scrollAmount,
         behavior: "smooth",
@@ -137,59 +167,56 @@ export function PortfolioTrack({
   if (!items || items.length === 0) return null;
 
   return (
-    <div className="relative w-full group py-4">
-      {/* Left Scroll Arrow */}
+    <div className="relative w-full group py-2">
+      {/* Left Floating Arrow */}
       <button
         onClick={() => scroll("left")}
-        className="absolute left-2 sm:left-4 top-1/2 -translate-y-1/2 z-30 h-11 w-11 rounded-full bg-white/90 text-stone-900 border border-stone-300 shadow-xl flex items-center justify-center hover:bg-stone-900 hover:text-white hover:border-stone-900 transition-all duration-300 cursor-pointer"
+        className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 z-30 h-12 w-12 rounded-full bg-white/85 text-stone-900 border border-stone-200/80 shadow-2xl backdrop-blur-md flex items-center justify-center hover:bg-stone-900 hover:text-white hover:border-stone-900 transition-all duration-300 cursor-pointer"
         aria-label="Scroll Left"
       >
-        <ChevronLeft size={22} />
+        <ChevronLeft size={24} />
       </button>
 
-      {/* Right Scroll Arrow */}
+      {/* Right Floating Arrow */}
       <button
         onClick={() => scroll("right")}
-        className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 z-30 h-11 w-11 rounded-full bg-white/90 text-stone-900 border border-stone-300 shadow-xl flex items-center justify-center hover:bg-stone-900 hover:text-white hover:border-stone-900 transition-all duration-300 cursor-pointer"
+        className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 z-30 h-12 w-12 rounded-full bg-white/85 text-stone-900 border border-stone-200/80 shadow-2xl backdrop-blur-md flex items-center justify-center hover:bg-stone-900 hover:text-white hover:border-stone-900 transition-all duration-300 cursor-pointer"
         aria-label="Scroll Right"
       >
-        <ChevronRight size={22} />
+        <ChevronRight size={24} />
       </button>
 
-      {/* Horizontal Multi-Card Track */}
+      {/* Edge-to-Edge Pure Photography Track — JJ Designers Style */}
       <div
         ref={containerRef}
-        className="flex gap-6 overflow-x-auto scrollbar-none scroll-smooth px-2 py-4"
-        style={{ scrollSnapType: "x mandatory" }}
+        onScroll={handleScroll}
+        className="flex gap-4 sm:gap-6 overflow-x-auto scrollbar-none px-4 md:px-8 py-2 h-[72vh] min-h-[500px] max-h-[780px] items-stretch scroll-smooth"
       >
-        {items.map((item, idx) => (
+        {displayItems.map((item: any, idx: number) => (
           <div
             key={item.src + idx}
-            className="flex-none w-[280px] sm:w-[340px] md:w-[400px] group/card cursor-pointer scroll-snap-align-start space-y-3"
+            className="flex-none relative h-full w-auto group/slide cursor-pointer overflow-hidden rounded-sm select-none"
             onClick={() => onSelectImage && onSelectImage(item)}
           >
-            {/* Title / Subtitle label above card */}
-            <div className="px-1">
-              <h4 className="font-display text-lg sm:text-xl uppercase tracking-wider text-stone-900 font-medium truncate">
-                {item.title || "STUDIO YOUNG DESIGNS"}
-              </h4>
-              {item.subtitle && (
-                <p className="text-[11px] uppercase tracking-widest text-stone-500 mt-0.5 font-sans">
-                  {item.subtitle}
-                </p>
+            <img
+              src={item.src}
+              alt={item.title || "Gallery"}
+              loading="lazy"
+              decoding="async"
+              className="h-full w-auto max-w-none object-cover transition-transform duration-700 ease-out group-hover/slide:scale-[1.02]"
+            />
+            {/* Subtle Hover Overlay with Title */}
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover/slide:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-6 pointer-events-none">
+              {item.title && (
+                <span className="font-display text-lg text-white uppercase tracking-wider font-medium">
+                  {item.title}
+                </span>
               )}
-            </div>
-
-            {/* Vertical Image Card */}
-            <div className="relative aspect-[3/4] w-full overflow-hidden bg-stone-100 rounded-sm border border-stone-200/80 shadow-md transition-all duration-500 group-hover/card:shadow-xl group-hover/card:border-stone-400">
-              <img
-                src={item.src}
-                alt={item.title}
-                loading="lazy"
-                decoding="async"
-                className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover/card:scale-105"
-              />
-              <div className="absolute inset-0 bg-black/10 opacity-0 group-hover/card:opacity-100 transition-opacity duration-300" />
+              {item.subtitle && (
+                <span className="text-xs text-white/80 uppercase tracking-widest font-sans mt-0.5">
+                  {item.subtitle}
+                </span>
+              )}
             </div>
           </div>
         ))}

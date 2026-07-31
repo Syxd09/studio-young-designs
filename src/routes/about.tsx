@@ -69,7 +69,7 @@ function AboutPage() {
       if (error) throw error;
       return (data || []).reduce((acc, curr) => ({ ...acc, [curr.key]: curr.value }), {});
     },
-    staleTime: 60 * 1000,
+    staleTime: 0,
   });
 
   const { data: layoutImages = {} } = useQuery<Record<string, string>>({
@@ -79,7 +79,7 @@ function AboutPage() {
       if (error) throw error;
       return (data || []).reduce((acc, curr) => ({ ...acc, [curr.key]: curr.image_url }), {});
     },
-    staleTime: 60 * 1000,
+    staleTime: 0,
   });
 
   const milestones = useMemo(() => {

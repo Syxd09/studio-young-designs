@@ -74,7 +74,7 @@ const PAGES_CONFIG: BannerConfig[] = [
 function PageBannersComponent() {
   const queryClient = useQueryClient();
 
-  const { data: layoutImages = {}, isLoading } = useQuery<Record<string, string>>({
+  const { data: layoutImages, isLoading } = useQuery<Record<string, string>>({
     queryKey: ["layout_images"],
     queryFn: async () => {
       const { data, error } = await supabase.from("layout_images").select("key, image_url");
@@ -99,27 +99,30 @@ function PageBannersComponent() {
 
     try {
       const ext = file.name.split(".").pop() || "jpg";
-      const fileName = `banner_${banner.key}_${Date.now()}.${ext}`;
+      const fileName = `banners/banner_${banner.key}_${Date.now()}.${ext}`;
 
       const { error: uploadError } = await supabase.storage
-        .from("layout-images")
+        .from("studio-young-assets")
         .upload(fileName, file, { upsert: true });
 
-      if (uploadError) {
-        // Try fallback bucket if layout-images doesn't exist
-        const { error: fallbackError } = await supabase.storage
-          .from("site-assets")
-          .upload(fileName, file, { upsert: true });
-        if (fallbackError) throw uploadError;
+      if (uploadError) throw uploadError;
 
-        const { data: publicData } = supabase.storage.from("site-assets").getPublicUrl(fileName);
-        updateLocalImage(banner, publicData.publicUrl);
-      } else {
-        const { data: publicData } = supabase.storage.from("layout-images").getPublicUrl(fileName);
-        updateLocalImage(banner, publicData.publicUrl);
-      }
+      const { data: publicData } = supabase.storage.from("studio-young-assets").getPublicUrl(fileName);
+      const uploadedUrl = publicData.publicUrl;
+      updateLocalImage(banner, uploadedUrl);
 
-      toast.success(`Image uploaded for ${banner.pageName}`);
+      // Auto-save to database immediately upon upload
+      const payload = banner.keysToUpdate.map((k) => ({
+        key: k,
+        image_url: uploadedUrl,
+        updated_at: new Date().toISOString(),
+      }));
+
+      const { error: dbError } = await supabase.from("layout_images").upsert(payload, { onConflict: "key" });
+      if (dbError) throw dbError;
+
+      await queryClient.invalidateQueries({ queryKey: ["layout_images"] });
+      toast.success(`${banner.pageName} background updated successfully!`);
     } catch (e: any) {
       console.error(e);
       toast.error(e.message || "Failed to upload image. You can also paste an image URL.");

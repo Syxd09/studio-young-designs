@@ -24,6 +24,9 @@ import {
 export interface ServiceFeature {
   title: string;
   description: string;
+  image?: string;
+  size?: "half" | "full";
+  theme?: "light" | "dark";
 }
 
 export interface GalleryImage {
@@ -131,15 +134,43 @@ export function ServicePageLayout({ data }: { data: ServicePageData }) {
     description: dbService?.description || data.description,
     features:
       dbService?.features !== undefined && Array.isArray(dbService.features) && dbService.features.length > 0
-        ? dbService.features.map((f: string, idx: number) => {
-            const colonIdx = typeof f === "string" ? f.indexOf(":") : -1;
-            if (colonIdx === -1) {
-              return { title: f || `Specification 0${idx + 1}`, description: f };
+        ? dbService.features.map((f: any, idx: number) => {
+            if (typeof f === "object" && f !== null) {
+              return {
+                title: f.title || `Offer Card 0${idx + 1}`,
+                description: f.description || "",
+                image: f.image || f.image_url || "",
+                size: f.size === "full" ? "full" : "half",
+                theme: f.theme === "dark" ? "dark" : "light",
+              };
             }
-            return {
-              title: f.substring(0, colonIdx).trim(),
-              description: f.substring(colonIdx + 1).trim(),
-            };
+            if (typeof f === "string") {
+              if (f.trim().startsWith("{")) {
+                try {
+                  const parsed = JSON.parse(f);
+                  return {
+                    title: parsed.title || `Offer Card 0${idx + 1}`,
+                    description: parsed.description || "",
+                    image: parsed.image || parsed.image_url || "",
+                    size: parsed.size === "full" ? "full" : "half",
+                    theme: parsed.theme === "dark" ? "dark" : "light",
+                  };
+                } catch (e) {
+                  // Fallback to string splitting below
+                }
+              }
+              const colonIdx = f.indexOf(":");
+              if (colonIdx === -1) {
+                return { title: f || `Offer Card 0${idx + 1}`, description: f, size: "half", theme: "light" };
+              }
+              return {
+                title: f.substring(0, colonIdx).trim(),
+                description: f.substring(colonIdx + 1).trim(),
+                size: "half",
+                theme: "light",
+              };
+            }
+            return { title: `Offer Card 0${idx + 1}`, description: "", size: "half", theme: "light" };
           })
         : data.features,
     gallery:
@@ -201,44 +232,97 @@ export function ServicePageLayout({ data }: { data: ServicePageData }) {
         </div>
       </section>
 
-      {/* Features Grid */}
-      <section className="bg-background py-24 md:py-32">
-        <div className="mx-auto max-w-[1400px] px-6 md:px-10">
+      {/* Features Grid — WHAT WE OFFER */}
+      <section className="bg-[#FAF8F5] py-24 md:py-32">
+        <div className="mx-auto max-w-[1400px] px-6 md:px-10 space-y-12">
+          {/* Section Header */}
           <Reveal3D rotateX={10}>
-            <div className="mb-16 flex items-center gap-3">
-              <span className="gold-rule" />
-              <span className="eyebrow">
-                <TextScramble text="What We Offer" />
-              </span>
+            <div>
+              <div className="mb-4 flex items-center gap-3">
+                <span className="h-px w-6 bg-[#C5A059]" />
+                <span className="text-[11px] uppercase tracking-[0.25em] text-stone-500 font-sans font-semibold">
+                  <TextScramble text="What We Offer" />
+                </span>
+              </div>
+              <SplitHeading
+                text={mergedData.intro || "Thoughtful Kitchens. Timeless Living."}
+                className="text-4xl text-stone-900 md:text-5xl lg:text-6xl font-display font-normal leading-tight"
+              />
+              <p className="mt-4 max-w-3xl text-base text-stone-600 md:text-lg leading-relaxed font-sans">
+                {mergedData.subtitle}
+              </p>
             </div>
           </Reveal3D>
-          <div className="grid grid-cols-1 gap-px bg-border/60 border border-border/60 md:grid-cols-2">
-            {mergedData.features.map((feat, i) => (
-              <div key={feat.title + i} className="bg-background">
-                <Reveal3D
-                  delay={i * 0.1}
-                  rotateX={10}
-                  rotateY={(i % 2 === 0 ? 1 : -1) * 5}
+
+          {/* Offer Cards Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-8">
+            {mergedData.features.map((feat, i) => {
+              const isFull = feat.size === "full";
+              const isDark = feat.theme === "dark";
+              const cardImg = feat.image || mergedData.heroImage;
+
+              return (
+                <div
+                  key={feat.title + i}
+                  className={isFull ? "col-span-1 md:col-span-12" : "col-span-1 md:col-span-6"}
                 >
-                  <TiltCard intensity={6}>
-                    <div className="group flex h-full flex-col bg-background p-8 transition-colors duration-500 hover:bg-cream md:p-12">
-                      <div className="flex items-center justify-between">
-                        <span className="font-display text-xl text-walnut">
-                          {String(i + 1).padStart(2, "0")}
-                        </span>
-                        <span className="h-px w-6 bg-gold transition-all duration-500 group-hover:w-14" />
+                  <Reveal3D delay={i * 0.08} rotateX={8}>
+                    <div
+                      className={`group relative overflow-hidden rounded-2xl transition-all duration-500 hover:-translate-y-1 shadow-sm hover:shadow-xl flex flex-col md:flex-row ${
+                        isFull ? "min-h-[340px] md:h-[380px]" : "min-h-[320px] md:h-[340px]"
+                      } ${
+                        isDark
+                          ? "bg-[#23201D] text-cream"
+                          : "bg-[#F2EFE9] text-stone-900"
+                      }`}
+                    >
+                      {/* Text Side */}
+                      <div
+                        className={`flex flex-col justify-center p-6 sm:p-8 md:p-10 lg:p-12 ${
+                          isFull ? "w-full md:w-5/12" : "w-full md:w-1/2"
+                        }`}
+                      >
+                        <div>
+                          <div className="flex items-center gap-3">
+                            <span className="font-display text-lg tracking-widest text-[#C5A059] font-medium">
+                              {String(i + 1).padStart(2, "0")}
+                            </span>
+                            <span className="h-px w-8 bg-[#C5A059]/60" />
+                          </div>
+                          <h3
+                            className={`mt-4 sm:mt-5 font-display text-2xl md:text-3xl lg:text-4xl font-normal leading-tight ${
+                              isDark ? "text-cream" : "text-stone-900"
+                            }`}
+                          >
+                            {feat.title}
+                          </h3>
+                          <p
+                            className={`mt-3 sm:mt-4 text-xs sm:text-sm md:text-base leading-relaxed ${
+                              isDark ? "text-stone-300/80" : "text-stone-600"
+                            }`}
+                          >
+                            {feat.description}
+                          </p>
+                        </div>
                       </div>
-                      <div className="mt-10">
-                        <h3 className="font-display text-2xl md:text-3xl">{feat.title}</h3>
-                        <p className="mt-4 text-sm leading-relaxed text-foreground/65 md:text-base">
-                          {feat.description}
-                        </p>
+
+                      {/* Image Side */}
+                      <div
+                        className={`relative overflow-hidden h-full ${
+                          isFull ? "w-full md:w-7/12 min-h-[260px] md:min-h-full" : "w-full md:w-1/2 min-h-[240px] md:min-h-full"
+                        }`}
+                      >
+                        <img
+                          src={cardImg}
+                          alt={feat.title}
+                          className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                        />
                       </div>
                     </div>
-                  </TiltCard>
-                </Reveal3D>
-              </div>
-            ))}
+                  </Reveal3D>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -315,23 +399,19 @@ function ServiceGallery({ images }: { images: GalleryImage[] }) {
               <TiltCard intensity={5}>
                 <button
                   onClick={() => setSelected(img)}
-                  className={`group relative block w-full overflow-hidden bg-muted text-left ${
-                    img.span === "tall"
-                      ? "aspect-[3/4] md:row-span-2"
-                      : img.span === "wide"
-                        ? "aspect-[16/9] md:col-span-2"
-                        : "aspect-[4/3]"
+                  className={`group relative block w-full overflow-hidden rounded-2xl border border-stone-200/80 bg-[#FAF8F5] text-left p-2 flex items-center justify-center ${
+                    img.span === "wide" ? "md:col-span-2 min-h-[380px]" : "min-h-[360px] md:min-h-[440px]"
                   }`}
                 >
                   <motion.img
                     src={img.src}
                     alt={img.alt}
                     loading="lazy"
-                    className="h-full w-full object-cover"
-                    whileHover={{ scale: 1.06 }}
+                    className="max-h-[520px] w-full object-contain rounded-xl"
+                    whileHover={{ scale: 1.03 }}
                     transition={{ duration: 1.2, ease: EASE_OUT_EXPO }}
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100 rounded-2xl" />
                   <div className="absolute inset-x-0 bottom-0 translate-y-4 p-6 opacity-0 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100">
                     <div className="text-sm text-white/80">{img.alt}</div>
                     <div className="mt-1 font-display text-xl text-white">{img.title}</div>

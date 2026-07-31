@@ -168,6 +168,7 @@ function Hero({
 
     const urls = keys.map((k) => images[k]).filter(Boolean);
     if (urls.length > 0) return urls;
+    if (images.home_hero_bg) return [images.home_hero_bg];
     if (images.hero_bg) return [images.hero_bg];
     return [heroImg];
   }, [images]);
@@ -909,14 +910,14 @@ function PortfolioCard({
         to="/portfolio"
         onMouseEnter={() => setHover(true)}
         onMouseLeave={() => setHover(false)}
-        className={`group relative block overflow-hidden bg-muted ${getAspectClass(piece.span)}`}
+        className={`group relative block overflow-hidden rounded-xl border border-stone-200/80 bg-[#FAF8F5] p-2 flex items-center justify-center ${getAspectClass(piece.span)}`}
       >
         <motion.img
           src={piece.img}
           alt={piece.title}
           loading="lazy"
-          className="h-full w-full object-cover"
-          whileHover={{ scale: 1.08 }}
+          className="h-full w-full object-contain rounded-lg"
+          whileHover={{ scale: 1.04 }}
           transition={{ duration: 1.4, ease: EASE_OUT_EXPO }}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent opacity-70 transition-opacity duration-500 group-hover:opacity-90" />
@@ -2279,7 +2280,7 @@ function Home() {
       if (error) throw error;
       return (data || []).reduce((acc, curr) => ({ ...acc, [curr.key]: curr.value }), {});
     },
-    staleTime: 60 * 1000,
+    staleTime: 0,
   });
 
   const { data: images = {} } = useQuery<Record<string, string>>({
@@ -2289,7 +2290,7 @@ function Home() {
       if (error) throw error;
       return (data || []).reduce((acc, curr) => ({ ...acc, [curr.key]: curr.image_url }), {});
     },
-    staleTime: 60 * 1000,
+    staleTime: 0,
   });
 
   const { data: services = [] } = useQuery<any[]>({
@@ -2302,7 +2303,7 @@ function Home() {
       if (error) throw error;
       return data || [];
     },
-    staleTime: 60 * 1000,
+    staleTime: 0,
   });
 
   const { data: testimonials = [] } = useQuery<any[]>({
@@ -2316,7 +2317,7 @@ function Home() {
       if (error) throw error;
       return data || [];
     },
-    staleTime: 60 * 1000,
+    staleTime: 0,
   });
 
   const { data: whyItems = [] } = useQuery<any[]>({
@@ -2329,7 +2330,7 @@ function Home() {
       if (error) throw error;
       return data || [];
     },
-    staleTime: 60 * 1000,
+    staleTime: 0,
   });
 
   return (
