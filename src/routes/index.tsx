@@ -25,7 +25,6 @@ import {
   Magnetic,
   TextScramble,
   useCursorTag,
-  Marquee,
   ParticleField,
   EASE_SMOOTH,
   EASE_OUT_EXPO,

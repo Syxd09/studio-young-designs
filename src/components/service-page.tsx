@@ -16,7 +16,6 @@ import {
   TextScramble,
   TiltCard,
   Magnetic,
-  Marquee,
   EASE_SMOOTH,
   EASE_OUT_EXPO,
 } from "./shared-animations";
@@ -45,7 +44,6 @@ export interface ServicePageData {
   description: string;
   features: ServiceFeature[];
   gallery: GalleryImage[];
-  marqueeItems: string[];
 }
 
 export function ServicePageLayout({ data }: { data: ServicePageData }) {
@@ -189,8 +187,6 @@ export function ServicePageLayout({ data }: { data: ServicePageData }) {
             ).values(),
           )
         : data.gallery,
-    marqueeItems:
-      dbService?.benefits && dbService.benefits.length > 0 ? dbService.benefits : data.marqueeItems,
   };
 
   return (

@@ -66,13 +66,27 @@ function EnquiriesComponent() {
   const fetchEnquiries = async () => {
     setLoading(true);
     try {
-      const { data, error } = await supabase
-        .from("enquiries")
-        .select("*")
-        .order("created_at", { ascending: false });
+      const [leadsRes, configRes] = await Promise.all([
+        supabase.from("enquiries").select("*").order("created_at", { ascending: false }),
+        supabase.from("site_config").select("key, value").like("key", "lead_notes_%"),
+      ]);
 
-      if (error) throw error;
-      setEnquiries(data || []);
+      if (leadsRes.error) throw leadsRes.error;
+
+      const notesMap = (configRes.data || []).reduce(
+        (acc, curr) => ({
+          ...acc,
+          [curr.key.replace("lead_notes_", "")]: curr.value,
+        }),
+        {} as Record<string, string>,
+      );
+
+      const merged = (leadsRes.data || []).map((e) => ({
+        ...e,
+        notes: e.notes || notesMap[e.id] || "",
+      }));
+
+      setEnquiries(merged);
     } catch (error) {
       toast.error("Failed to load leads");
     } finally {
@@ -99,27 +113,37 @@ function EnquiriesComponent() {
     if (!selectedEnquiry) return;
     setSavingNotes(true);
     try {
-      // 1. Try saving to Supabase (in case notes column is added)
-      const { error } = await supabase
+      // 1. Save to site_config as lead_notes_{id} to guarantee database synchronization across all devices
+      const { error: configError } = await supabase.from("site_config").upsert(
+        [
+          {
+            key: `lead_notes_${selectedEnquiry.id}`,
+            value: leadNotes,
+          },
+        ],
+        { onConflict: "key" },
+      );
+
+      if (configError) throw configError;
+
+      // 2. Also try writing to enquiries.notes in case the column exists/is added later
+      await supabase
         .from("enquiries")
         .update({ notes: leadNotes })
         .eq("id", selectedEnquiry.id);
 
-      if (error) {
-        // Fallback to local storage if column doesn't exist
-        localStorage.setItem(`lead_notes_${selectedEnquiry.id}`, leadNotes);
-        toast.info("Notes saved locally (Supabase notes column not detected)");
-      } else {
-        toast.success("Notes saved successfully");
-        // Update local list
-        setEnquiries((prev) =>
-          prev.map((e) => (e.id === selectedEnquiry.id ? { ...e, notes: leadNotes } : e)),
-        );
-      }
-    } catch (err) {
-      // Fallback
+      toast.success("Notes saved and synchronized successfully!");
+      
+      // Update local state
+      setEnquiries((prev) =>
+        prev.map((e) => (e.id === selectedEnquiry.id ? { ...e, notes: leadNotes } : e)),
+      );
+      setSelectedEnquiry((prev) => (prev ? { ...prev, notes: leadNotes } : null));
+    } catch (err: any) {
+      console.error(err);
+      // Local fallback
       localStorage.setItem(`lead_notes_${selectedEnquiry.id}`, leadNotes);
-      toast.info("Notes saved locally");
+      toast.info("Notes saved locally (network or database sync issue)");
     } finally {
       setSavingNotes(false);
     }
@@ -130,8 +154,12 @@ function EnquiriesComponent() {
     try {
       const { error } = await supabase.from("enquiries").delete().eq("id", id);
       if (error) throw error;
-      toast.success("Lead successfully deleted");
+
+      // Clean up notes from site_config and local storage
+      await supabase.from("site_config").delete().eq("key", `lead_notes_${id}`);
       localStorage.removeItem(`lead_notes_${id}`);
+
+      toast.success("Lead successfully deleted");
       fetchEnquiries();
       setSelectedEnquiry(null);
     } catch (error) {

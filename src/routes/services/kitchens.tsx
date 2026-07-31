@@ -70,7 +70,6 @@ const data: ServicePageData = {
     { src: p3, alt: "Kitchen Storage", title: "Custom Pantry System", span: "tall" },
     { src: svcComplete, alt: "Kitchen Lighting", title: "Under-Cabinet Lighting" },
   ],
-  marqueeItems: ["Walnut", "Marble", "Brass", "Handcrafted", "Modular", "Bespoke"],
 };
 
 function KitchensPage() {

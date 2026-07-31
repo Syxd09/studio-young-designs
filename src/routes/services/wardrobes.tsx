@@ -76,7 +76,6 @@ const data: ServicePageData = {
     { src: p2, alt: "Interior Shelving", title: "Adjustable Shelving", span: "wide" },
     { src: svcComplete, alt: "Wardrobe Lighting", title: "Motion-Activated LEDs" },
   ],
-  marqueeItems: ["Walnut", "Cedar", "Brass", "Walk-In", "Sliding", "Bespoke"],
 };
 
 function WardrobesPage() {

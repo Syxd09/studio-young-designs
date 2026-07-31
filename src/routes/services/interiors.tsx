@@ -76,7 +76,6 @@ const data: ServicePageData = {
     { src: svcLiving, alt: "Living Room", title: "Living Room Composition" },
     { src: p2, alt: "Bedroom", title: "Master Bedroom Suite" },
   ],
-  marqueeItems: ["Turnkey", "Bespoke", "Premium", "40+ Years", "700+ Homes", "One Studio"],
 };
 
 function InteriorsPage() {

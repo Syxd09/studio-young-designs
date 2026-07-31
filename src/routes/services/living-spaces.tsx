@@ -76,7 +76,6 @@ const data: ServicePageData = {
     { src: p2, alt: "Lounge", title: "Evening Lounge Setting", span: "tall" },
     { src: svcKitchen, alt: "Open Plan", title: "Open-Plan Living & Dining" },
   ],
-  marqueeItems: ["Custom", "Lighting", "Textiles", "Art", "Furniture", "Bespoke"],
 };
 
 function LivingSpacesPage() {

@@ -47,13 +47,7 @@ function AdminAboutComponent() {
   // Form states
   const [config, setConfig] = useState<Record<string, string>>({});
   const [aboutImage, setAboutImage] = useState<string>("");
-  const [marqueeItems, setMarqueeItems] = useState<string[]>([
-    "Handcrafted Joinery",
-    "Bangalore Atelier",
-    "Bespoke Walnut & Marble",
-    "Since 1981",
-    "Turnkey Excellence",
-  ]);
+
   const [ethosPillars, setEthosPillars] = useState<EthosPillar[]>([
     {
       num: "01",
@@ -105,9 +99,8 @@ function AdminAboutComponent() {
   ]);
 
   const [activeTab, setActiveTab] = useState<
-    "story" | "video" | "founders" | "marquee" | "ethos" | "milestones"
+    "story" | "video" | "founders" | "ethos" | "milestones"
   >("story");
-  const [newMarqueeInput, setNewMarqueeInput] = useState("");
 
   useEffect(() => {
     fetchAboutData();
@@ -141,21 +134,7 @@ function AdminAboutComponent() {
         setAboutImage(imagesRes.data.image_url);
       }
 
-      // Parse Marquee Items
-      if (configMap.about_marquee_items) {
-        try {
-          const parsed = JSON.parse(configMap.about_marquee_items);
-          if (Array.isArray(parsed) && parsed.length > 0) {
-            setMarqueeItems(parsed);
-          }
-        } catch {
-          const split = configMap.about_marquee_items
-            .split(",")
-            .map((s) => s.trim())
-            .filter(Boolean);
-          if (split.length > 0) setMarqueeItems(split);
-        }
-      }
+
 
       // Parse Ethos Pillars
       if (configMap.about_ethos_data) {
@@ -319,7 +298,6 @@ function AdminAboutComponent() {
     try {
       const mergedConfig = {
         ...config,
-        about_marquee_items: JSON.stringify(marqueeItems),
         about_ethos_data: JSON.stringify(ethosPillars),
         milestones_data: JSON.stringify(milestones),
       };
@@ -338,25 +316,6 @@ function AdminAboutComponent() {
     } finally {
       setSaving(false);
     }
-  };
-
-  // Marquee handlers
-  const handleAddMarqueeItem = () => {
-    if (!newMarqueeInput.trim()) return;
-    setMarqueeItems((prev) => [...prev, newMarqueeInput.trim()]);
-    setNewMarqueeInput("");
-  };
-
-  const handleDeleteMarqueeItem = (index: number) => {
-    setMarqueeItems((prev) => prev.filter((_, i) => i !== index));
-  };
-
-  const handleUpdateMarqueeItem = (index: number, val: string) => {
-    setMarqueeItems((prev) => {
-      const copy = [...prev];
-      copy[index] = val;
-      return copy;
-    });
   };
 
   // Ethos handlers

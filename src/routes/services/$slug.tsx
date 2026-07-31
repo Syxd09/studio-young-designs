@@ -85,16 +85,44 @@ function DynamicServicePage() {
     );
   }
 
-  // Parse features and benefits
-  const parsedFeatures = (dbService.features || []).map((f: string, idx: number) => {
-    const idxOf = f.indexOf(":");
-    if (idxOf === -1) {
-      return { title: `Specification 0${idx + 1}`, description: f };
+  // Parse features
+  const parsedFeatures = (dbService.features || []).map((f: any, idx: number) => {
+    if (typeof f === "object" && f !== null) {
+      return {
+        title: f.title || `Offer Card 0${idx + 1}`,
+        description: f.description || "",
+        image: f.image || f.image_url || "",
+        size: f.size === "full" ? "full" : "half",
+        theme: f.theme === "dark" ? "dark" : "light",
+      };
     }
-    return {
-      title: f.substring(0, idxOf),
-      description: f.substring(idxOf + 1),
-    };
+    if (typeof f === "string") {
+      if (f.trim().startsWith("{")) {
+        try {
+          const parsed = JSON.parse(f);
+          return {
+            title: parsed.title || `Offer Card 0${idx + 1}`,
+            description: parsed.description || "",
+            image: parsed.image || parsed.image_url || "",
+            size: parsed.size === "full" ? "full" : "half",
+            theme: parsed.theme === "dark" ? "dark" : "light",
+          };
+        } catch (e) {
+          // Fallback below
+        }
+      }
+      const colonIdx = f.indexOf(":");
+      if (colonIdx === -1) {
+        return { title: f || `Offer Card 0${idx + 1}`, description: f, size: "half", theme: "light" };
+      }
+      return {
+        title: f.substring(0, colonIdx).trim(),
+        description: f.substring(colonIdx + 1).trim(),
+        size: "half",
+        theme: "light",
+      };
+    }
+    return { title: `Offer Card 0${idx + 1}`, description: "", size: "half", theme: "light" };
   });
 
   const pageData: ServicePageData = {
@@ -106,7 +134,6 @@ function DynamicServicePage() {
     description: dbService.description,
     features: parsedFeatures,
     gallery: [], // Loaded dynamically in ServicePageLayout
-    marqueeItems: dbService.benefits || [],
   };
 
   return <ServicePageLayout data={pageData} />;

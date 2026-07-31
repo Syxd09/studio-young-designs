@@ -17,7 +17,6 @@ import {
   Highlight,
   TiltCard,
   Magnetic,
-  Marquee,
   EASE_SMOOTH,
   EASE_OUT_EXPO,
 } from "@/components/shared-animations";
@@ -125,28 +124,6 @@ function AboutPage() {
       },
     ];
   }, [config.milestones_data, config.stat_years, config.stat_spaces]);
-
-  const marqueeItems = useMemo(() => {
-    if (config.about_marquee_items) {
-      try {
-        const parsed = JSON.parse(config.about_marquee_items);
-        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
-      } catch {
-        const split = config.about_marquee_items
-          .split(",")
-          .map((s) => s.trim())
-          .filter(Boolean);
-        if (split.length > 0) return split;
-      }
-    }
-    return [
-      "Handcrafted Joinery",
-      "Bangalore Atelier",
-      "Bespoke Walnut & Marble",
-      "Since 1981",
-      "Turnkey Excellence",
-    ];
-  }, [config.about_marquee_items]);
 
   const pillars = useMemo(() => {
     if (config.about_ethos_data) {
