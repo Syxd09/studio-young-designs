@@ -124,7 +124,7 @@ export function Reveal3D({
         initial={{ opacity: 0, rotateX, rotateY, z, y: 40 }}
         animate={inView ? { opacity: 1, rotateX: 0, rotateY: 0, z: 0, y: 0 } : {}}
         transition={{ duration: 1.2, delay, ease: EASE_SMOOTH }}
-        style={{ transformStyle: "preserve-3d" }}
+        style={{ transformStyle: "preserve-3d", WebkitBackfaceVisibility: "hidden", backfaceVisibility: "hidden" }}
       >
         {children}
       </motion.div>
@@ -246,7 +246,7 @@ export function TiltCard({
         ref={ref}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
-        style={{ rotateX: springX, rotateY: springY, transformStyle: "preserve-3d" }}
+        style={{ rotateX: springX, rotateY: springY, transformStyle: "preserve-3d", WebkitBackfaceVisibility: "hidden", backfaceVisibility: "hidden" }}
         className={`relative ${className}`}
       >
         {children}

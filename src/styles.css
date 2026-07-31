@@ -80,6 +80,7 @@
 @layer base {
   * {
     border-color: var(--color-border);
+    -webkit-tap-highlight-color: transparent;
   }
   html {
     scroll-behavior: smooth;
@@ -139,20 +140,40 @@
   -webkit-backdrop-filter: blur(18px) saturate(140%);
 }
 
+/* iOS WebKit Backdrop Blur & Compositing Fix:
+ * Real-time backdrop-filter on fixed elements over 3D transforms causes severe
+ * black screen flickering on iOS WebKit (Safari & Chrome iOS). Solid opacity fallback eliminates flickering.
+ */
+@supports (-webkit-touch-callout: none) {
+  .glass-panel {
+    -webkit-backdrop-filter: none !important;
+    backdrop-filter: none !important;
+    background: rgba(250, 248, 245, 0.96) !important;
+  }
+  :is(.dark *) .glass-panel {
+    background: rgba(24, 24, 26, 0.96) !important;
+  }
+}
+
 /* ─── 3D Perspective Context ─── */
 
 @utility perspective-container {
   perspective: 1200px;
   perspective-origin: 50% 50%;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
 @utility perspective-deep {
   perspective: 2000px;
   perspective-origin: 50% 50%;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
 }
 
 @utility preserve-3d {
   transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
 }
 
 /* ─── Film Grain Overlay ─── */
