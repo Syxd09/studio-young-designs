@@ -203,6 +203,7 @@ function PortfolioPage() {
       const { data, error } = await supabase
         .from("gallery")
         .select("*")
+        .eq("is_visible", true)
         .order("display_order", { ascending: true });
       if (error) throw error;
       return data || [];

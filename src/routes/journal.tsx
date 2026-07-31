@@ -50,7 +50,7 @@ export const Route = createFileRoute("/journal")({
   component: JournalPage,
 });
 
-type Category = "all" | "design-tips" | "materials" | "guides";
+
 
 interface JournalPost {
   slug: string;
@@ -59,7 +59,7 @@ interface JournalPost {
   content: string[];
   date: string;
   readTime: string;
-  category: Category;
+  category: string;
   image: string;
   keywords: string[];
 }
@@ -149,15 +149,9 @@ const defaultPosts: JournalPost[] = [
   },
 ];
 
-const categories: Array<{ key: Category; label: string }> = [
-  { key: "all", label: "All Journal" },
-  { key: "guides", label: "Guides & Manuals" },
-  { key: "materials", label: "Material Studies" },
-  { key: "design-tips", label: "Design Philosophy" },
-];
+
 
 function JournalPage() {
-  const [filter, setFilter] = useState<Category>("all");
   const [selectedPost, setSelectedPost] = useState<JournalPost | null>(null);
 
   const { data: dbPosts = [] } = useQuery<any[]>({
@@ -233,8 +227,7 @@ function JournalPage() {
           }))
       : defaultPosts;
 
-  const filteredPosts =
-    filter === "all" ? postsList : postsList.filter((p) => p.category === filter);
+  const filteredPosts = postsList;
 
   // Close detail viewer on Esc key
   useEffect(() => {
@@ -261,42 +254,20 @@ function JournalPage() {
 
       <section className="bg-cream py-24 md:py-32">
         <div className="mx-auto max-w-[1400px] px-6 md:px-10">
-          {/* Section Header & Filter */}
-          <div className="mb-16 flex flex-col gap-8 md:flex-row md:items-end md:justify-between">
-            <div>
-              <Reveal3D rotateX={10}>
-                <div className="mb-6 flex items-center gap-3">
-                  <span className="gold-rule" />
-                  <span className="eyebrow">
-                    <TextScramble text="Design Notebook" />
-                  </span>
-                </div>
-                <SplitHeading
-                  text="Considered insights."
-                  className="text-4xl text-charcoal md:text-5xl"
-                />
-              </Reveal3D>
-            </div>
-
-            {/* Filters */}
-            <div className="flex flex-wrap gap-3">
-              {categories.map((cat, idx) => (
-                <motion.button
-                  key={cat.key}
-                  onClick={() => setFilter(cat.key)}
-                  initial={{ opacity: 0, y: 15 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: idx * 0.05, ease: EASE_SMOOTH }}
-                  className={`border px-5 py-2 text-[10px] uppercase tracking-[0.2em] transition-all duration-300 ${
-                    filter === cat.key
-                      ? "border-charcoal bg-charcoal text-cream"
-                      : "border-charcoal/15 text-charcoal/60 hover:border-charcoal/40 hover:text-charcoal"
-                  }`}
-                >
-                  {cat.label}
-                </motion.button>
-              ))}
-            </div>
+          {/* Section Header */}
+          <div className="mb-16">
+            <Reveal3D rotateX={10}>
+              <div className="mb-6 flex items-center gap-3">
+                <span className="gold-rule" />
+                <span className="eyebrow">
+                  <TextScramble text="Design Notebook" />
+                </span>
+              </div>
+              <SplitHeading
+                text="Considered insights."
+                className="text-4xl text-charcoal md:text-5xl"
+              />
+            </Reveal3D>
           </div>
 
           {/* Grid Layout */}

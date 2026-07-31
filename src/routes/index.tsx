@@ -179,7 +179,7 @@ function Hero({
     if (heroSlidesList.length <= 1) return;
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % heroSlidesList.length);
-    }, 2000);
+    }, 6000);
     return () => clearInterval(timer);
   }, [heroSlidesList.length]);
 
@@ -461,22 +461,16 @@ function About({
 
         <div className="md:col-span-7 md:pl-8">
           <SplitHeading
-            text="Crafted with Purpose. Built to Endure."
+            text={config.about_heading || "Crafted with Purpose. Built to Endure."}
             className="text-4xl md:text-6xl"
           />
           <Reveal3D delay={0.2} rotateX={8}>
             <div className="mt-10 max-w-xl text-lg leading-relaxed text-foreground/75 space-y-6">
               <p>
-                For more than 45 years, Studio Young Designs has been shaping extraordinary homes
-                through timeless design, precision engineering, and master craftsmanship. Every detail is
-                thoughtfully considered, every material carefully selected, and every project executed
-                with uncompromising standards.
+                {config.about_desc_1 || "For more than 45 years, Studio Young Designs has been shaping extraordinary homes through timeless design, precision engineering, and master craftsmanship. Every detail is thoughtfully considered, every material carefully selected, and every project executed with uncompromising standards."}
               </p>
               <p>
-                Our integrated design, manufacturing, and execution model allows us to deliver
-                bespoke interiors with exceptional quality and complete accountability. From luxury
-                kitchens and custom wardrobes to handcrafted furniture and complete home interiors, we
-                create spaces that embody elegance, functionality, and enduring value.
+                {config.about_desc_2 || "Our integrated design, manufacturing, and execution model allows us to deliver bespoke interiors with exceptional quality and complete accountability. From luxury kitchens and custom wardrobes to handcrafted furniture and complete home interiors, we create spaces that embody elegance, functionality, and enduring value."}
               </p>
               <p className="font-display italic text-xl text-stone-600 pt-2 border-t border-border/40">
                 &ldquo;Luxury is not what we add. It is how we build.&rdquo;
@@ -487,37 +481,31 @@ function About({
                 <div className="flex flex-col pr-4 sm:pr-6">
                   <div className="h-10 sm:h-12 flex items-end mb-1.5">
                     <span className="font-display text-2xl sm:text-3xl lg:text-4xl font-normal text-[#cb2026] tracking-tight">
-                      45+
+                      {config.stat_years || "45+"}
                     </span>
                   </div>
-                  <p className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.16em] text-stone-600 leading-snug">
-                    YEARS OF
-                    <br />
-                    CRAFTSMANSHIP
+                  <p className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.16em] text-stone-600 leading-snug whitespace-pre-line">
+                    {config.stat_years_label || "YEARS OF\nCRAFTSMANSHIP"}
                   </p>
                 </div>
                 <div className="flex flex-col px-4 sm:px-6">
                   <div className="h-10 sm:h-12 flex items-end mb-1.5">
                     <span className="font-display text-2xl sm:text-3xl lg:text-4xl font-normal text-[#cb2026] tracking-tight whitespace-nowrap">
-                      On-Time
+                      {config.stat_ontime || "On-Time"}
                     </span>
                   </div>
-                  <p className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.16em] text-stone-600 leading-snug">
-                    PROJECT
-                    <br />
-                    DELIVERY
+                  <p className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.16em] text-stone-600 leading-snug whitespace-pre-line">
+                    {config.stat_ontime_label || "PROJECT\nDELIVERY"}
                   </p>
                 </div>
                 <div className="flex flex-col pl-4 sm:pl-6">
                   <div className="h-10 sm:h-12 flex items-end mb-1.5">
                     <span className="font-display text-2xl sm:text-3xl lg:text-4xl font-normal text-[#cb2026] tracking-tight whitespace-nowrap">
-                      In-House
+                      {config.stat_inhouse || "In-House"}
                     </span>
                   </div>
-                  <p className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.16em] text-stone-600 leading-snug">
-                    MANUFACTURING
-                    <br />
-                    EXCELLENCE
+                  <p className="text-[10px] sm:text-[11px] font-bold uppercase tracking-[0.16em] text-stone-600 leading-snug whitespace-pre-line">
+                    {config.stat_inhouse_label || "MANUFACTURING\nEXCELLENCE"}
                   </p>
                 </div>
               </div>

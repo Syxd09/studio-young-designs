@@ -85,6 +85,10 @@ function ConfigComponent() {
         stat_spaces_label: "Projects Completed",
         stat_artisans: "35+",
         stat_artisans_label: "Master Craftsmen",
+        stat_ontime: "On-Time",
+        stat_ontime_label: "PROJECT\nDELIVERY",
+        stat_inhouse: "In-House",
+        stat_inhouse_label: "MANUFACTURING\nEXCELLENCE",
         // Contact
         contact_phone: "+91-9902599515",
         contact_email: "info@studioyoungdesigns.com",
@@ -959,6 +963,46 @@ function ConfigComponent() {
                     type="text"
                     value={config.stat_quality_label || "Quality Materials"}
                     onChange={(e) => handleTextChange("stat_quality_label", e.target.value)}
+                    className="w-full bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded p-2 text-stone-500 dark:text-stone-400 focus:border-[#cb2026] outline-none text-[10px]"
+                    placeholder="Label text"
+                  />
+                </div>
+
+                {/* Project Delivery Highlight */}
+                <div className="border border-stone-200 dark:border-stone-850 p-4 rounded bg-stone-50 dark:bg-stone-900/35 space-y-3">
+                  <label className="text-[10px] uppercase tracking-widest text-[#cb2026] font-bold">
+                    Project Delivery Highlight
+                  </label>
+                  <input
+                    type="text"
+                    value={config.stat_ontime || ""}
+                    onChange={(e) => handleTextChange("stat_ontime", e.target.value)}
+                    className="w-full bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded p-2 text-stone-900 dark:text-white focus:border-[#cb2026] outline-none text-xs font-semibold"
+                  />
+                  <input
+                    type="text"
+                    value={config.stat_ontime_label || ""}
+                    onChange={(e) => handleTextChange("stat_ontime_label", e.target.value)}
+                    className="w-full bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded p-2 text-stone-500 dark:text-stone-400 focus:border-[#cb2026] outline-none text-[10px]"
+                    placeholder="Label text"
+                  />
+                </div>
+
+                {/* Manufacturing Highlight */}
+                <div className="border border-stone-200 dark:border-stone-850 p-4 rounded bg-stone-50 dark:bg-stone-900/35 space-y-3">
+                  <label className="text-[10px] uppercase tracking-widest text-[#cb2026] font-bold">
+                    Manufacturing Highlight
+                  </label>
+                  <input
+                    type="text"
+                    value={config.stat_inhouse || ""}
+                    onChange={(e) => handleTextChange("stat_inhouse", e.target.value)}
+                    className="w-full bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded p-2 text-stone-900 dark:text-white focus:border-[#cb2026] outline-none text-xs font-semibold"
+                  />
+                  <input
+                    type="text"
+                    value={config.stat_inhouse_label || ""}
+                    onChange={(e) => handleTextChange("stat_inhouse_label", e.target.value)}
                     className="w-full bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded p-2 text-stone-500 dark:text-stone-400 focus:border-[#cb2026] outline-none text-[10px]"
                     placeholder="Label text"
                   />
