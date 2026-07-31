@@ -30,14 +30,6 @@ interface BannerConfig {
 
 const PAGES_CONFIG: BannerConfig[] = [
   {
-    key: "about_hero",
-    pageName: "About Us Page Hero",
-    pagePath: "/about",
-    subtitle: "Hero header banner displayed at the top of the About Us page.",
-    defaultImage: aboutImg,
-    keysToUpdate: ["about_hero_bg", "about_img"],
-  },
-  {
     key: "services_hero",
     pageName: "Services Page Hero",
     pagePath: "/services",

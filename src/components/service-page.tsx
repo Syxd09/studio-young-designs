@@ -4,10 +4,11 @@
  */
 
 import { Link } from "@tanstack/react-router";
-import { useRef, useState } from "react";
-import { motion, useInView } from "framer-motion";
+import { useRef, useState, useEffect, useMemo } from "react";
+import { motion, useInView, AnimatePresence, animate } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/utils/supabase";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import {
   PageWrapper,
   PageHero,
@@ -280,10 +281,10 @@ export function ServicePageLayout({ data }: { data: ServicePageData }) {
                       >
                         <div>
                           <div className="flex items-center gap-3">
+                            <span className="h-px w-8 bg-[#C5A059]/60" />
                             <span className="font-display text-lg tracking-widest text-[#C5A059] font-medium">
                               {String(i + 1).padStart(2, "0")}
                             </span>
-                            <span className="h-px w-8 bg-[#C5A059]/60" />
                           </div>
                           <h3
                             className={`mt-4 sm:mt-5 font-display text-2xl md:text-3xl lg:text-4xl font-normal leading-tight ${
@@ -373,11 +374,80 @@ export function ServicePageLayout({ data }: { data: ServicePageData }) {
 
 function ServiceGallery({ images }: { images: GalleryImage[] }) {
   const [selected, setSelected] = useState<GalleryImage | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
+  
+  // Tripled images list for infinite loop
+  const loopImages = useMemo(() => {
+    if (!images || images.length === 0) return [];
+    return [...images, ...images, ...images];
+  }, [images]);
+
+  // Align scroll to center (middle copy of the W content)
+  const alignCenter = () => {
+    const el = containerRef.current;
+    if (el) {
+      const W = el.scrollWidth / 3;
+      el.scrollLeft = W;
+    }
+  };
+
+  // Run center alignment once images/track are loaded
+  useEffect(() => {
+    if (loopImages.length === 0) return;
+    
+    // We delay alignment slightly to allow browser layout calculations
+    const timer = setTimeout(alignCenter, 100);
+    window.addEventListener("resize", alignCenter);
+    
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener("resize", alignCenter);
+    };
+  }, [loopImages]);
+
+  // Seamless boundary wrap check in onScroll
+  const handleScroll = () => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    const W = el.scrollWidth / 3;
+    if (W <= 0) return;
+
+    // Right boundary wrap (past 2/3 of content)
+    if (el.scrollLeft >= 2 * W) {
+      el.scrollLeft -= W;
+    }
+    // Left boundary wrap (below 1/3 of content)
+    else if (el.scrollLeft < W) {
+      el.scrollLeft += W;
+    }
+  };
+
+  const scroll = (direction: "left" | "right") => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    const W = el.scrollWidth / 3;
+    const scrollAmount = el.clientWidth * 0.7;
+    const target = el.scrollLeft + (direction === "left" ? -scrollAmount : scrollAmount);
+
+    animate(el.scrollLeft, target, {
+      type: "spring",
+      stiffness: 80,
+      damping: 18,
+      mass: 0.8,
+      onUpdate: (val) => {
+        el.scrollLeft = val;
+      },
+    });
+  };
+
+  if (!images || images.length === 0) return null;
 
   return (
     <section className="bg-background py-24 md:py-32">
-      <div className="mx-auto max-w-[1400px] px-6 md:px-10">
-        <div className="mb-16">
+      <div className="mx-auto max-w-[1400px] px-6 md:px-10 space-y-12">
+        <div className="mb-8">
           <Reveal3D rotateX={10}>
             <div className="mb-6 flex items-center gap-3">
               <span className="gold-rule" />
@@ -389,61 +459,103 @@ function ServiceGallery({ images }: { images: GalleryImage[] }) {
           </Reveal3D>
         </div>
 
-        <div className="grid grid-cols-1 gap-4 md:grid-cols-3 md:gap-6">
-          {images.map((img, i) => (
-            <Reveal3D key={img.title} delay={(i % 3) * 0.08} rotateX={10}>
-              <TiltCard intensity={5}>
-                <button
-                  onClick={() => setSelected(img)}
-                  className={`group relative block w-full overflow-hidden rounded-2xl border border-stone-200/80 bg-[#FAF8F5] text-left p-2 flex items-center justify-center ${
-                    img.span === "wide" ? "md:col-span-2 min-h-[380px]" : "min-h-[360px] md:min-h-[440px]"
-                  }`}
-                >
-                  <motion.img
-                    src={img.src}
-                    alt={img.alt}
-                    loading="lazy"
-                    className="max-h-[520px] w-full object-contain rounded-xl"
-                    whileHover={{ scale: 1.03 }}
-                    transition={{ duration: 1.2, ease: EASE_OUT_EXPO }}
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100 rounded-2xl" />
-                  <div className="absolute inset-x-0 bottom-0 translate-y-4 p-6 opacity-0 transition-all duration-500 group-hover:translate-y-0 group-hover:opacity-100">
-                    <div className="text-sm text-white/80">{img.alt}</div>
-                    <div className="mt-1 font-display text-xl text-white">{img.title}</div>
-                  </div>
-                </button>
-              </TiltCard>
-            </Reveal3D>
-          ))}
+        {/* Horizontal Multi-Card Track Gallery */}
+        <div className="relative w-full group py-2">
+          {/* Left Floating Arrow */}
+          <button
+            onClick={() => scroll("left")}
+            className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 z-30 h-12 w-12 rounded-full bg-white/85 text-stone-900 border border-stone-200/80 shadow-2xl backdrop-blur-md flex items-center justify-center hover:bg-stone-900 hover:text-white hover:border-stone-900 transition-all duration-300 cursor-pointer"
+            aria-label="Scroll Left"
+          >
+            <ChevronLeft size={24} />
+          </button>
+
+          {/* Right Floating Arrow */}
+          <button
+            onClick={() => scroll("right")}
+            className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 z-30 h-12 w-12 rounded-full bg-white/85 text-stone-900 border border-stone-200/80 shadow-2xl backdrop-blur-md flex items-center justify-center hover:bg-stone-900 hover:text-white hover:border-stone-900 transition-all duration-300 cursor-pointer"
+            aria-label="Scroll Right"
+          >
+            <ChevronRight size={24} />
+          </button>
+
+          {/* Edge-to-Edge Pure Photography Track */}
+          <div
+            ref={containerRef}
+            onScroll={handleScroll}
+            className="flex gap-4 sm:gap-6 overflow-x-auto scrollbar-none px-4 md:px-8 py-2 h-[68vh] min-h-[460px] max-h-[700px] items-stretch"
+          >
+            {loopImages.map((img: GalleryImage, idx: number) => (
+              <div
+                key={img.src + idx}
+                className="flex-none relative h-full w-auto group/slide cursor-pointer overflow-hidden rounded-sm select-none"
+                onClick={() => setSelected(img)}
+              >
+                <img
+                  src={img.src}
+                  alt={img.alt || "Gallery"}
+                  loading="lazy"
+                  decoding="async"
+                  className="h-full w-auto max-w-none object-cover transition-transform duration-700 ease-out group-hover/slide:scale-[1.02]"
+                />
+                {/* Subtle Hover Overlay with Title */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover/slide:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-6 pointer-events-none">
+                  {img.title && (
+                    <span className="font-display text-lg text-white uppercase tracking-wider font-medium">
+                      {img.title}
+                    </span>
+                  )}
+                  {img.alt && (
+                    <span className="text-xs text-white/80 uppercase tracking-widest font-sans mt-0.5">
+                      {img.alt}
+                    </span>
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
       {/* Lightbox */}
-      {selected && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          onClick={() => setSelected(null)}
-          className="fixed inset-0 z-[200] flex items-center justify-center bg-black/90 p-6 backdrop-blur-sm"
-        >
-          <motion.img
-            src={selected.src}
-            alt={selected.alt}
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.5, ease: EASE_SMOOTH }}
-            className="max-h-[85vh] max-w-full object-contain"
-          />
-          <button
+      <AnimatePresence>
+        {selected && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
             onClick={() => setSelected(null)}
-            className="absolute right-6 top-6 text-3xl text-white/70 transition-colors hover:text-white"
+            className="fixed inset-0 z-[200] flex items-center justify-center bg-black/90 p-6 backdrop-blur-sm"
           >
-            ×
-          </button>
-        </motion.div>
-      )}
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0, rotateX: 10 }}
+              animate={{ scale: 1, opacity: 1, rotateX: 0 }}
+              exit={{ scale: 0.8, opacity: 0 }}
+              transition={{ duration: 0.5, ease: EASE_SMOOTH }}
+              className="relative"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <img
+                src={selected.src}
+                alt={selected.title}
+                className="max-h-[80vh] max-w-full object-contain"
+              />
+              <div className="mt-4 text-center">
+                <div className="font-display text-2xl text-white">{selected.title}</div>
+                {selected.alt && (
+                  <div className="text-sm text-stone-400 mt-1 uppercase tracking-widest">{selected.alt}</div>
+                )}
+              </div>
+              <button
+                onClick={() => setSelected(null)}
+                className="absolute right-0 -top-12 text-3xl text-white/70 hover:text-white transition-colors cursor-pointer"
+              >
+                ×
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }

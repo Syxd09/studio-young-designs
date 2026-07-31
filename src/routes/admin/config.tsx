@@ -448,35 +448,6 @@ function ConfigComponent() {
                     </label>
                   )}
                 </div>
-
-                {/* About Image Card */}
-                <div className="border border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-900/35 p-5 rounded-lg space-y-4">
-                  <div className="flex justify-between items-center">
-                    <span className="text-[10px] uppercase tracking-widest text-[#cb2026] font-bold">
-                      About Section Banner
-                    </span>
-                    {uploadingKey === "about_img" && (
-                      <Loader2 size={12} className="animate-spin text-[#cb2026]" />
-                    )}
-                  </div>
-                  {images.about_img && (
-                    <img
-                      src={images.about_img}
-                      alt="About section banner"
-                      className="w-full h-44 object-cover rounded border border-stone-200 dark:border-stone-800"
-                    />
-                  )}
-                  <label className="flex items-center justify-center gap-2 border border-stone-300 dark:border-stone-750 hover:border-[#cb2026] bg-stone-100 dark:bg-stone-900 hover:bg-stone-200 dark:hover:bg-stone-800 transition-colors rounded py-2.5 text-xs font-semibold cursor-pointer text-stone-700 dark:text-stone-300">
-                    <Upload size={14} className="text-stone-400" />
-                    <span>Upload New About Image</span>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={(e) => handleImageUpload("about_img", e)}
-                      className="hidden"
-                    />
-                  </label>
-                </div>
               </motion.div>
             )}
 
@@ -567,44 +538,6 @@ function ConfigComponent() {
                     value={config.hero_subtitle || ""}
                     onChange={(e) => handleTextChange("hero_subtitle", e.target.value)}
                     rows={3}
-                    className="w-full bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded p-3 text-stone-900 dark:text-white focus:border-[#cb2026] focus:bg-white dark:focus:bg-transparent outline-none text-xs leading-relaxed"
-                  />
-                </div>
-
-                <div className="h-px bg-stone-100 dark:bg-stone-850 my-6" />
-
-                <div className="space-y-2">
-                  <label className="text-[10px] uppercase tracking-widest text-[#cb2026] font-bold">
-                    About Us Section Headline
-                  </label>
-                  <input
-                    type="text"
-                    value={config.about_heading || ""}
-                    onChange={(e) => handleTextChange("about_heading", e.target.value)}
-                    className="w-full bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded p-3 text-stone-900 dark:text-white focus:border-[#cb2026] focus:bg-white dark:focus:bg-transparent outline-none text-sm font-semibold"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-[10px] uppercase tracking-widest text-[#cb2026] font-bold">
-                    About Section Paragraph 1
-                  </label>
-                  <textarea
-                    value={config.about_desc_1 || ""}
-                    onChange={(e) => handleTextChange("about_desc_1", e.target.value)}
-                    rows={4}
-                    className="w-full bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded p-3 text-stone-900 dark:text-white focus:border-[#cb2026] focus:bg-white dark:focus:bg-transparent outline-none text-xs leading-relaxed"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-[10px] uppercase tracking-widest text-[#cb2026] font-bold">
-                    About Section Paragraph 2
-                  </label>
-                  <textarea
-                    value={config.about_desc_2 || ""}
-                    onChange={(e) => handleTextChange("about_desc_2", e.target.value)}
-                    rows={4}
                     className="w-full bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded p-3 text-stone-900 dark:text-white focus:border-[#cb2026] focus:bg-white dark:focus:bg-transparent outline-none text-xs leading-relaxed"
                   />
                 </div>

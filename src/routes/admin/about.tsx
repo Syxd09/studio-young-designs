@@ -47,6 +47,8 @@ function AdminAboutComponent() {
   // Form states
   const [config, setConfig] = useState<Record<string, string>>({});
   const [aboutImage, setAboutImage] = useState<string>("");
+  const [heritageImage, setHeritageImage] = useState<string>("");
+  const [heroImage, setHeroImage] = useState<string>("");
 
   const [ethosPillars, setEthosPillars] = useState<EthosPillar[]>([
     {
@@ -111,14 +113,11 @@ function AdminAboutComponent() {
     try {
       const [configRes, imagesRes] = await Promise.all([
         supabase.from("site_config").select("key, value"),
-        supabase
-          .from("layout_images")
-          .select("key, image_url")
-          .eq("key", "about_img")
-          .maybeSingle(),
+        supabase.from("layout_images").select("key, image_url"),
       ]);
 
       if (configRes.error) throw configRes.error;
+      if (imagesRes.error) throw imagesRes.error;
 
       const configMap = (configRes.data || []).reduce(
         (acc, curr) => ({
@@ -128,10 +127,41 @@ function AdminAboutComponent() {
         {} as Record<string, string>,
       );
 
-      setConfig(configMap);
+      const defaults: Record<string, string> = {
+        about_heading: "A quiet devotion to material, proportion and light — carried through four decades.",
+        about_homepage_heading: "Crafted with Purpose. Built to Endure.",
+        about_homepage_desc_1: "For more than 45 years, Studio Young Designs has been shaping extraordinary homes through timeless design, precision engineering, and master craftsmanship. Every detail is thoughtfully considered, every material carefully selected, and every project executed with uncompromising standards.",
+        about_homepage_desc_2: "Our integrated design, manufacturing, and execution model allows us to deliver bespoke interiors with exceptional quality and complete accountability. From luxury kitchens and custom wardrobes to handcrafted furniture and complete home interiors, we create spaces that embody elegance, functionality, and enduring value.",
+        about_heritage_title: "Crafted with Purpose. Perfected Through Experience.",
+        about_heritage_p1: "For over 45 years, Studio Young Designs has been creating bespoke interiors that combine timeless design, exceptional craftsmanship, and uncompromising quality. Since 1981, we have transformed residences into refined living spaces where every detail is thoughtfully designed, micticulously crafted, and built to stand the test of time.",
+        about_heritage_p2: "Our strength lies in complete in-house execution. From premium modular kitchens, custom wardrobes, and handcrafted furniture to full-home interiors, every project is managed by our own team of designers, master craftsmen, and installation specialists. This integrated approach ensures complete quality control, seamless coordination, and precision at every stage of the journey.",
+        about_heritage_p3: "At Studio Young Designs, we believe true luxury is measured not by extravagance, but by flawless execution, enduring materials, and spaces that enrich everyday living. Every home we create reflects our commitment to craftsmanship, innovation, and trust—delivering timeless interiors that families will cherish for generations.",
+        about_quote: "We remain a small studio by choice. It lets us stay close to the drawing, to the wood, to the client..."
+      };
 
-      if (imagesRes.data?.image_url) {
-        setAboutImage(imagesRes.data.image_url);
+      const finalConfig = {
+        ...defaults,
+        ...configMap,
+      };
+
+      setConfig(finalConfig);
+
+      const imagesMap = (imagesRes.data || []).reduce(
+        (acc, curr) => ({
+          ...acc,
+          [curr.key]: curr.image_url,
+        }),
+        {} as Record<string, string>,
+      );
+
+      if (imagesMap.about_img) {
+        setAboutImage(imagesMap.about_img);
+      }
+      if (imagesMap.about_heritage_img) {
+        setHeritageImage(imagesMap.about_heritage_img);
+      }
+      if (imagesMap.about_hero_bg) {
+        setHeroImage(imagesMap.about_hero_bg);
       }
 
 
@@ -170,7 +200,10 @@ function AdminAboutComponent() {
     setConfig((prev) => ({ ...prev, [key]: value }));
   };
 
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (
+    key: "about_img" | "about_heritage_img" | "about_hero_bg",
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     if (!e.target.files || !e.target.files[0]) return;
     const file = e.target.files[0];
     if (file.size > 10 * 1024 * 1024) {
@@ -181,7 +214,7 @@ function AdminAboutComponent() {
     setUploadingImage(true);
     try {
       const fileExt = file.name.split(".").pop();
-      const fileName = `about_img-${Date.now()}.${fileExt}`;
+      const fileName = `${key}-${Date.now()}.${fileExt}`;
       const filePath = `layout/${fileName}`;
 
       const { error: uploadError } = await supabase.storage
@@ -196,12 +229,26 @@ function AdminAboutComponent() {
 
       const { error: dbError } = await supabase
         .from("layout_images")
-        .upsert({ key: "about_img", image_url: publicUrl }, { onConflict: "key" });
+        .upsert({ key, image_url: publicUrl }, { onConflict: "key" });
 
       if (dbError) throw dbError;
 
-      setAboutImage(publicUrl);
-      toast.success("About banner image updated!");
+      if (key === "about_img") {
+        setAboutImage(publicUrl);
+      } else if (key === "about_heritage_img") {
+        setHeritageImage(publicUrl);
+      } else {
+        setHeroImage(publicUrl);
+      }
+      toast.success(
+        `${
+          key === "about_img"
+            ? "Homepage About"
+            : key === "about_heritage_img"
+              ? "Heritage"
+              : "Hero Banner"
+        } image updated!`
+      );
     } catch (err: any) {
       toast.error(err.message || "Failed to upload image.");
     } finally {
@@ -445,77 +492,231 @@ function AdminAboutComponent() {
                 transition={{ duration: 0.3 }}
                 className="space-y-6 max-w-3xl"
               >
-                {/* About Banner Upload */}
-                <div className="border border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-900/35 p-5 rounded-lg space-y-4">
-                  <div className="flex justify-between items-center">
-                    <span className="text-[10px] uppercase tracking-widest text-[#cb2026] font-bold">
-                      About Page Banner Image
-                    </span>
-                    {uploadingImage && (
-                      <Loader2 size={14} className="animate-spin text-[#cb2026]" />
-                    )}
-                  </div>
-                  {aboutImage && (
-                    <div className="relative rounded overflow-hidden h-48 w-full border border-stone-200 dark:border-stone-800">
-                      <img
-                        src={aboutImage}
-                        alt="About page banner"
-                        className="w-full h-full object-cover"
-                      />
-                    </div>
-                  )}
-                  <label className="flex items-center justify-center gap-2 border-2 border-dashed border-stone-300 dark:border-stone-700 hover:border-[#cb2026] bg-white dark:bg-stone-900 transition-colors rounded py-3 text-xs font-semibold cursor-pointer text-stone-700 dark:text-stone-300">
-                    <Upload size={14} />
-                    <span>Upload New About Banner Image</span>
+                {/* SECTION 1: ABOUT US PAGE HERO BANNER */}
+                <div className="space-y-4 pb-6 border-b border-stone-250 dark:border-stone-800">
+                  <h3 className="text-xs font-bold text-[#cb2026] uppercase tracking-wider">
+                    About Us Page Hero Banner
+                  </h3>
+                  
+                  {/* Hero Subtitle */}
+                  <div className="space-y-2">
+                    <label className="text-[10px] uppercase tracking-widest text-stone-400 dark:text-stone-500 font-bold block mb-1">
+                      Hero Subtitle / Description
+                    </label>
                     <input
-                      type="file"
-                      accept="image/*"
-                      onChange={handleImageUpload}
-                      className="hidden"
+                      type="text"
+                      value={config.about_heading || ""}
+                      onChange={(e) => handleConfigChange("about_heading", e.target.value)}
+                      placeholder="A quiet devotion to material, proportion and light — carried through four decades."
+                      className="w-full bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded p-3 text-stone-900 dark:text-white focus:border-[#cb2026] outline-none text-sm font-semibold"
                     />
-                  </label>
+                  </div>
+
+                  {/* Hero Banner Image */}
+                  <div className="border border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-900/35 p-5 rounded-lg space-y-4">
+                    <div className="flex justify-between items-center">
+                      <span className="text-[10px] uppercase tracking-widest text-stone-400 dark:text-stone-500 font-bold">
+                        Hero Banner Image
+                      </span>
+                      {uploadingImage && (
+                        <Loader2 size={14} className="animate-spin text-[#cb2026]" />
+                      )}
+                    </div>
+                    {heroImage && (
+                      <div className="relative rounded overflow-hidden h-48 w-full border border-stone-200 dark:border-stone-800">
+                        <img
+                          src={heroImage}
+                          alt="About page hero banner"
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    )}
+                    <label className="flex items-center justify-center gap-2 border-2 border-dashed border-stone-300 dark:border-stone-700 hover:border-[#cb2026] bg-white dark:bg-stone-900 transition-colors rounded py-3 text-xs font-semibold cursor-pointer text-stone-700 dark:text-stone-300">
+                      <Upload size={14} />
+                      <span>Upload New Hero Banner Image</span>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => handleImageUpload("about_hero_bg", e)}
+                        className="hidden"
+                      />
+                    </label>
+                  </div>
                 </div>
 
-                <div className="space-y-2">
-                  <label className="text-[10px] uppercase tracking-widest text-[#cb2026] font-bold">
-                    Main Headline
-                  </label>
-                  <input
-                    type="text"
-                    value={config.about_heading || ""}
-                    onChange={(e) => handleConfigChange("about_heading", e.target.value)}
-                    placeholder="Four decades. One quiet obsession — space that lasts."
-                    className="w-full bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded p-3 text-stone-900 dark:text-white focus:border-[#cb2026] outline-none text-sm font-semibold"
-                  />
+                {/* SECTION 2: HOMEPAGE ABOUT BLOCK */}
+                <div className="space-y-4 pb-6 border-b border-stone-250 dark:border-stone-800">
+                  <h3 className="text-xs font-bold text-[#cb2026] uppercase tracking-wider">
+                    Homepage About Us Section
+                  </h3>
+
+                  {/* Homepage Headline */}
+                  <div className="space-y-2">
+                    <label className="text-[10px] uppercase tracking-widest text-stone-400 dark:text-stone-500 font-bold block mb-1">
+                      Homepage Main Headline
+                    </label>
+                    <input
+                      type="text"
+                      value={config.about_homepage_heading || ""}
+                      onChange={(e) => handleConfigChange("about_homepage_heading", e.target.value)}
+                      placeholder="Four decades. One quiet obsession — space that lasts."
+                      className="w-full bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded p-3 text-stone-900 dark:text-white focus:border-[#cb2026] outline-none text-sm font-semibold"
+                    />
+                  </div>
+
+                  {/* Homepage Description 1 */}
+                  <div className="space-y-2">
+                    <label className="text-[10px] uppercase tracking-widest text-stone-400 dark:text-stone-500 font-bold block mb-1">
+                      Homepage Description Paragraph 1
+                    </label>
+                    <textarea
+                      value={config.about_homepage_desc_1 || ""}
+                      onChange={(e) => handleConfigChange("about_homepage_desc_1", e.target.value)}
+                      rows={4}
+                      className="w-full bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded p-3 text-stone-900 dark:text-white focus:border-[#cb2026] outline-none text-xs leading-relaxed"
+                    />
+                  </div>
+
+                  {/* Homepage Description 2 */}
+                  <div className="space-y-2">
+                    <label className="text-[10px] uppercase tracking-widest text-stone-400 dark:text-stone-500 font-bold block mb-1">
+                      Homepage Description Paragraph 2
+                    </label>
+                    <textarea
+                      value={config.about_homepage_desc_2 || ""}
+                      onChange={(e) => handleConfigChange("about_homepage_desc_2", e.target.value)}
+                      rows={4}
+                      className="w-full bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded p-3 text-stone-900 dark:text-white focus:border-[#cb2026] outline-none text-xs leading-relaxed"
+                    />
+                  </div>
+
+                  {/* Homepage About Section Image */}
+                  <div className="border border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-900/35 p-5 rounded-lg space-y-4">
+                    <div className="flex justify-between items-center">
+                      <span className="text-[10px] uppercase tracking-widest text-stone-400 dark:text-stone-500 font-bold">
+                        Homepage About Image
+                      </span>
+                      {uploadingImage && (
+                        <Loader2 size={14} className="animate-spin text-[#cb2026]" />
+                      )}
+                    </div>
+                    {aboutImage && (
+                      <div className="relative rounded overflow-hidden h-48 w-full border border-stone-200 dark:border-stone-800">
+                        <img
+                          src={aboutImage}
+                          alt="Homepage about section image"
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    )}
+                    <label className="flex items-center justify-center gap-2 border-2 border-dashed border-stone-300 dark:border-stone-700 hover:border-[#cb2026] bg-white dark:bg-stone-900 transition-colors rounded py-3 text-xs font-semibold cursor-pointer text-stone-700 dark:text-stone-300">
+                      <Upload size={14} />
+                      <span>Upload New Homepage About Image</span>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => handleImageUpload("about_img", e)}
+                        className="hidden"
+                      />
+                    </label>
+                  </div>
                 </div>
 
-                <div className="space-y-2">
-                  <label className="text-[10px] uppercase tracking-widest text-[#cb2026] font-bold">
-                    Story Paragraph 1
-                  </label>
-                  <textarea
-                    value={config.about_desc_1 || ""}
-                    onChange={(e) => handleConfigChange("about_desc_1", e.target.value)}
-                    rows={4}
-                    className="w-full bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded p-3 text-stone-900 dark:text-white focus:border-[#cb2026] outline-none text-xs leading-relaxed"
-                  />
+                {/* SECTION 3: ABOUT US PAGE HERITAGE SECTION */}
+                <div className="space-y-4 pb-6 border-b border-stone-250 dark:border-stone-800">
+                  <h3 className="text-xs font-bold text-[#cb2026] uppercase tracking-wider">
+                    About Us Page: The Heritage Section
+                  </h3>
+
+                  {/* Heritage Section Title */}
+                  <div className="space-y-2">
+                    <label className="text-[10px] uppercase tracking-widest text-stone-400 dark:text-stone-500 font-bold block mb-1">
+                      Heritage Section Title
+                    </label>
+                    <input
+                      type="text"
+                      value={config.about_heritage_title || ""}
+                      onChange={(e) => handleConfigChange("about_heritage_title", e.target.value)}
+                      placeholder="Crafted with Purpose. Perfected Through Experience."
+                      className="w-full bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded p-3 text-stone-900 dark:text-white focus:border-[#cb2026] outline-none text-sm font-semibold"
+                    />
+                  </div>
+
+                  {/* Heritage Paragraph 1 */}
+                  <div className="space-y-2">
+                    <label className="text-[10px] uppercase tracking-widest text-stone-400 dark:text-stone-500 font-bold block mb-1">
+                      Heritage Story Paragraph 1
+                    </label>
+                    <textarea
+                      value={config.about_heritage_p1 || ""}
+                      onChange={(e) => handleConfigChange("about_heritage_p1", e.target.value)}
+                      rows={4}
+                      className="w-full bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded p-3 text-stone-900 dark:text-white focus:border-[#cb2026] outline-none text-xs leading-relaxed"
+                    />
+                  </div>
+
+                  {/* Heritage Paragraph 2 */}
+                  <div className="space-y-2">
+                    <label className="text-[10px] uppercase tracking-widest text-stone-400 dark:text-stone-500 font-bold block mb-1">
+                      Heritage Story Paragraph 2
+                    </label>
+                    <textarea
+                      value={config.about_heritage_p2 || ""}
+                      onChange={(e) => handleConfigChange("about_heritage_p2", e.target.value)}
+                      rows={4}
+                      className="w-full bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded p-3 text-stone-900 dark:text-white focus:border-[#cb2026] outline-none text-xs leading-relaxed"
+                    />
+                  </div>
+
+                  {/* Heritage Paragraph 3 */}
+                  <div className="space-y-2">
+                    <label className="text-[10px] uppercase tracking-widest text-stone-400 dark:text-stone-500 font-bold block mb-1">
+                      Heritage Story Paragraph 3
+                    </label>
+                    <textarea
+                      value={config.about_heritage_p3 || ""}
+                      onChange={(e) => handleConfigChange("about_heritage_p3", e.target.value)}
+                      rows={4}
+                      className="w-full bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded p-3 text-stone-900 dark:text-white focus:border-[#cb2026] outline-none text-xs leading-relaxed"
+                    />
+                  </div>
+
+                  {/* Heritage Image */}
+                  <div className="border border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-900/35 p-5 rounded-lg space-y-4">
+                    <div className="flex justify-between items-center">
+                      <span className="text-[10px] uppercase tracking-widest text-stone-400 dark:text-stone-500 font-bold">
+                        Heritage Section Image
+                      </span>
+                      {uploadingImage && (
+                        <Loader2 size={14} className="animate-spin text-[#cb2026]" />
+                      )}
+                    </div>
+                    {heritageImage && (
+                      <div className="relative rounded overflow-hidden h-48 w-full border border-stone-200 dark:border-stone-800">
+                        <img
+                          src={heritageImage}
+                          alt="Heritage section image"
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                    )}
+                    <label className="flex items-center justify-center gap-2 border-2 border-dashed border-stone-300 dark:border-stone-700 hover:border-[#cb2026] bg-white dark:bg-stone-900 transition-colors rounded py-3 text-xs font-semibold cursor-pointer text-stone-700 dark:text-stone-300">
+                      <Upload size={14} />
+                      <span>Upload New Heritage Image</span>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => handleImageUpload("about_heritage_img", e)}
+                        className="hidden"
+                      />
+                    </label>
+                  </div>
                 </div>
 
-                <div className="space-y-2">
-                  <label className="text-[10px] uppercase tracking-widest text-[#cb2026] font-bold">
-                    Story Paragraph 2
-                  </label>
-                  <textarea
-                    value={config.about_desc_2 || ""}
-                    onChange={(e) => handleConfigChange("about_desc_2", e.target.value)}
-                    rows={4}
-                    className="w-full bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded p-3 text-stone-900 dark:text-white focus:border-[#cb2026] outline-none text-xs leading-relaxed"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-[10px] uppercase tracking-widest text-[#cb2026] font-bold">
-                    Featured Atelier Quote / Tagline
+                {/* Tagline */}
+                <div className="space-y-2 pt-4">
+                  <label className="text-[10px] uppercase tracking-widest text-stone-400 dark:text-stone-500 font-bold block mb-1">
+                    Featured Atelier Quote / Tagline (Optional)
                   </label>
                   <textarea
                     value={config.about_quote || ""}

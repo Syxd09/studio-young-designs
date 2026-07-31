@@ -5,7 +5,7 @@
 
 import { createFileRoute } from "@tanstack/react-router";
 import { useState, useRef, useEffect, useMemo } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, animate } from "framer-motion";
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/utils/supabase";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -124,14 +124,70 @@ export function PortfolioTrack({
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const scroll = (direction: "left" | "right") => {
-    if (containerRef.current) {
-      const scrollAmount = containerRef.current.clientWidth * 0.7;
-      containerRef.current.scrollBy({
-        left: direction === "left" ? -scrollAmount : scrollAmount,
-        behavior: "smooth",
-      });
+  // Tripled items list for infinite loop
+  const loopItems = useMemo(() => {
+    if (!items || items.length === 0) return [];
+    return [...items, ...items, ...items];
+  }, [items]);
+
+  // Align scroll to center (middle copy of the W content)
+  const alignCenter = () => {
+    const el = containerRef.current;
+    if (el) {
+      const W = el.scrollWidth / 3;
+      el.scrollLeft = W;
     }
+  };
+
+  // Run center alignment once items/track are loaded
+  useEffect(() => {
+    if (loopItems.length === 0) return;
+
+    // We delay alignment slightly to allow browser layout calculations
+    const timer = setTimeout(alignCenter, 100);
+    window.addEventListener("resize", alignCenter);
+
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener("resize", alignCenter);
+    };
+  }, [loopItems]);
+
+  // Seamless boundary wrap check in onScroll
+  const handleScroll = () => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    const W = el.scrollWidth / 3;
+    if (W <= 0) return;
+
+    // Right boundary wrap (past 2/3 of content)
+    if (el.scrollLeft >= 2 * W) {
+      el.scrollLeft -= W;
+    }
+    // Left boundary wrap (below 1/3 of content)
+    else if (el.scrollLeft < W) {
+      el.scrollLeft += W;
+    }
+  };
+
+  const scroll = (direction: "left" | "right") => {
+    const el = containerRef.current;
+    if (!el) return;
+
+    const W = el.scrollWidth / 3;
+    const scrollAmount = el.clientWidth * 0.7;
+    const target = el.scrollLeft + (direction === "left" ? -scrollAmount : scrollAmount);
+
+    animate(el.scrollLeft, target, {
+      type: "spring",
+      stiffness: 80,
+      damping: 18,
+      mass: 0.8,
+      onUpdate: (val) => {
+        el.scrollLeft = val;
+      },
+    });
   };
 
   if (!items || items.length === 0) return null;
@@ -159,9 +215,10 @@ export function PortfolioTrack({
       {/* Edge-to-Edge Pure Photography Track — Manual Navigation Only */}
       <div
         ref={containerRef}
-        className="flex gap-4 sm:gap-6 overflow-x-auto scrollbar-none px-4 md:px-8 py-2 h-[72vh] min-h-[500px] max-h-[780px] items-stretch scroll-smooth"
+        onScroll={handleScroll}
+        className="flex gap-4 sm:gap-6 overflow-x-auto scrollbar-none px-4 md:px-8 py-2 h-[72vh] min-h-[500px] max-h-[780px] items-stretch"
       >
-        {items.map((item: any, idx: number) => (
+        {loopItems.map((item: any, idx: number) => (
           <div
             key={item.src + idx}
             className="flex-none relative h-full w-auto group/slide cursor-pointer overflow-hidden rounded-sm select-none"

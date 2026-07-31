@@ -460,16 +460,16 @@ function About({
 
         <div className="md:col-span-7 md:pl-8">
           <SplitHeading
-            text={config.about_heading || "Crafted with Purpose. Built to Endure."}
+            text={config.about_homepage_heading || config.about_heading || "Crafted with Purpose. Built to Endure."}
             className="text-4xl md:text-6xl"
           />
           <Reveal3D delay={0.2} rotateX={8}>
             <div className="mt-10 max-w-xl text-lg leading-relaxed text-foreground/75 space-y-6">
               <p>
-                {config.about_desc_1 || "For more than 45 years, Studio Young Designs has been shaping extraordinary homes through timeless design, precision engineering, and master craftsmanship. Every detail is thoughtfully considered, every material carefully selected, and every project executed with uncompromising standards."}
+                {config.about_homepage_desc_1 || config.about_desc_1 || "For more than 45 years, Studio Young Designs has been shaping extraordinary homes through timeless design, precision engineering, and master craftsmanship. Every detail is thoughtfully considered, every material carefully selected, and every project executed with uncompromising standards."}
               </p>
               <p>
-                {config.about_desc_2 || "Our integrated design, manufacturing, and execution model allows us to deliver bespoke interiors with exceptional quality and complete accountability. From luxury kitchens and custom wardrobes to handcrafted furniture and complete home interiors, we create spaces that embody elegance, functionality, and enduring value."}
+                {config.about_homepage_desc_2 || config.about_desc_2 || "Our integrated design, manufacturing, and execution model allows us to deliver bespoke interiors with exceptional quality and complete accountability. From luxury kitchens and custom wardrobes to handcrafted furniture and complete home interiors, we create spaces that embody elegance, functionality, and enduring value."}
               </p>
               <p className="font-display italic text-xl text-stone-600 pt-2 border-t border-border/40">
                 &ldquo;Luxury is not what we add. It is how we build.&rdquo;
