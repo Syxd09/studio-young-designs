@@ -971,13 +971,22 @@ export function VideoShowcase({
   config = {},
   eyebrow = "Film & Crafts",
   className = "py-32 md:py-40",
+  youtube_video_url,
+  video_title,
+  video_subtitle,
+  video_poster_url,
 }: {
   config?: Record<string, string>;
   eyebrow?: string;
   className?: string;
+  youtube_video_url?: string;
+  video_title?: string;
+  video_subtitle?: string;
+  video_poster_url?: string;
 }) {
   const [isPlaying, setIsPlaying] = useState(false);
-  const rawUrl = config.youtube_video_url || "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
+  const rawUrl =
+    youtube_video_url || config.youtube_video_url || "https://www.youtube.com/watch?v=dQw4w9WgXcQ";
 
   const getYouTubeEmbedUrl = (url: string) => {
     if (!url) return "https://www.youtube.com/embed/dQw4w9WgXcQ";
@@ -993,11 +1002,12 @@ export function VideoShowcase({
   };
 
   const embedUrl = getYouTubeEmbedUrl(rawUrl);
-  const videoTitle = config.video_title || "Our Studio in Motion";
-  const videoSubtitle =
+  const titleText = video_title || config.video_title || "Our Studio in Motion";
+  const subtitleText =
+    video_subtitle ||
     config.video_subtitle ||
     "Step inside our Bangalore atelier and experience 40 years of precision craftsmanship, fine materials, and spatial harmony.";
-  const videoPoster = config.video_poster_url || p1;
+  const videoPoster = video_poster_url || config.video_poster_url || p1;
 
   return (
     <section className={`relative bg-charcoal text-cream overflow-hidden ${className}`}>
@@ -1016,12 +1026,12 @@ export function VideoShowcase({
               </div>
             </Reveal3D>
             <SplitHeading
-              text={videoTitle}
+              text={titleText}
               className="text-4xl text-cream md:text-6xl font-display"
             />
           </div>
           <Reveal3D delay={0.2} rotateX={6} className="md:col-span-5">
-            <p className="text-base leading-relaxed text-cream/70">{videoSubtitle}</p>
+            <p className="text-base leading-relaxed text-cream/70">{subtitleText}</p>
           </Reveal3D>
         </div>
 
@@ -1035,7 +1045,7 @@ export function VideoShowcase({
               >
                 <img
                   src={videoPoster}
-                  alt={videoTitle}
+                  alt={titleText}
                   className="h-full w-full object-cover brightness-75 group-hover:brightness-90 group-hover:scale-105 transition-all duration-700 ease-out"
                 />
                 <div className="absolute inset-0 bg-black/40 backdrop-blur-[2px] transition-opacity group-hover:opacity-20" />
@@ -1057,7 +1067,7 @@ export function VideoShowcase({
             ) : (
               <iframe
                 src={embedUrl}
-                title={videoTitle}
+                title={titleText}
                 className="h-full w-full border-0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                 allowFullScreen

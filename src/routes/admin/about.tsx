@@ -230,6 +230,52 @@ function AdminAboutComponent() {
     }
   };
 
+  const [uploadingVideoKey, setUploadingVideoKey] = useState<string | null>(null);
+
+  const handleVideoPosterUpload = async (key: string, e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files || !e.target.files[0]) return;
+    const file = e.target.files[0];
+
+    if (file.size > 10 * 1024 * 1024) {
+      toast.error("File size is too large. Limit is 10MB.");
+      return;
+    }
+
+    setUploadingVideoKey(key);
+    try {
+      const fileExt = file.name.split(".").pop() || "jpg";
+      const fileName = `${key}_${Date.now()}.${fileExt}`;
+      const filePath = `video_posters/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from("studio-young-assets")
+        .upload(filePath, file, {
+          contentType: file.type,
+          upsert: true,
+        });
+
+      if (uploadError) throw uploadError;
+
+      const {
+        data: { publicUrl },
+      } = supabase.storage.from("studio-young-assets").getPublicUrl(filePath);
+
+      const { error: dbError } = await supabase
+        .from("site_config")
+        .upsert({ key, value: publicUrl }, { onConflict: "key" });
+
+      if (dbError) throw dbError;
+
+      setConfig((prev) => ({ ...prev, [key]: publicUrl }));
+      toast.success("Video thumbnail uploaded from device successfully!");
+    } catch (err: any) {
+      console.error(err);
+      toast.error(err.message || "Failed to upload video thumbnail.");
+    } finally {
+      setUploadingVideoKey(null);
+    }
+  };
+
   const handleFounderImageUpload = async (
     e: React.ChangeEvent<HTMLInputElement>,
     key: "founder_img_1" | "founder_img_2",
@@ -581,20 +627,53 @@ function AdminAboutComponent() {
                   />
                 </div>
 
-                <div className="space-y-2">
-                  <label className="text-[10px] uppercase tracking-widest text-[#cb2026] font-bold">
-                    Video Cover / Thumbnail Image URL
-                  </label>
-                  <input
-                    type="text"
-                    value={config.about_video_poster_url || ""}
-                    onChange={(e) => handleConfigChange("about_video_poster_url", e.target.value)}
-                    placeholder="https://images.unsplash.com/... or custom thumbnail image URL"
-                    className="w-full bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded p-3 text-stone-900 dark:text-white focus:border-[#cb2026] outline-none text-sm font-semibold"
-                  />
-                  <p className="text-[10px] text-stone-400 dark:text-stone-550 italic">
-                    The background preview image shown before clicking Play on the About page video.
-                  </p>
+                {/* Video Cover / Thumbnail Image Upload */}
+                <div className="space-y-3 p-4 border border-stone-200 dark:border-stone-800 rounded-lg bg-stone-50 dark:bg-stone-900/60 shadow-sm">
+                  <div className="flex items-center justify-between">
+                    <label className="text-[10px] uppercase tracking-widest text-[#cb2026] font-bold block">
+                      Video Cover / Thumbnail Image
+                    </label>
+                    <span className="text-[10px] text-stone-400">
+                      Upload from device or paste URL
+                    </span>
+                  </div>
+
+                  <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                    <input
+                      type="text"
+                      value={config.about_video_poster_url || ""}
+                      onChange={(e) => handleConfigChange("about_video_poster_url", e.target.value)}
+                      placeholder="Image URL or upload from device below..."
+                      className="flex-1 bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded p-2.5 text-stone-900 dark:text-white outline-none focus:border-[#cb2026] text-xs font-semibold"
+                    />
+                    <label className="bg-[#cb2026] hover:bg-[#df383e] text-white px-4 py-2.5 rounded text-xs font-bold flex items-center justify-center gap-2 cursor-pointer transition-colors shrink-0">
+                      {uploadingVideoKey === "about_video_poster_url" ? (
+                        <Loader2 size={14} className="animate-spin" />
+                      ) : (
+                        <Upload size={14} />
+                      )}
+                      <span>Upload Thumbnail</span>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={(e) => handleVideoPosterUpload("about_video_poster_url", e)}
+                      />
+                    </label>
+                  </div>
+
+                  {config.about_video_poster_url && (
+                    <div className="relative aspect-video max-w-sm rounded-lg overflow-hidden border border-stone-200 dark:border-stone-800 bg-stone-900 mt-2">
+                      <img
+                        src={config.about_video_poster_url}
+                        alt="About Video Thumbnail Preview"
+                        className="w-full h-full object-cover"
+                      />
+                      <div className="absolute top-2 left-2 bg-black/75 text-white text-[9px] px-2 py-0.5 rounded font-mono uppercase tracking-wider">
+                        Current Video Cover Preview
+                      </div>
+                    </div>
+                  )}
                 </div>
               </motion.div>
             )}
