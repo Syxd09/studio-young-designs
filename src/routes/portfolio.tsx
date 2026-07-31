@@ -124,36 +124,6 @@ export function PortfolioTrack({
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Triple items array for seamless infinite looping
-  const displayItems = useMemo(() => {
-    if (!items || items.length === 0) return [];
-    if (items.length < 4) {
-      return [...items, ...items, ...items, ...items, ...items, ...items];
-    }
-    return [...items, ...items, ...items];
-  }, [items]);
-
-  // Set initial scroll position to middle set
-  useEffect(() => {
-    if (containerRef.current && displayItems.length > 0) {
-      const singleSetWidth = containerRef.current.scrollWidth / 3;
-      containerRef.current.scrollLeft = singleSetWidth;
-    }
-  }, [displayItems]);
-
-  const handleScroll = () => {
-    if (!containerRef.current) return;
-    const { scrollLeft, scrollWidth } = containerRef.current;
-    const singleSetWidth = scrollWidth / 3;
-
-    // Wrap around seamlessly when hitting boundaries
-    if (scrollLeft >= singleSetWidth * 2) {
-      containerRef.current.scrollLeft = scrollLeft - singleSetWidth;
-    } else if (scrollLeft <= 10) {
-      containerRef.current.scrollLeft = scrollLeft + singleSetWidth;
-    }
-  };
-
   const scroll = (direction: "left" | "right") => {
     if (containerRef.current) {
       const scrollAmount = containerRef.current.clientWidth * 0.7;
@@ -186,13 +156,12 @@ export function PortfolioTrack({
         <ChevronRight size={24} />
       </button>
 
-      {/* Edge-to-Edge Pure Photography Track — JJ Designers Style */}
+      {/* Edge-to-Edge Pure Photography Track — Manual Navigation Only */}
       <div
         ref={containerRef}
-        onScroll={handleScroll}
         className="flex gap-4 sm:gap-6 overflow-x-auto scrollbar-none px-4 md:px-8 py-2 h-[72vh] min-h-[500px] max-h-[780px] items-stretch scroll-smooth"
       >
-        {displayItems.map((item: any, idx: number) => (
+        {items.map((item: any, idx: number) => (
           <div
             key={item.src + idx}
             className="flex-none relative h-full w-auto group/slide cursor-pointer overflow-hidden rounded-sm select-none"
