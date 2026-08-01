@@ -799,7 +799,7 @@ export function PageHero({
   return (
     <section
       ref={ref}
-      className="relative h-[60vh] min-h-[400px] w-full overflow-hidden bg-charcoal"
+      className="relative min-h-[400px] md:h-[55vh] md:min-h-[480px] w-full overflow-hidden bg-charcoal flex flex-col justify-end"
     >
       <motion.div style={{ y: imgY }} className="absolute inset-0">
         <img
@@ -812,7 +812,7 @@ export function PageHero({
         <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-black/70" />
       </motion.div>
 
-      <div className="relative z-10 flex h-full flex-col justify-end px-6 pb-16 md:px-14">
+      <div className="relative z-10 flex w-full flex-col justify-end px-6 pt-28 pb-12 md:px-14 md:pt-36 md:pb-16">
         <div className="mx-auto w-full max-w-[1400px]">
           {/* Breadcrumbs */}
           <motion.nav
