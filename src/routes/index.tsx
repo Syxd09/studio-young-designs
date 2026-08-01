@@ -117,7 +117,7 @@ function Loader() {
             initial={{ opacity: 0, letterSpacing: "0.4em", rotateX: 30 }}
             animate={{ opacity: 1, letterSpacing: "0.02em", rotateX: 0 }}
             transition={{ duration: 1.2, delay: 0.4, ease: EASE_SMOOTH }}
-            className="mt-4 font-display text-4xl md:text-5xl"
+            className="mt-4 font-display text-3xl sm:text-4xl md:text-5xl whitespace-nowrap"
           >
             Studio Young Designs
           </motion.div>
