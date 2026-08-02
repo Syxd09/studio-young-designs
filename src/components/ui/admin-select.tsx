@@ -34,16 +34,14 @@ export function AdminSelect({
 
   // Normalize options to object format
   const normalizedOptions: AdminSelectOption[] = options.map((opt) =>
-    typeof opt === "string" ? { value: opt, label: opt } : opt
+    typeof opt === "string" ? { value: opt, label: opt } : opt,
   );
 
   const selectedOption = normalizedOptions.find((opt) => opt.value === value);
 
   // Filter options based on search term
   const filteredOptions = searchable
-    ? normalizedOptions.filter((opt) =>
-        opt.label.toLowerCase().includes(searchTerm.toLowerCase())
-      )
+    ? normalizedOptions.filter((opt) => opt.label.toLowerCase().includes(searchTerm.toLowerCase()))
     : normalizedOptions;
 
   // Close dropdown on outside click

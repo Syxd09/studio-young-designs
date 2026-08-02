@@ -232,7 +232,9 @@ function AboutPage() {
             </Reveal3D>
 
             <SplitHeading
-              text={config.about_heritage_title || "Crafted with Purpose. Perfected Through Experience."}
+              text={
+                config.about_heritage_title || "Crafted with Purpose. Perfected Through Experience."
+              }
               className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl text-charcoal font-display leading-[1.1]"
             />
 

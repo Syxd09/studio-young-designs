@@ -127,13 +127,10 @@ function EnquiriesComponent() {
       if (configError) throw configError;
 
       // 2. Also try writing to enquiries.notes in case the column exists/is added later
-      await supabase
-        .from("enquiries")
-        .update({ notes: leadNotes })
-        .eq("id", selectedEnquiry.id);
+      await supabase.from("enquiries").update({ notes: leadNotes }).eq("id", selectedEnquiry.id);
 
       toast.success("Notes saved and synchronized successfully!");
-      
+
       // Update local state
       setEnquiries((prev) =>
         prev.map((e) => (e.id === selectedEnquiry.id ? { ...e, notes: leadNotes } : e)),
@@ -204,7 +201,10 @@ function EnquiriesComponent() {
 
     const csvContent =
       "data:text/csv;charset=utf-8," +
-      [headers.join(","), ...rows.map((r) => r.map((val) => `"${val.replace(/"/g, '""')}"`).join(","))].join("\n");
+      [
+        headers.join(","),
+        ...rows.map((r) => r.map((val) => `"${val.replace(/"/g, '""')}"`).join(",")),
+      ].join("\n");
 
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");

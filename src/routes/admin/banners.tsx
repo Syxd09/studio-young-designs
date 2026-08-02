@@ -99,7 +99,9 @@ function PageBannersComponent() {
 
       if (uploadError) throw uploadError;
 
-      const { data: publicData } = supabase.storage.from("studio-young-assets").getPublicUrl(fileName);
+      const { data: publicData } = supabase.storage
+        .from("studio-young-assets")
+        .getPublicUrl(fileName);
       const uploadedUrl = publicData.publicUrl;
       updateLocalImage(banner, uploadedUrl);
 
@@ -110,7 +112,9 @@ function PageBannersComponent() {
         updated_at: new Date().toISOString(),
       }));
 
-      const { error: dbError } = await supabase.from("layout_images").upsert(payload, { onConflict: "key" });
+      const { error: dbError } = await supabase
+        .from("layout_images")
+        .upsert(payload, { onConflict: "key" });
       if (dbError) throw dbError;
 
       await queryClient.invalidateQueries({ queryKey: ["layout_images"] });

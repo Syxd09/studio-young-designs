@@ -518,14 +518,21 @@ function ConfigComponent() {
                                   : "bg-white dark:bg-stone-800 text-stone-700 dark:text-stone-300 border-stone-200 dark:border-stone-700 hover:border-amber-400"
                               }`}
                             >
-                              {isHighlighted && <Star size={11} className="fill-current text-white" />}
+                              {isHighlighted && (
+                                <Star size={11} className="fill-current text-white" />
+                              )}
                               <span>{cleanWord}</span>
                             </button>
                           );
                         })}
                     </div>
                     <p className="text-[10px] text-stone-400 dark:text-stone-500 italic">
-                      💡 Tip: Click any word above to toggle gold highlight on the homepage hero title, or type asterisks manually in the box (e.g. <code className="text-amber-600 dark:text-amber-400 font-mono">*45+ years*</code>).
+                      💡 Tip: Click any word above to toggle gold highlight on the homepage hero
+                      title, or type asterisks manually in the box (e.g.{" "}
+                      <code className="text-amber-600 dark:text-amber-400 font-mono">
+                        *45+ years*
+                      </code>
+                      ).
                     </p>
                   </div>
                 </div>

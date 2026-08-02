@@ -132,7 +132,9 @@ export function ServicePageLayout({ data }: { data: ServicePageData }) {
     intro: siteConfig[`service_intro_${data.slug}`] || dbService?.intro || data.intro,
     description: dbService?.description || data.description,
     features:
-      dbService?.features !== undefined && Array.isArray(dbService.features) && dbService.features.length > 0
+      dbService?.features !== undefined &&
+      Array.isArray(dbService.features) &&
+      dbService.features.length > 0
         ? dbService.features.map((f: any, idx: number) => {
             if (typeof f === "object" && f !== null) {
               return {
@@ -160,7 +162,12 @@ export function ServicePageLayout({ data }: { data: ServicePageData }) {
               }
               const colonIdx = f.indexOf(":");
               if (colonIdx === -1) {
-                return { title: f || `Offer Card 0${idx + 1}`, description: f, size: "half", theme: "light" };
+                return {
+                  title: f || `Offer Card 0${idx + 1}`,
+                  description: f,
+                  size: "half",
+                  theme: "light",
+                };
               }
               return {
                 title: f.substring(0, colonIdx).trim(),
@@ -169,7 +176,12 @@ export function ServicePageLayout({ data }: { data: ServicePageData }) {
                 theme: "light",
               };
             }
-            return { title: `Offer Card 0${idx + 1}`, description: "", size: "half", theme: "light" };
+            return {
+              title: `Offer Card 0${idx + 1}`,
+              description: "",
+              size: "half",
+              theme: "light",
+            };
           })
         : data.features,
     gallery:
@@ -267,11 +279,7 @@ export function ServicePageLayout({ data }: { data: ServicePageData }) {
                     <div
                       className={`group relative overflow-hidden rounded-2xl transition-all duration-500 hover:-translate-y-1 shadow-sm hover:shadow-xl flex flex-col md:flex-row ${
                         isFull ? "min-h-[340px] md:h-[380px]" : "min-h-[320px] md:h-[340px]"
-                      } ${
-                        isDark
-                          ? "bg-[#23201D] text-cream"
-                          : "bg-[#F2EFE9] text-stone-900"
-                      }`}
+                      } ${isDark ? "bg-[#23201D] text-cream" : "bg-[#F2EFE9] text-stone-900"}`}
                     >
                       {/* Text Side */}
                       <div
@@ -306,7 +314,9 @@ export function ServicePageLayout({ data }: { data: ServicePageData }) {
                       {/* Image Side */}
                       <div
                         className={`relative overflow-hidden h-full ${
-                          isFull ? "w-full md:w-7/12 min-h-[260px] md:min-h-full" : "w-full md:w-1/2 min-h-[240px] md:min-h-full"
+                          isFull
+                            ? "w-full md:w-7/12 min-h-[260px] md:min-h-full"
+                            : "w-full md:w-1/2 min-h-[240px] md:min-h-full"
                         }`}
                       >
                         <img
@@ -375,7 +385,7 @@ export function ServicePageLayout({ data }: { data: ServicePageData }) {
 function ServiceGallery({ images }: { images: GalleryImage[] }) {
   const [selected, setSelected] = useState<GalleryImage | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
-  
+
   // Tripled images list for infinite loop
   const loopImages = useMemo(() => {
     if (!images || images.length === 0) return [];
@@ -394,11 +404,11 @@ function ServiceGallery({ images }: { images: GalleryImage[] }) {
   // Run center alignment once images/track are loaded
   useEffect(() => {
     if (loopImages.length === 0) return;
-    
+
     // We delay alignment slightly to allow browser layout calculations
     const timer = setTimeout(alignCenter, 100);
     window.addEventListener("resize", alignCenter);
-    
+
     return () => {
       clearTimeout(timer);
       window.removeEventListener("resize", alignCenter);
@@ -543,7 +553,9 @@ function ServiceGallery({ images }: { images: GalleryImage[] }) {
               <div className="mt-4 text-center">
                 <div className="font-display text-2xl text-white">{selected.title}</div>
                 {selected.alt && (
-                  <div className="text-sm text-stone-400 mt-1 uppercase tracking-widest">{selected.alt}</div>
+                  <div className="text-sm text-stone-400 mt-1 uppercase tracking-widest">
+                    {selected.alt}
+                  </div>
                 )}
               </div>
               <button

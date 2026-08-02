@@ -31,7 +31,8 @@ export const Route = createFileRoute("/services/kitchens")({
 const data: ServicePageData = {
   slug: "kitchens",
   title: "Kitchens",
-  subtitle: "Every kitchen we create is a perfect balance of beauty, functionality and enduring quality.",
+  subtitle:
+    "Every kitchen we create is a perfect balance of beauty, functionality and enduring quality.",
   heroImage: svcKitchen,
   intro: "Thoughtful Kitchens. Timeless Living.",
   description:
@@ -47,8 +48,7 @@ const data: ServicePageData = {
     },
     {
       title: "Tailored to You",
-      description:
-        "Custom-designed layouts that maximize space, comfort and everyday efficiency.",
+      description: "Custom-designed layouts that maximize space, comfort and everyday efficiency.",
       image: p2,
       size: "half",
       theme: "dark",

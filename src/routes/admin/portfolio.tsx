@@ -79,13 +79,20 @@ function PortfolioAdminComponent() {
     try {
       const [galleryRes, configRes] = await Promise.all([
         supabase.from("gallery").select("*").order("display_order", { ascending: true }),
-        supabase.from("site_config").select("value").eq("key", "homepage_selected_gallery_ids").maybeSingle(),
+        supabase
+          .from("site_config")
+          .select("value")
+          .eq("key", "homepage_selected_gallery_ids")
+          .maybeSingle(),
       ]);
 
       if (galleryRes.error) throw galleryRes.error;
 
       const rawConfigVal = configRes.data?.value || "";
-      const selectedIds = rawConfigVal.split(",").map((s: string) => s.trim()).filter(Boolean);
+      const selectedIds = rawConfigVal
+        .split(",")
+        .map((s: string) => s.trim())
+        .filter(Boolean);
 
       const itemsWithFeatured = (galleryRes.data || []).map((item: any) => ({
         ...item,
@@ -241,13 +248,16 @@ function PortfolioAdminComponent() {
 
       // Optimistically update local state so UI buttons respond immediately
       setItems((prev) =>
-        prev.map((i) => (String(i.id) === targetId ? { ...i, is_featured: isNowFeatured } : i))
+        prev.map((i) => (String(i.id) === targetId ? { ...i, is_featured: isNowFeatured } : i)),
       );
 
       // Save to site_config (guaranteed fail-proof)
       const { error: configError } = await supabase
         .from("site_config")
-        .upsert({ key: "homepage_selected_gallery_ids", value: nextIds.join(",") }, { onConflict: "key" });
+        .upsert(
+          { key: "homepage_selected_gallery_ids", value: nextIds.join(",") },
+          { onConflict: "key" },
+        );
 
       if (configError) throw configError;
 
@@ -269,14 +279,9 @@ function PortfolioAdminComponent() {
   const updateCardSpan = async (item: GalleryItem, newSpan: "standard" | "tall" | "wide") => {
     try {
       // Optimistically update local state for instant feedback
-      setItems((prev) =>
-        prev.map((i) => (i.id === item.id ? { ...i, span: newSpan } : i))
-      );
+      setItems((prev) => prev.map((i) => (i.id === item.id ? { ...i, span: newSpan } : i)));
 
-      const { error } = await supabase
-        .from("gallery")
-        .update({ span: newSpan })
-        .eq("id", item.id);
+      const { error } = await supabase.from("gallery").update({ span: newSpan }).eq("id", item.id);
 
       if (error) throw error;
       toast.success(`Photo layout size updated to ${newSpan.toUpperCase()}!`);
@@ -360,20 +365,11 @@ function PortfolioAdminComponent() {
     const c1 = itemCategory.toLowerCase().trim();
     const c2 = targetFilter.toLowerCase().trim();
     if (c1 === c2) return true;
-    if (
-      (c1 === "living" || c1 === "living-spaces") &&
-      (c2 === "living" || c2 === "living-spaces")
-    )
+    if ((c1 === "living" || c1 === "living-spaces") && (c2 === "living" || c2 === "living-spaces"))
       return true;
-    if (
-      (c1 === "kitchens" || c1 === "kitchen") &&
-      (c2 === "kitchens" || c2 === "kitchen")
-    )
+    if ((c1 === "kitchens" || c1 === "kitchen") && (c2 === "kitchens" || c2 === "kitchen"))
       return true;
-    if (
-      (c1 === "wardrobes" || c1 === "wardrobe") &&
-      (c2 === "wardrobes" || c2 === "wardrobe")
-    )
+    if ((c1 === "wardrobes" || c1 === "wardrobe") && (c2 === "wardrobes" || c2 === "wardrobe"))
       return true;
     if (
       (c1 === "interiors" || c1 === "turnkey-interiors") &&

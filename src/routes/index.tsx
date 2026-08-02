@@ -44,6 +44,7 @@ import p4 from "@/assets/portfolio-4.jpg";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [{ property: "og:image", content: "https://studioyoungdesigns.com/og.jpg" }],
+    links: [{ rel: "preload", as: "image", href: heroImg, fetchpriority: "high" }],
   }),
   component: Home,
 });
@@ -198,6 +199,7 @@ function Hero({
             className="absolute inset-0 h-full w-full object-cover"
             width={1920}
             height={1280}
+            fetchPriority={currentSlide === 0 ? "high" : "low"}
           />
         </AnimatePresence>
         <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/25 to-black/70" />
@@ -250,20 +252,33 @@ function Hero({
             {(() => {
               const rawTitle = config.hero_title || "Bespoke spaces, crafted over *forty years*.";
               const parsedWords = rawTitle.includes("*")
-                ? rawTitle.split(/(\*[^*]+\*)/g).filter(Boolean).flatMap((part) => {
-                    if (part.startsWith("*") && part.endsWith("*")) {
-                      return part.slice(1, -1).split(/\s+/).filter(Boolean).map((w) => ({ word: w, isHighlight: true }));
-                    }
-                    return part.split(/\s+/).filter(Boolean).map((w) => ({ word: w, isHighlight: false }));
-                  })
-                : rawTitle.split(/\s+/).filter(Boolean).map((w) => ({
-                    word: w,
-                    isHighlight:
-                      w.toLowerCase().includes("forty") ||
-                      w.includes("40") ||
-                      w.toLowerCase().includes("years") ||
-                      w.includes("45"),
-                  }));
+                ? rawTitle
+                    .split(/(\*[^*]+\*)/g)
+                    .filter(Boolean)
+                    .flatMap((part) => {
+                      if (part.startsWith("*") && part.endsWith("*")) {
+                        return part
+                          .slice(1, -1)
+                          .split(/\s+/)
+                          .filter(Boolean)
+                          .map((w) => ({ word: w, isHighlight: true }));
+                      }
+                      return part
+                        .split(/\s+/)
+                        .filter(Boolean)
+                        .map((w) => ({ word: w, isHighlight: false }));
+                    })
+                : rawTitle
+                    .split(/\s+/)
+                    .filter(Boolean)
+                    .map((w) => ({
+                      word: w,
+                      isHighlight:
+                        w.toLowerCase().includes("forty") ||
+                        w.includes("40") ||
+                        w.toLowerCase().includes("years") ||
+                        w.includes("45"),
+                    }));
 
               return parsedWords.map(({ word: w, isHighlight }, i) => (
                 <span key={i} className="inline-block overflow-hidden pb-2 align-bottom">
@@ -460,16 +475,24 @@ function About({
 
         <div className="md:col-span-7 md:pl-8">
           <SplitHeading
-            text={config.about_homepage_heading || config.about_heading || "Crafted with Purpose. Built to Endure."}
+            text={
+              config.about_homepage_heading ||
+              config.about_heading ||
+              "Crafted with Purpose. Built to Endure."
+            }
             className="text-4xl md:text-6xl"
           />
           <Reveal3D delay={0.2} rotateX={8}>
             <div className="mt-10 max-w-xl text-lg leading-relaxed text-foreground/75 space-y-6">
               <p>
-                {config.about_homepage_desc_1 || config.about_desc_1 || "For more than 45 years, Studio Young Designs has been shaping extraordinary homes through timeless design, precision engineering, and master craftsmanship. Every detail is thoughtfully considered, every material carefully selected, and every project executed with uncompromising standards."}
+                {config.about_homepage_desc_1 ||
+                  config.about_desc_1 ||
+                  "For more than 45 years, Studio Young Designs has been shaping extraordinary homes through timeless design, precision engineering, and master craftsmanship. Every detail is thoughtfully considered, every material carefully selected, and every project executed with uncompromising standards."}
               </p>
               <p>
-                {config.about_homepage_desc_2 || config.about_desc_2 || "Our integrated design, manufacturing, and execution model allows us to deliver bespoke interiors with exceptional quality and complete accountability. From luxury kitchens and custom wardrobes to handcrafted furniture and complete home interiors, we create spaces that embody elegance, functionality, and enduring value."}
+                {config.about_homepage_desc_2 ||
+                  config.about_desc_2 ||
+                  "Our integrated design, manufacturing, and execution model allows us to deliver bespoke interiors with exceptional quality and complete accountability. From luxury kitchens and custom wardrobes to handcrafted furniture and complete home interiors, we create spaces that embody elegance, functionality, and enduring value."}
               </p>
               <p className="font-display italic text-xl text-stone-600 pt-2 border-t border-border/40">
                 &ldquo;Luxury is not what we add. It is how we build.&rdquo;
@@ -799,12 +822,15 @@ function Portfolio({ config = {} }: { config?: Record<string, string> }) {
 
   const pieces = useMemo(() => {
     const rawSelectedIds = config.homepage_selected_gallery_ids || "";
-    const selectedIds = rawSelectedIds.split(",").map((s) => s.trim()).filter(Boolean);
+    const selectedIds = rawSelectedIds
+      .split(",")
+      .map((s) => s.trim())
+      .filter(Boolean);
 
     if (dbGallery.length > 0) {
       // Filter ONLY items explicitly selected by admin in command center
       const featuredItems = dbGallery.filter(
-        (item) => selectedIds.includes(String(item.id)) || item.is_featured === true
+        (item) => selectedIds.includes(String(item.id)) || item.is_featured === true,
       );
 
       // If admin selected specific items, display ONLY those exact items!
@@ -825,7 +851,13 @@ function Portfolio({ config = {} }: { config?: Record<string, string> }) {
     }
     return [
       { id: "1", img: p1, title: "Malabar Residence", place: "Dining · Bangalore", span: "tall" },
-      { id: "2", img: p2, title: "Sadashivanagar House", place: "Master Bedroom", span: "standard" },
+      {
+        id: "2",
+        img: p2,
+        title: "Sadashivanagar House",
+        place: "Master Bedroom",
+        span: "standard",
+      },
       { id: "3", img: p3, title: "Cubbon Study", place: "Home Library", span: "standard" },
       { id: "4", img: p4, title: "Whitefield Villa", place: "Marble & Walnut Bath", span: "tall" },
     ];
@@ -1237,7 +1269,11 @@ interface StatParsed {
   text: string | null;
 }
 
-function parseStatValue(raw: string | undefined, defaultNum: number, defaultSuffix: string): StatParsed {
+function parseStatValue(
+  raw: string | undefined,
+  defaultNum: number,
+  defaultSuffix: string,
+): StatParsed {
   if (!raw || !raw.trim()) {
     return { n: isNaN(defaultNum) ? null : defaultNum, s: defaultSuffix, text: null };
   }
@@ -1323,7 +1359,13 @@ function Counters({ config = {} }: { config?: Record<string, string> }) {
             const displayText = st.text || st.s || "";
 
             return (
-              <Reveal3D key={i} delay={i * 0.12} rotateX={15} rotateY={(i - 1.5) * 5} className="h-full">
+              <Reveal3D
+                key={i}
+                delay={i * 0.12}
+                rotateX={15}
+                rotateY={(i - 1.5) * 5}
+                className="h-full"
+              >
                 <div className="flex h-full flex-col justify-between pt-10">
                   <div className="flex min-h-[5rem] items-end pb-1">
                     <span
@@ -1854,7 +1896,10 @@ function Contact({
   };
 
   return (
-    <section id="contact" className="relative bg-charcoal pt-8 pb-0 text-cream md:pt-10 md:pb-0 scroll-mt-20">
+    <section
+      id="contact"
+      className="relative bg-charcoal pt-8 pb-0 text-cream md:pt-10 md:pb-0 scroll-mt-20"
+    >
       <div className="mx-auto grid max-w-[1400px] grid-cols-1 gap-16 px-6 md:grid-cols-12 md:px-10">
         <div className="md:col-span-5">
           <Reveal3D rotateX={10} rotateY={-6}>
@@ -1950,27 +1995,41 @@ function Contact({
                 </div>
 
                 <p className="text-sm leading-relaxed text-cream/80 border-t border-b border-cream/10 py-5">
-                  Your enquiry for <strong className="text-gold font-semibold">{submittedData.service}</strong> has been successfully received by Studio Young Designs. Our senior design team will review your project parameters and contact you at <span className="text-cream font-medium">{submittedData.phone}</span> or <span className="text-cream font-medium">{submittedData.email}</span> within 24 hours.
+                  Your enquiry for{" "}
+                  <strong className="text-gold font-semibold">{submittedData.service}</strong> has
+                  been successfully received by Studio Young Designs. Our senior design team will
+                  review your project parameters and contact you at{" "}
+                  <span className="text-cream font-medium">{submittedData.phone}</span> or{" "}
+                  <span className="text-cream font-medium">{submittedData.email}</span> within 24
+                  hours.
                 </p>
 
                 <div className="grid grid-cols-2 gap-4 bg-charcoal/60 p-4 rounded border border-cream/10 text-xs">
                   <div>
-                    <span className="text-cream/50 text-[10px] uppercase tracking-wider block">Service</span>
+                    <span className="text-cream/50 text-[10px] uppercase tracking-wider block">
+                      Service
+                    </span>
                     <span className="text-cream font-medium">{submittedData.service}</span>
                   </div>
                   <div>
-                    <span className="text-cream/50 text-[10px] uppercase tracking-wider block">Location</span>
+                    <span className="text-cream/50 text-[10px] uppercase tracking-wider block">
+                      Location
+                    </span>
                     <span className="text-cream font-medium">{submittedData.location}</span>
                   </div>
                   <div>
-                    <span className="text-cream/50 text-[10px] uppercase tracking-wider block">Status</span>
+                    <span className="text-cream/50 text-[10px] uppercase tracking-wider block">
+                      Status
+                    </span>
                     <span className="text-emerald-400 font-medium flex items-center gap-1.5">
                       <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
                       Received & Queued
                     </span>
                   </div>
                   <div>
-                    <span className="text-cream/50 text-[10px] uppercase tracking-wider block">Est. Response</span>
+                    <span className="text-cream/50 text-[10px] uppercase tracking-wider block">
+                      Est. Response
+                    </span>
                     <span className="text-cream font-medium">Within 24 Hours</span>
                   </div>
                 </div>
@@ -2066,7 +2125,10 @@ function Contact({
                   >
                     {submitting ? (
                       <>
-                        <Loader2 size={16} className="animate-spin text-gold group-hover:text-charcoal" />
+                        <Loader2
+                          size={16}
+                          className="animate-spin text-gold group-hover:text-charcoal"
+                        />
                         <span>Sending Enquiry...</span>
                       </>
                     ) : (

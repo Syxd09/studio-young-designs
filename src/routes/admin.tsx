@@ -334,7 +334,10 @@ function AdminLayoutComponent() {
             >
               STUDIO YOUNG
             </span>
-            <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" title="Database Connected" />
+            <span
+              className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse"
+              title="Database Connected"
+            />
           </div>
           <span className="text-[8px] uppercase tracking-[0.25em] text-[#cb2026] font-bold mt-1">
             Command Atelier
@@ -504,7 +507,9 @@ function AdminLayoutComponent() {
                         }`}
                       >
                         <item.icon size={16} className="text-[#cb2026]" />
-                        <span className="text-xs uppercase tracking-widest font-semibold">{item.label}</span>
+                        <span className="text-xs uppercase tracking-widest font-semibold">
+                          {item.label}
+                        </span>
                       </Link>
                     );
                   })}

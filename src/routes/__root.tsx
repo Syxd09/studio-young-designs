@@ -130,7 +130,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 function RootShell({ children }: { children: ReactNode }) {
   const schemaOrgJSON = {
     "@context": "https://schema.org",
-    "@type": "HomeAndConstructionBusiness",
+    "@type": "LocalBusiness",
     name: "Studio Young Designs",
     url: "https://studioyoungdesigns.com",
     logo: "https://studioyoungdesigns.com/logo-transparent.png",

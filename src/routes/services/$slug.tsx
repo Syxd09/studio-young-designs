@@ -59,7 +59,11 @@ function DynamicServicePage() {
           ? "living"
           : `${slug}s`;
 
-      const { data: altRes } = await supabase.from("services").select("*").eq("slug", altSlug).maybeSingle();
+      const { data: altRes } = await supabase
+        .from("services")
+        .select("*")
+        .eq("slug", altSlug)
+        .maybeSingle();
       return altRes || null;
     },
   });
@@ -113,7 +117,12 @@ function DynamicServicePage() {
       }
       const colonIdx = f.indexOf(":");
       if (colonIdx === -1) {
-        return { title: f || `Offer Card 0${idx + 1}`, description: f, size: "half", theme: "light" };
+        return {
+          title: f || `Offer Card 0${idx + 1}`,
+          description: f,
+          size: "half",
+          theme: "light",
+        };
       }
       return {
         title: f.substring(0, colonIdx).trim(),

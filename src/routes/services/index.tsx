@@ -243,54 +243,80 @@ function ServicesPage() {
                   <TextScramble text="DISCIPLINE SHOWCASE" />
                 </span>
               </div>
-              <SplitHeading
-                text="A Legacy of Craftsmanship"
-                className="text-3xl md:text-5xl"
-              />
+              <SplitHeading text="A Legacy of Craftsmanship" className="text-3xl md:text-5xl" />
             </Reveal3D>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
             {[
-              { slug: "kitchens", defaultImg: svcKitchen, defaultTitle: "Modular Kitchens", defaultSub: "Walnut & Marble Craftsmanship", link: "/services/kitchens" },
-              { slug: "wardrobes", defaultImg: svcWardrobe, defaultTitle: "Bespoke Wardrobes", defaultSub: "Glass & Leather Walk-In Closets", link: "/services/wardrobes" },
-              { slug: "living-spaces", defaultImg: svcLiving, defaultTitle: "Living Spaces", defaultSub: "Acoustic-calibrated Lounges", link: "/services/living-spaces" },
-              { slug: "interiors", defaultImg: svcComplete, defaultTitle: "Turnkey Interiors", defaultSub: "Complete Residential Masterpieces", link: "/services/interiors" }
-            ].map((def) => {
-              const dbSvc = dbServices.find(
-                (s) =>
-                  s.slug === def.slug ||
-                  s.slug === `/${def.slug}` ||
-                  s.slug === `/services/${def.slug}`
-              );
-              return {
-                img: dbSvc?.image_url || def.defaultImg,
-                title: dbSvc?.title || def.defaultTitle,
-                subtitle: dbSvc?.short_desc || def.defaultSub,
-                link: def.link,
-              };
-            }).map((item, idx) => (
-              <Reveal3D key={item.title} delay={idx * 0.06} rotateX={6}>
-                <Link to={item.link} className="group relative block aspect-[4/5] overflow-hidden rounded-2xl bg-charcoal shadow-sm hover:shadow-xl transition-all duration-500">
-                  <img
-                    src={item.img}
-                    alt={item.title}
-                    className="absolute inset-0 h-full w-full object-cover grayscale transition-all duration-700 ease-out group-hover:scale-105 group-hover:grayscale-0 group-hover:opacity-80"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-                  <div className="absolute inset-x-0 bottom-0 p-6 md:p-8 flex flex-col justify-end">
-                    <span className="text-[10px] uppercase tracking-widest text-gold font-bold mb-2">
-                      0{idx + 1}
-                    </span>
-                    <h4 className="font-display text-xl text-white md:text-2xl font-normal leading-tight group-hover:text-gold transition-colors duration-300">
-                      {item.title}
-                    </h4>
-                    <p className="text-xs text-white/60 max-h-0 opacity-0 overflow-hidden transition-all duration-500 ease-in-out group-hover:max-h-20 group-hover:opacity-100 group-hover:mt-2">
-                      {item.subtitle}
-                    </p>
-                  </div>
-                </Link>
-              </Reveal3D>
-            ))}
+              {
+                slug: "kitchens",
+                defaultImg: svcKitchen,
+                defaultTitle: "Modular Kitchens",
+                defaultSub: "Walnut & Marble Craftsmanship",
+                link: "/services/kitchens",
+              },
+              {
+                slug: "wardrobes",
+                defaultImg: svcWardrobe,
+                defaultTitle: "Bespoke Wardrobes",
+                defaultSub: "Glass & Leather Walk-In Closets",
+                link: "/services/wardrobes",
+              },
+              {
+                slug: "living-spaces",
+                defaultImg: svcLiving,
+                defaultTitle: "Living Spaces",
+                defaultSub: "Acoustic-calibrated Lounges",
+                link: "/services/living-spaces",
+              },
+              {
+                slug: "interiors",
+                defaultImg: svcComplete,
+                defaultTitle: "Turnkey Interiors",
+                defaultSub: "Complete Residential Masterpieces",
+                link: "/services/interiors",
+              },
+            ]
+              .map((def) => {
+                const dbSvc = dbServices.find(
+                  (s) =>
+                    s.slug === def.slug ||
+                    s.slug === `/${def.slug}` ||
+                    s.slug === `/services/${def.slug}`,
+                );
+                return {
+                  img: dbSvc?.image_url || def.defaultImg,
+                  title: dbSvc?.title || def.defaultTitle,
+                  subtitle: dbSvc?.short_desc || def.defaultSub,
+                  link: def.link,
+                };
+              })
+              .map((item, idx) => (
+                <Reveal3D key={item.title} delay={idx * 0.06} rotateX={6}>
+                  <Link
+                    to={item.link}
+                    className="group relative block aspect-[4/5] overflow-hidden rounded-2xl bg-charcoal shadow-sm hover:shadow-xl transition-all duration-500"
+                  >
+                    <img
+                      src={item.img}
+                      alt={item.title}
+                      className="absolute inset-0 h-full w-full object-cover grayscale transition-all duration-700 ease-out group-hover:scale-105 group-hover:grayscale-0 group-hover:opacity-80"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                    <div className="absolute inset-x-0 bottom-0 p-6 md:p-8 flex flex-col justify-end">
+                      <span className="text-[10px] uppercase tracking-widest text-gold font-bold mb-2">
+                        0{idx + 1}
+                      </span>
+                      <h4 className="font-display text-xl text-white md:text-2xl font-normal leading-tight group-hover:text-gold transition-colors duration-300">
+                        {item.title}
+                      </h4>
+                      <p className="text-xs text-white/60 max-h-0 opacity-0 overflow-hidden transition-all duration-500 ease-in-out group-hover:max-h-20 group-hover:opacity-100 group-hover:mt-2">
+                        {item.subtitle}
+                      </p>
+                    </div>
+                  </Link>
+                </Reveal3D>
+              ))}
           </div>
         </div>
       </section>
@@ -328,7 +354,10 @@ function ServicesPage() {
                   rel="noopener noreferrer"
                   className="group relative inline-flex items-center gap-3 overflow-hidden border border-cream/25 hover:border-gold px-8 py-4 text-[11px] uppercase tracking-[0.28em] text-cream w-full sm:w-auto justify-center transition-colors duration-300"
                 >
-                  <Download size={14} className="text-gold group-hover:scale-110 transition-transform duration-300" />
+                  <Download
+                    size={14}
+                    className="text-gold group-hover:scale-110 transition-transform duration-300"
+                  />
                   <span>Download Brochure</span>
                 </a>
               </Magnetic>

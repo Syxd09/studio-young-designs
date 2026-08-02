@@ -128,15 +128,22 @@ function AdminAboutComponent() {
       );
 
       const defaults: Record<string, string> = {
-        about_heading: "A quiet devotion to material, proportion and light — carried through four decades.",
+        about_heading:
+          "A quiet devotion to material, proportion and light — carried through four decades.",
         about_homepage_heading: "Crafted with Purpose. Built to Endure.",
-        about_homepage_desc_1: "For more than 45 years, Studio Young Designs has been shaping extraordinary homes through timeless design, precision engineering, and master craftsmanship. Every detail is thoughtfully considered, every material carefully selected, and every project executed with uncompromising standards.",
-        about_homepage_desc_2: "Our integrated design, manufacturing, and execution model allows us to deliver bespoke interiors with exceptional quality and complete accountability. From luxury kitchens and custom wardrobes to handcrafted furniture and complete home interiors, we create spaces that embody elegance, functionality, and enduring value.",
+        about_homepage_desc_1:
+          "For more than 45 years, Studio Young Designs has been shaping extraordinary homes through timeless design, precision engineering, and master craftsmanship. Every detail is thoughtfully considered, every material carefully selected, and every project executed with uncompromising standards.",
+        about_homepage_desc_2:
+          "Our integrated design, manufacturing, and execution model allows us to deliver bespoke interiors with exceptional quality and complete accountability. From luxury kitchens and custom wardrobes to handcrafted furniture and complete home interiors, we create spaces that embody elegance, functionality, and enduring value.",
         about_heritage_title: "Crafted with Purpose. Perfected Through Experience.",
-        about_heritage_p1: "For over 45 years, Studio Young Designs has been creating bespoke interiors that combine timeless design, exceptional craftsmanship, and uncompromising quality. Since 1981, we have transformed residences into refined living spaces where every detail is thoughtfully designed, micticulously crafted, and built to stand the test of time.",
-        about_heritage_p2: "Our strength lies in complete in-house execution. From premium modular kitchens, custom wardrobes, and handcrafted furniture to full-home interiors, every project is managed by our own team of designers, master craftsmen, and installation specialists. This integrated approach ensures complete quality control, seamless coordination, and precision at every stage of the journey.",
-        about_heritage_p3: "At Studio Young Designs, we believe true luxury is measured not by extravagance, but by flawless execution, enduring materials, and spaces that enrich everyday living. Every home we create reflects our commitment to craftsmanship, innovation, and trust—delivering timeless interiors that families will cherish for generations.",
-        about_quote: "We remain a small studio by choice. It lets us stay close to the drawing, to the wood, to the client..."
+        about_heritage_p1:
+          "For over 45 years, Studio Young Designs has been creating bespoke interiors that combine timeless design, exceptional craftsmanship, and uncompromising quality. Since 1981, we have transformed residences into refined living spaces where every detail is thoughtfully designed, micticulously crafted, and built to stand the test of time.",
+        about_heritage_p2:
+          "Our strength lies in complete in-house execution. From premium modular kitchens, custom wardrobes, and handcrafted furniture to full-home interiors, every project is managed by our own team of designers, master craftsmen, and installation specialists. This integrated approach ensures complete quality control, seamless coordination, and precision at every stage of the journey.",
+        about_heritage_p3:
+          "At Studio Young Designs, we believe true luxury is measured not by extravagance, but by flawless execution, enduring materials, and spaces that enrich everyday living. Every home we create reflects our commitment to craftsmanship, innovation, and trust—delivering timeless interiors that families will cherish for generations.",
+        about_quote:
+          "We remain a small studio by choice. It lets us stay close to the drawing, to the wood, to the client...",
       };
 
       const finalConfig = {
@@ -163,8 +170,6 @@ function AdminAboutComponent() {
       if (imagesMap.about_hero_bg) {
         setHeroImage(imagesMap.about_hero_bg);
       }
-
-
 
       // Parse Ethos Pillars
       if (configMap.about_ethos_data) {
@@ -202,7 +207,7 @@ function AdminAboutComponent() {
 
   const handleImageUpload = async (
     key: "about_img" | "about_heritage_img" | "about_hero_bg",
-    e: React.ChangeEvent<HTMLInputElement>
+    e: React.ChangeEvent<HTMLInputElement>,
   ) => {
     if (!e.target.files || !e.target.files[0]) return;
     const file = e.target.files[0];
@@ -247,7 +252,7 @@ function AdminAboutComponent() {
             : key === "about_heritage_img"
               ? "Heritage"
               : "Hero Banner"
-        } image updated!`
+        } image updated!`,
       );
     } catch (err: any) {
       toast.error(err.message || "Failed to upload image.");
@@ -497,7 +502,7 @@ function AdminAboutComponent() {
                   <h3 className="text-xs font-bold text-[#cb2026] uppercase tracking-wider">
                     About Us Page Hero Banner
                   </h3>
-                  
+
                   {/* Hero Subtitle */}
                   <div className="space-y-2">
                     <label className="text-[10px] uppercase tracking-widest text-stone-400 dark:text-stone-500 font-bold block mb-1">
@@ -744,7 +749,8 @@ function AdminAboutComponent() {
                     About Page Atelier Video Showcase
                   </span>
                   <p className="text-[10px] text-stone-400 dark:text-stone-500 mt-1">
-                    Manage the featured video showcase section displayed right after &quot;Our Ethos&quot; on the About Us page.
+                    Manage the featured video showcase section displayed right after &quot;Our
+                    Ethos&quot; on the About Us page.
                   </p>
                 </div>
 

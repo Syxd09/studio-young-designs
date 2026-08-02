@@ -50,8 +50,6 @@ export const Route = createFileRoute("/journal")({
   component: JournalPage,
 });
 
-
-
 interface JournalPost {
   slug: string;
   title: string;
@@ -148,8 +146,6 @@ const defaultPosts: JournalPost[] = [
     ],
   },
 ];
-
-
 
 function JournalPage() {
   const [selectedPost, setSelectedPost] = useState<JournalPost | null>(null);

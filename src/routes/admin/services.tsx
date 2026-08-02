@@ -173,7 +173,13 @@ function ServicesComponent() {
         }
         const idxOf = f.indexOf(":");
         if (idxOf === -1) {
-          return { title: f || `Offer Card 0${idx + 1}`, description: f, image: "", size: "half" as const, theme: "light" as const };
+          return {
+            title: f || `Offer Card 0${idx + 1}`,
+            description: f,
+            image: "",
+            size: "half" as const,
+            theme: "light" as const,
+          };
         }
         return {
           title: f.substring(0, idxOf).trim(),
@@ -183,7 +189,13 @@ function ServicesComponent() {
           theme: "light" as const,
         };
       }
-      return { title: `Offer Card 0${idx + 1}`, description: "", image: "", size: "half" as const, theme: "light" as const };
+      return {
+        title: `Offer Card 0${idx + 1}`,
+        description: "",
+        image: "",
+        size: "half" as const,
+        theme: "light" as const,
+      };
     });
     setFeatures(parsedFeatures);
 
@@ -585,7 +597,9 @@ function ServicesComponent() {
                 {imageUrl ? (
                   <img src={imageUrl} alt={title} className="w-full h-full object-cover" />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center text-stone-400 text-xs">No image set</div>
+                  <div className="w-full h-full flex items-center justify-center text-stone-400 text-xs">
+                    No image set
+                  </div>
                 )}
                 <label className="absolute inset-0 bg-stone-950/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-1.5 cursor-pointer text-xs font-bold text-white">
                   {uploading ? (
@@ -893,7 +907,8 @@ function ServicesComponent() {
                     className="w-full bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded p-3 text-xs text-stone-900 dark:text-white placeholder-stone-400 focus:border-[#cb2026] focus:bg-white dark:focus:bg-transparent outline-none font-semibold"
                   />
                   <p className="text-[10px] text-stone-400 dark:text-stone-550 italic">
-                    The large main headline shown in the Overview section of this service detail page.
+                    The large main headline shown in the Overview section of this service detail
+                    page.
                   </p>
                 </div>
 
@@ -1107,7 +1122,11 @@ function ServicesComponent() {
                             </div>
                             {feat.image && (
                               <div className="mt-1.5 relative aspect-[16/9] w-24 rounded overflow-hidden border border-stone-200 dark:border-stone-800">
-                                <img src={feat.image} alt={feat.title} className="w-full h-full object-cover" />
+                                <img
+                                  src={feat.image}
+                                  alt={feat.title}
+                                  className="w-full h-full object-cover"
+                                />
                               </div>
                             )}
                           </div>
