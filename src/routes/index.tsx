@@ -29,6 +29,7 @@ import {
   EASE_SMOOTH,
   EASE_OUT_EXPO,
 } from "@/components/shared-animations";
+import { sendEnquiryEmail } from "@/utils/email";
 
 import heroImg from "@/assets/hero.jpg";
 import aboutImg from "@/assets/about.jpg";
@@ -1879,6 +1880,20 @@ function Contact({
         .insert([{ name, email, phone, service, message: fullMessage, status: "New" }]);
 
       if (error) throw error;
+
+      try {
+        await sendEnquiryEmail({
+          data: {
+            name,
+            email,
+            phone,
+            service,
+            message: fullMessage,
+          },
+        });
+      } catch (emailError) {
+        console.error("Failed to send notification email via Resend:", emailError);
+      }
 
       setSubmittedData({
         name,
