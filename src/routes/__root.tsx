@@ -14,6 +14,7 @@ import appCss from "../styles.css?url";
 import { reportError } from "../lib/error-reporting";
 import { Toaster } from "@/components/ui/sonner";
 import { SmoothScrollProvider } from "@/components/smooth-scroll-provider";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 
 function NotFoundComponent() {
   return (
@@ -209,35 +210,6 @@ function RootComponent() {
     // Force top scroll immediately
     window.scrollTo(0, 0);
 
-    const isHomePage = location.pathname === "/" || location.pathname === "";
-
-    let userTouched = false;
-
-    // Detect actual physical user interaction (wheel, touch, arrow keys)
-    const onUserInteract = () => {
-      userTouched = true;
-    };
-
-    window.addEventListener("wheel", onUserInteract, { passive: true });
-    window.addEventListener("touchmove", onUserInteract, { passive: true });
-    window.addEventListener("pointerdown", onUserInteract, { passive: true });
-    window.addEventListener("keydown", onUserInteract, { passive: true });
-
-    let autoScrollTimer: any;
-
-    // Auto-scroll gently after 2s ONLY for inner subpages (About, Gallery, Services, Journal)
-    if (!isHomePage) {
-      autoScrollTimer = setTimeout(() => {
-        if (!userTouched) {
-          const targetY = Math.round(window.innerHeight * 0.45);
-          window.scrollTo({
-            top: targetY > 150 ? targetY : 380,
-            behavior: "smooth",
-          });
-        }
-      }, 2000);
-    }
-
     const handleResetScroll = () => {
       window.scrollTo(0, 0);
     };
@@ -246,11 +218,6 @@ function RootComponent() {
     window.addEventListener("pagehide", handleResetScroll);
 
     return () => {
-      clearTimeout(autoScrollTimer);
-      window.removeEventListener("wheel", onUserInteract);
-      window.removeEventListener("touchmove", onUserInteract);
-      window.removeEventListener("pointerdown", onUserInteract);
-      window.removeEventListener("keydown", onUserInteract);
       window.removeEventListener("beforeunload", handleResetScroll);
       window.removeEventListener("pagehide", handleResetScroll);
     };
@@ -263,6 +230,7 @@ function RootComponent() {
         <Outlet />
       </SmoothScrollProvider>
       <Toaster position="bottom-right" richColors />
+      <SpeedInsights />
     </QueryClientProvider>
   );
 }
