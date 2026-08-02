@@ -38,9 +38,9 @@ export const Route = createFileRoute("/portfolio")({
         content:
           "Browse our portfolio of bespoke interiors, modular kitchens, custom wardrobes, and living spaces crafted over 45 years.",
       },
-      { property: "og:url", content: "https://studioyoungdesigns.com/portfolio" },
+      { property: "og:url", content: "https://www.studioyoungdesigns.com/portfolio" },
     ],
-    links: [{ rel: "canonical", href: "https://studioyoungdesigns.com/portfolio" }],
+    links: [{ rel: "canonical", href: "https://www.studioyoungdesigns.com/portfolio" }],
   }),
   component: PortfolioPage,
 });

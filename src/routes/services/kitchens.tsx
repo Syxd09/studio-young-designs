@@ -21,9 +21,9 @@ export const Route = createFileRoute("/services/kitchens")({
         content:
           "Custom modular kitchens built around the way your family cooks and gathers. Premium materials, master craftsmanship.",
       },
-      { property: "og:url", content: "https://studioyoungdesigns.com/services/kitchens" },
+      { property: "og:url", content: "https://www.studioyoungdesigns.com/services/kitchens" },
     ],
-    links: [{ rel: "canonical", href: "https://studioyoungdesigns.com/services/kitchens" }],
+    links: [{ rel: "canonical", href: "https://www.studioyoungdesigns.com/services/kitchens" }],
   }),
   component: KitchensPage,
 });

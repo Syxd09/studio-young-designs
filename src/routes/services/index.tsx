@@ -26,9 +26,9 @@ export const Route = createFileRoute("/services/")({
         content:
           "Thoughtfully designed. Expertly crafted. Flawlessly executed. Discover Studio Young Designs signature services.",
       },
-      { property: "og:url", content: "https://studioyoungdesigns.com/services" },
+      { property: "og:url", content: "https://www.studioyoungdesigns.com/services" },
     ],
-    links: [{ rel: "canonical", href: "https://studioyoungdesigns.com/services" }],
+    links: [{ rel: "canonical", href: "https://www.studioyoungdesigns.com/services" }],
   }),
   component: ServicesPage,
 });

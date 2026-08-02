@@ -43,8 +43,11 @@ import p4 from "@/assets/portfolio-4.jpg";
 
 export const Route = createFileRoute("/")({
   head: () => ({
-    meta: [{ property: "og:image", content: "https://studioyoungdesigns.com/og.jpg" }],
-    links: [{ rel: "preload", as: "image", href: heroImg, fetchpriority: "high" }],
+    meta: [{ property: "og:image", content: "https://www.studioyoungdesigns.com/og.jpg" }],
+    links: [
+      { rel: "canonical", href: "https://www.studioyoungdesigns.com" },
+      { rel: "preload", as: "image", href: heroImg, fetchPriority: "high" },
+    ],
   }),
   component: Home,
 });

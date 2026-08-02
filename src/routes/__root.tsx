@@ -76,7 +76,7 @@ function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   );
 }
 
-const siteUrl = "https://studioyoungdesigns.com";
+const siteUrl = "https://www.studioyoungdesigns.com";
 
 export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()({
   head: () => ({
@@ -106,7 +106,6 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [
-      { rel: "canonical", href: siteUrl },
       { rel: "alternate", hrefLang: "en", href: siteUrl },
       { rel: "stylesheet", href: appCss },
       { rel: "icon", href: "/favicon.ico" },

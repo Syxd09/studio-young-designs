@@ -43,9 +43,9 @@ export const Route = createFileRoute("/journal")({
         content:
           "Bangalore interior design blog, modular kitchen tips, luxury wardrobe ideas, turnkey interiors Bangalore, home styling tips",
       },
-      { property: "og:url", content: "https://studioyoungdesigns.com/journal" },
+      { property: "og:url", content: "https://www.studioyoungdesigns.com/journal" },
     ],
-    links: [{ rel: "canonical", href: "https://studioyoungdesigns.com/journal" }],
+    links: [{ rel: "canonical", href: "https://www.studioyoungdesigns.com/journal" }],
   }),
   component: JournalPage,
 });

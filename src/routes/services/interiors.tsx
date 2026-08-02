@@ -21,9 +21,9 @@ export const Route = createFileRoute("/services/interiors")({
         content:
           "End-to-end interior design and execution for residences and commercial spaces. One studio, from first sketch to final handover.",
       },
-      { property: "og:url", content: "https://studioyoungdesigns.com/services/interiors" },
+      { property: "og:url", content: "https://www.studioyoungdesigns.com/services/interiors" },
     ],
-    links: [{ rel: "canonical", href: "https://studioyoungdesigns.com/services/interiors" }],
+    links: [{ rel: "canonical", href: "https://www.studioyoungdesigns.com/services/interiors" }],
   }),
   component: InteriorsPage,
 });

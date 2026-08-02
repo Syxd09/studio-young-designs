@@ -47,9 +47,9 @@ export const Route = createFileRoute("/about")({
         property: "og:title",
         content: "About Us — Studio Young Designs | Bespoke Interiors Bangalore",
       },
-      { property: "og:url", content: "https://studioyoungdesigns.com/about" },
+      { property: "og:url", content: "https://www.studioyoungdesigns.com/about" },
     ],
-    links: [{ rel: "canonical", href: "https://studioyoungdesigns.com/about" }],
+    links: [{ rel: "canonical", href: "https://www.studioyoungdesigns.com/about" }],
   }),
   component: AboutPage,
 });

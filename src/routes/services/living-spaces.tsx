@@ -21,9 +21,11 @@ export const Route = createFileRoute("/services/living-spaces")({
         content:
           "Living, dining and lounging rooms composed as considered whole environments. Bespoke furniture, lighting and material palettes.",
       },
-      { property: "og:url", content: "https://studioyoungdesigns.com/services/living-spaces" },
+      { property: "og:url", content: "https://www.studioyoungdesigns.com/services/living-spaces" },
     ],
-    links: [{ rel: "canonical", href: "https://studioyoungdesigns.com/services/living-spaces" }],
+    links: [
+      { rel: "canonical", href: "https://www.studioyoungdesigns.com/services/living-spaces" },
+    ],
   }),
   component: LivingSpacesPage,
 });

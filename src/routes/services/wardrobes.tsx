@@ -21,9 +21,9 @@ export const Route = createFileRoute("/services/wardrobes")({
         content:
           "Bespoke wardrobes in walnut, oak and lacquer with brushed metal hardware. Walk-in closets designed around your life.",
       },
-      { property: "og:url", content: "https://studioyoungdesigns.com/services/wardrobes" },
+      { property: "og:url", content: "https://www.studioyoungdesigns.com/services/wardrobes" },
     ],
-    links: [{ rel: "canonical", href: "https://studioyoungdesigns.com/services/wardrobes" }],
+    links: [{ rel: "canonical", href: "https://www.studioyoungdesigns.com/services/wardrobes" }],
   }),
   component: WardrobesPage,
 });
