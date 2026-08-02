@@ -25,13 +25,13 @@ export const sendEnquiryEmail = createServerFn({ method: "POST" })
       // Send to both emails in parallel
       const [res1, res2] = await Promise.all([
         resend.emails.send({
-          from: "Studio Young Designs <onboarding@resend.dev>",
+          from: "Studio Young Designs <contact@studioyoungdesigns.com>",
           to: "youngdesigns9@gmail.com",
           subject: `New Enquiry from ${name} — Studio Young Designs`,
           html: htmlContent,
         }),
         resend.emails.send({
-          from: "Studio Young Designs <onboarding@resend.dev>",
+          from: "Studio Young Designs <contact@studioyoungdesigns.com>",
           to: "info@studioyoungdesigns.com",
           subject: `New Enquiry from ${name} — Studio Young Designs`,
           html: htmlContent,
