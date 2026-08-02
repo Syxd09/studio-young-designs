@@ -11,6 +11,11 @@ import {
 } from "@/components/shared-animations";
 
 import heroImg from "@/assets/hero.jpg";
+import { Download } from "lucide-react";
+import svcKitchen from "@/assets/service-kitchen.jpg";
+import svcWardrobe from "@/assets/service-wardrobe.jpg";
+import svcLiving from "@/assets/service-living.jpg";
+import svcComplete from "@/assets/service-complete.jpg";
 
 export const Route = createFileRoute("/services/")({
   head: () => ({
@@ -227,6 +232,69 @@ function ServicesPage() {
         </div>
       </section>
 
+      {/* Curated Visual Gallery Showcase */}
+      <section className="bg-cream pb-24 md:pb-32">
+        <div className="mx-auto max-w-[1400px] px-6 md:px-10">
+          <div className="mb-12">
+            <Reveal3D rotateX={10}>
+              <div className="mb-4 flex items-center gap-3">
+                <span className="gold-rule" />
+                <span className="eyebrow">
+                  <TextScramble text="DISCIPLINE SHOWCASE" />
+                </span>
+              </div>
+              <SplitHeading
+                text="A Legacy of Craftsmanship"
+                className="text-3xl md:text-5xl"
+              />
+            </Reveal3D>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+            {[
+              { slug: "kitchens", defaultImg: svcKitchen, defaultTitle: "Modular Kitchens", defaultSub: "Walnut & Marble Craftsmanship", link: "/services/kitchens" },
+              { slug: "wardrobes", defaultImg: svcWardrobe, defaultTitle: "Bespoke Wardrobes", defaultSub: "Glass & Leather Walk-In Closets", link: "/services/wardrobes" },
+              { slug: "living-spaces", defaultImg: svcLiving, defaultTitle: "Living Spaces", defaultSub: "Acoustic-calibrated Lounges", link: "/services/living-spaces" },
+              { slug: "interiors", defaultImg: svcComplete, defaultTitle: "Turnkey Interiors", defaultSub: "Complete Residential Masterpieces", link: "/services/interiors" }
+            ].map((def) => {
+              const dbSvc = dbServices.find(
+                (s) =>
+                  s.slug === def.slug ||
+                  s.slug === `/${def.slug}` ||
+                  s.slug === `/services/${def.slug}`
+              );
+              return {
+                img: dbSvc?.image_url || def.defaultImg,
+                title: dbSvc?.title || def.defaultTitle,
+                subtitle: dbSvc?.short_desc || def.defaultSub,
+                link: def.link,
+              };
+            }).map((item, idx) => (
+              <Reveal3D key={item.title} delay={idx * 0.06} rotateX={6}>
+                <Link to={item.link} className="group relative block aspect-[4/5] overflow-hidden rounded-2xl bg-charcoal shadow-sm hover:shadow-xl transition-all duration-500">
+                  <img
+                    src={item.img}
+                    alt={item.title}
+                    className="absolute inset-0 h-full w-full object-cover grayscale transition-all duration-700 ease-out group-hover:scale-105 group-hover:grayscale-0 group-hover:opacity-80"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                  <div className="absolute inset-x-0 bottom-0 p-6 md:p-8 flex flex-col justify-end">
+                    <span className="text-[10px] uppercase tracking-widest text-gold font-bold mb-2">
+                      0{idx + 1}
+                    </span>
+                    <h4 className="font-display text-xl text-white md:text-2xl font-normal leading-tight group-hover:text-gold transition-colors duration-300">
+                      {item.title}
+                    </h4>
+                    <p className="text-xs text-white/60 max-h-0 opacity-0 overflow-hidden transition-all duration-500 ease-in-out group-hover:max-h-20 group-hover:opacity-100 group-hover:mt-2">
+                      {item.subtitle}
+                    </p>
+                  </div>
+                </Link>
+              </Reveal3D>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* Why Section */}
       <section className="bg-charcoal py-24 text-cream md:py-32">
         <div className="mx-auto max-w-[1400px] px-6 text-center md:px-10">
@@ -239,12 +307,12 @@ function ServicesPage() {
               Every project begins with a conversation. Tell us about your space, and we'll take it
               from there.
             </p>
-            <div className="mt-12">
+            <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-6">
               <Magnetic>
                 <Link
                   to="/"
                   hash="contact"
-                  className="group relative inline-flex items-center gap-3 overflow-hidden bg-white px-8 py-4 text-[11px] uppercase tracking-[0.28em] text-charcoal"
+                  className="group relative inline-flex items-center gap-3 overflow-hidden bg-white px-8 py-4 text-[11px] uppercase tracking-[0.28em] text-charcoal w-full sm:w-auto justify-center"
                 >
                   <span className="absolute inset-0 origin-left scale-x-0 bg-gold transition-transform duration-500 ease-out group-hover:scale-x-100" />
                   <span className="relative">Book a Consultation</span>
@@ -252,6 +320,17 @@ function ServicesPage() {
                     →
                   </span>
                 </Link>
+              </Magnetic>
+              <Magnetic>
+                <a
+                  href={siteConfig.services_brochure_url || "/young-designs-brochure.pdf"}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group relative inline-flex items-center gap-3 overflow-hidden border border-cream/25 hover:border-gold px-8 py-4 text-[11px] uppercase tracking-[0.28em] text-cream w-full sm:w-auto justify-center transition-colors duration-300"
+                >
+                  <Download size={14} className="text-gold group-hover:scale-110 transition-transform duration-300" />
+                  <span>Download Brochure</span>
+                </a>
               </Magnetic>
             </div>
           </Reveal3D>

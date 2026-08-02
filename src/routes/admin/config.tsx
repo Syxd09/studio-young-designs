@@ -615,6 +615,19 @@ function ConfigComponent() {
                   />
                 </div>
 
+                <div className="space-y-2">
+                  <label className="text-[10px] uppercase tracking-widest text-[#cb2026] font-bold">
+                    Services Brochure PDF Link
+                  </label>
+                  <input
+                    type="text"
+                    value={config.services_brochure_url || ""}
+                    onChange={(e) => handleTextChange("services_brochure_url", e.target.value)}
+                    placeholder="e.g. /young-designs-brochure.pdf"
+                    className="w-full bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded p-3 text-stone-900 dark:text-white focus:border-[#cb2026] focus:bg-white dark:focus:bg-transparent outline-none text-sm font-semibold"
+                  />
+                </div>
+
                 <div className="h-px bg-stone-100 dark:bg-stone-850 my-6" />
 
                 <div className="space-y-2">
