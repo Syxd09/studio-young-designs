@@ -123,6 +123,7 @@ export function PortfolioTrack({
   onSelectImage?: (item: any) => void;
 }) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const isAnimatingRef = useRef(false);
 
   // Tripled items list for infinite loop
   const loopItems = useMemo(() => {
@@ -158,6 +159,9 @@ export function PortfolioTrack({
     const el = containerRef.current;
     if (!el) return;
 
+    // If animating programmatically, wrap after animation finishes
+    if (isAnimatingRef.current) return;
+
     const W = el.scrollWidth / 3;
     if (W <= 0) return;
 
@@ -175,17 +179,21 @@ export function PortfolioTrack({
     const el = containerRef.current;
     if (!el) return;
 
-    const W = el.scrollWidth / 3;
+    if (isAnimatingRef.current) return;
+    isAnimatingRef.current = true;
+
     const scrollAmount = el.clientWidth * 0.7;
     const target = el.scrollLeft + (direction === "left" ? -scrollAmount : scrollAmount);
 
     animate(el.scrollLeft, target, {
-      type: "spring",
-      stiffness: 80,
-      damping: 18,
-      mass: 0.8,
+      duration: 1.35,
+      ease: [0.16, 1, 0.3, 1], // easeOutExpo
       onUpdate: (val) => {
-        el.scrollLeft = val;
+        el.scrollLeft = Math.round(val);
+      },
+      onComplete: () => {
+        isAnimatingRef.current = false;
+        handleScroll();
       },
     });
   };
@@ -219,8 +227,16 @@ export function PortfolioTrack({
         className="flex gap-4 sm:gap-6 overflow-x-auto scrollbar-none px-4 md:px-8 py-2 h-[72vh] min-h-[500px] max-h-[780px] items-stretch"
       >
         {loopItems.map((item: any, idx: number) => (
-          <div
+          <motion.div
             key={item.src + idx}
+            initial={{ opacity: 0, y: 30, scale: 0.97 }}
+            whileInView={{ opacity: 1, y: 0, scale: 1 }}
+            viewport={{ once: true, margin: "-50px" }}
+            transition={{
+              duration: 0.8,
+              ease: [0.16, 1, 0.3, 1], // Custom OutExpo easing
+              delay: (idx % items.length) * 0.03,
+            }}
             className="flex-none relative h-full w-auto group/slide cursor-pointer overflow-hidden rounded-sm select-none"
             onClick={() => onSelectImage && onSelectImage(item)}
           >
@@ -229,7 +245,7 @@ export function PortfolioTrack({
               alt={item.title || "Gallery"}
               loading="lazy"
               decoding="async"
-              className="h-full w-auto max-w-none object-cover transition-transform duration-700 ease-out group-hover/slide:scale-[1.02]"
+              className="h-full w-auto max-w-none object-cover transition-transform duration-1000 ease-out group-hover/slide:scale-[1.03]"
             />
             {/* Subtle Hover Overlay with Title */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover/slide:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-6 pointer-events-none">
@@ -244,7 +260,7 @@ export function PortfolioTrack({
                 </span>
               )}
             </div>
-          </div>
+          </motion.div>
         ))}
       </div>
     </div>
