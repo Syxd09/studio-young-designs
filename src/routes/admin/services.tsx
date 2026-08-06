@@ -379,6 +379,10 @@ function ServicesComponent() {
       if (error) throw error;
       toast.success("New service added successfully!");
 
+      queryClient.invalidateQueries({ queryKey: ["services"] }).catch(console.error);
+      queryClient.invalidateQueries({ queryKey: ["services_active"] }).catch(console.error);
+      queryClient.invalidateQueries({ queryKey: ["service_detail"] }).catch(console.error);
+
       // Clear forms
       setNewTitle("");
       setNewSlug("");
@@ -412,6 +416,10 @@ function ServicesComponent() {
 
       if (error) throw error;
       toast.success("Service successfully deleted");
+
+      queryClient.invalidateQueries({ queryKey: ["services"] }).catch(console.error);
+      queryClient.invalidateQueries({ queryKey: ["services_active"] }).catch(console.error);
+      queryClient.invalidateQueries({ queryKey: ["service_detail"] }).catch(console.error);
 
       const remaining = services.filter((s) => s.id !== id);
       setServices(remaining);

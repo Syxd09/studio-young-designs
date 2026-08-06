@@ -18,10 +18,6 @@ import { Route as AboutRouteImport } from './routes/about'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ServicesIndexRouteImport } from './routes/services/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
-import { Route as ServicesWardrobesRouteImport } from './routes/services/wardrobes'
-import { Route as ServicesLivingSpacesRouteImport } from './routes/services/living-spaces'
-import { Route as ServicesKitchensRouteImport } from './routes/services/kitchens'
-import { Route as ServicesInteriorsRouteImport } from './routes/services/interiors'
 import { Route as ServicesSlugRouteImport } from './routes/services/$slug'
 import { Route as AdminWhyRouteImport } from './routes/admin/why'
 import { Route as AdminTestimonialsRouteImport } from './routes/admin/testimonials'
@@ -79,26 +75,6 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => AdminRoute,
-} as any)
-const ServicesWardrobesRoute = ServicesWardrobesRouteImport.update({
-  id: '/wardrobes',
-  path: '/wardrobes',
-  getParentRoute: () => ServicesRoute,
-} as any)
-const ServicesLivingSpacesRoute = ServicesLivingSpacesRouteImport.update({
-  id: '/living-spaces',
-  path: '/living-spaces',
-  getParentRoute: () => ServicesRoute,
-} as any)
-const ServicesKitchensRoute = ServicesKitchensRouteImport.update({
-  id: '/kitchens',
-  path: '/kitchens',
-  getParentRoute: () => ServicesRoute,
-} as any)
-const ServicesInteriorsRoute = ServicesInteriorsRouteImport.update({
-  id: '/interiors',
-  path: '/interiors',
-  getParentRoute: () => ServicesRoute,
 } as any)
 const ServicesSlugRoute = ServicesSlugRouteImport.update({
   id: '/$slug',
@@ -181,10 +157,6 @@ export interface FileRoutesByFullPath {
   '/admin/testimonials': typeof AdminTestimonialsRoute
   '/admin/why': typeof AdminWhyRoute
   '/services/$slug': typeof ServicesSlugRoute
-  '/services/interiors': typeof ServicesInteriorsRoute
-  '/services/kitchens': typeof ServicesKitchensRoute
-  '/services/living-spaces': typeof ServicesLivingSpacesRoute
-  '/services/wardrobes': typeof ServicesWardrobesRoute
   '/admin/': typeof AdminIndexRoute
   '/services/': typeof ServicesIndexRoute
 }
@@ -206,10 +178,6 @@ export interface FileRoutesByTo {
   '/admin/testimonials': typeof AdminTestimonialsRoute
   '/admin/why': typeof AdminWhyRoute
   '/services/$slug': typeof ServicesSlugRoute
-  '/services/interiors': typeof ServicesInteriorsRoute
-  '/services/kitchens': typeof ServicesKitchensRoute
-  '/services/living-spaces': typeof ServicesLivingSpacesRoute
-  '/services/wardrobes': typeof ServicesWardrobesRoute
   '/admin': typeof AdminIndexRoute
   '/services': typeof ServicesIndexRoute
 }
@@ -234,10 +202,6 @@ export interface FileRoutesById {
   '/admin/testimonials': typeof AdminTestimonialsRoute
   '/admin/why': typeof AdminWhyRoute
   '/services/$slug': typeof ServicesSlugRoute
-  '/services/interiors': typeof ServicesInteriorsRoute
-  '/services/kitchens': typeof ServicesKitchensRoute
-  '/services/living-spaces': typeof ServicesLivingSpacesRoute
-  '/services/wardrobes': typeof ServicesWardrobesRoute
   '/admin/': typeof AdminIndexRoute
   '/services/': typeof ServicesIndexRoute
 }
@@ -263,10 +227,6 @@ export interface FileRouteTypes {
     | '/admin/testimonials'
     | '/admin/why'
     | '/services/$slug'
-    | '/services/interiors'
-    | '/services/kitchens'
-    | '/services/living-spaces'
-    | '/services/wardrobes'
     | '/admin/'
     | '/services/'
   fileRoutesByTo: FileRoutesByTo
@@ -288,10 +248,6 @@ export interface FileRouteTypes {
     | '/admin/testimonials'
     | '/admin/why'
     | '/services/$slug'
-    | '/services/interiors'
-    | '/services/kitchens'
-    | '/services/living-spaces'
-    | '/services/wardrobes'
     | '/admin'
     | '/services'
   id:
@@ -315,10 +271,6 @@ export interface FileRouteTypes {
     | '/admin/testimonials'
     | '/admin/why'
     | '/services/$slug'
-    | '/services/interiors'
-    | '/services/kitchens'
-    | '/services/living-spaces'
-    | '/services/wardrobes'
     | '/admin/'
     | '/services/'
   fileRoutesById: FileRoutesById
@@ -397,34 +349,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/admin/'
       preLoaderRoute: typeof AdminIndexRouteImport
       parentRoute: typeof AdminRoute
-    }
-    '/services/wardrobes': {
-      id: '/services/wardrobes'
-      path: '/wardrobes'
-      fullPath: '/services/wardrobes'
-      preLoaderRoute: typeof ServicesWardrobesRouteImport
-      parentRoute: typeof ServicesRoute
-    }
-    '/services/living-spaces': {
-      id: '/services/living-spaces'
-      path: '/living-spaces'
-      fullPath: '/services/living-spaces'
-      preLoaderRoute: typeof ServicesLivingSpacesRouteImport
-      parentRoute: typeof ServicesRoute
-    }
-    '/services/kitchens': {
-      id: '/services/kitchens'
-      path: '/kitchens'
-      fullPath: '/services/kitchens'
-      preLoaderRoute: typeof ServicesKitchensRouteImport
-      parentRoute: typeof ServicesRoute
-    }
-    '/services/interiors': {
-      id: '/services/interiors'
-      path: '/interiors'
-      fullPath: '/services/interiors'
-      preLoaderRoute: typeof ServicesInteriorsRouteImport
-      parentRoute: typeof ServicesRoute
     }
     '/services/$slug': {
       id: '/services/$slug'
@@ -547,19 +471,11 @@ const AdminRouteWithChildren = AdminRoute._addFileChildren(AdminRouteChildren)
 
 interface ServicesRouteChildren {
   ServicesSlugRoute: typeof ServicesSlugRoute
-  ServicesInteriorsRoute: typeof ServicesInteriorsRoute
-  ServicesKitchensRoute: typeof ServicesKitchensRoute
-  ServicesLivingSpacesRoute: typeof ServicesLivingSpacesRoute
-  ServicesWardrobesRoute: typeof ServicesWardrobesRoute
   ServicesIndexRoute: typeof ServicesIndexRoute
 }
 
 const ServicesRouteChildren: ServicesRouteChildren = {
   ServicesSlugRoute: ServicesSlugRoute,
-  ServicesInteriorsRoute: ServicesInteriorsRoute,
-  ServicesKitchensRoute: ServicesKitchensRoute,
-  ServicesLivingSpacesRoute: ServicesLivingSpacesRoute,
-  ServicesWardrobesRoute: ServicesWardrobesRoute,
   ServicesIndexRoute: ServicesIndexRoute,
 }
 

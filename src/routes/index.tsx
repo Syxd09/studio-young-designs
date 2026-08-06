@@ -1295,20 +1295,18 @@ function parseStatValue(
 
 function CountUp({ to, suffix = "" }: { to: number; suffix?: string }) {
   const ref = useRef<HTMLSpanElement>(null);
-  const inView = useInView(ref, { once: true, margin: "-80px" });
-  const mv = useMotionValue(0);
-  const smooth = useSpring(mv, { duration: 2000, bounce: 0 });
+  const inView = useInView(ref, { once: true, margin: "-10px" });
   const [val, setVal] = useState(0);
 
   useEffect(() => {
     if (!inView || typeof to !== "number" || isNaN(to)) return;
-    const controls = animate(mv, to, { duration: 2.2, ease: [0.22, 1, 0.36, 1] });
-    const unsub = smooth.on("change", (v) => setVal(Math.round(v)));
-    return () => {
-      controls.stop();
-      unsub();
-    };
-  }, [inView, to, mv, smooth]);
+    const controls = animate(0, to, {
+      duration: 2.2,
+      ease: [0.22, 1, 0.36, 1],
+      onUpdate: (v) => setVal(Math.round(v)),
+    });
+    return () => controls.stop();
+  }, [inView, to]);
 
   if (typeof to !== "number" || isNaN(to)) {
     return <span>{suffix}</span>;

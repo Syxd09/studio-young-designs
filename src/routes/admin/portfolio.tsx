@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { supabase } from "@/utils/supabase";
 import {
@@ -38,6 +39,7 @@ interface GalleryItem {
 }
 
 function PortfolioAdminComponent() {
+  const queryClient = useQueryClient();
   const [items, setItems] = useState<GalleryItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -59,6 +61,7 @@ function PortfolioAdminComponent() {
   useEffect(() => {
     fetchGallery();
     fetchCategories();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const fetchCategories = async () => {
@@ -100,6 +103,8 @@ function PortfolioAdminComponent() {
       }));
 
       setItems(itemsWithFeatured);
+      queryClient.invalidateQueries({ queryKey: ["gallery"] }).catch(console.error);
+      queryClient.invalidateQueries({ queryKey: ["site_config"] }).catch(console.error);
     } catch (err: any) {
       console.error(err);
       toast.error("Failed to load portfolio items.");
@@ -285,6 +290,7 @@ function PortfolioAdminComponent() {
 
       if (error) throw error;
       toast.success(`Photo layout size updated to ${newSpan.toUpperCase()}!`);
+      queryClient.invalidateQueries({ queryKey: ["gallery"] }).catch(console.error);
     } catch (err: any) {
       console.error(err);
       toast.error("Failed to update card size.");
