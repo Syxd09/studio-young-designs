@@ -318,11 +318,12 @@ function Hero({
           >
             <Magnetic>
               <Link
-                to="/portfolio"
-                className="group relative inline-flex items-center gap-3 overflow-hidden bg-white px-7 py-4 text-[11px] uppercase tracking-[0.28em] text-charcoal"
+                to="/"
+                hash="contact"
+                className="group relative inline-flex items-center gap-3 overflow-hidden bg-white px-7 py-4 text-[11px] uppercase tracking-[0.28em] text-charcoal hover:text-charcoal"
               >
                 <span className="absolute inset-0 origin-left scale-x-0 bg-gold transition-transform duration-500 ease-out group-hover:scale-x-100" />
-                <span className="relative">Explore Portfolio</span>
+                <span className="relative">Book a Consultation</span>
                 <motion.span
                   className="relative"
                   whileHover={{ x: 4 }}
@@ -330,18 +331,6 @@ function Hero({
                 >
                   →
                 </motion.span>
-              </Link>
-            </Magnetic>
-            <Magnetic>
-              <Link
-                to="/"
-                hash="contact"
-                className="group relative inline-flex items-center gap-3 overflow-hidden border border-white/70 px-7 py-4 text-[11px] uppercase tracking-[0.28em] text-white"
-              >
-                <span className="absolute inset-0 origin-right scale-x-0 bg-white transition-transform duration-500 ease-out group-hover:origin-left group-hover:scale-x-100" />
-                <span className="relative transition-colors duration-500 group-hover:text-charcoal">
-                  Book a Consultation
-                </span>
               </Link>
             </Magnetic>
           </motion.div>
