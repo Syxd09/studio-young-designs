@@ -30,6 +30,7 @@ import {
   EASE_OUT_EXPO,
 } from "@/components/shared-animations";
 import { sendEnquiryEmail } from "@/utils/email";
+import { Brochure } from "@/components/brochure";
 
 import heroImg from "@/assets/hero.jpg";
 import aboutImg from "@/assets/about.jpg";
@@ -2403,6 +2404,7 @@ function Home() {
       <Hero config={config} images={images} />
       <About config={config} images={images} />
       <Why config={config} items={whyItems} />
+      <Brochure config={config} />
       <Services services={services} config={config} />
       <Portfolio config={config} />
       <VideoShowcase config={config} />

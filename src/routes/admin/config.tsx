@@ -20,6 +20,7 @@ import {
   Plus,
   BookOpen,
   Star,
+  FileText,
 } from "lucide-react";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
@@ -28,7 +29,7 @@ export const Route = createFileRoute("/admin/config")({
   component: ConfigComponent,
 });
 
-type TabType = "media" | "copy" | "video" | "stats" | "contact" | "social";
+type TabType = "media" | "copy" | "video" | "stats" | "contact" | "social" | "brochure";
 
 function ConfigComponent() {
   const [config, setConfig] = useState<Record<string, string>>({});
@@ -95,6 +96,13 @@ function ConfigComponent() {
         contact_address:
           "No.105, Parvathi Plaza, Richmond Rd, Richmond Town, Bengaluru, Karnataka 560025",
         contact_hours: "Mon–Sat · 10:30 AM – 8:00 PM",
+        // Brochure
+        brochure_heading: "Download Our Signature Brochure",
+        brochure_subheading:
+          "Explore our design philosophy, premium materials, and curated spatial portfolios in a single elegant document.",
+        brochure_button_text: "Download Brochure",
+        brochure_url: "",
+        brochure_preview_img: "",
       };
 
       const configMap = (configRes.data || []).reduce(
@@ -259,6 +267,54 @@ function ConfigComponent() {
     }
   };
 
+  const handleConfigFileUpload = async (
+    key: string,
+    e: React.ChangeEvent<HTMLInputElement>,
+    fileTypeLabel: string,
+  ) => {
+    if (!e.target.files || !e.target.files[0]) return;
+    const file = e.target.files[0];
+
+    if (file.size > 20 * 1024 * 1024) {
+      toast.error("File size is too large. Limit is 20MB.");
+      return;
+    }
+
+    setUploadingKey(key);
+    try {
+      const fileExt = file.name.split(".").pop() || "";
+      const fileName = `${key}_${Date.now()}.${fileExt}`;
+      const filePath = `brochure/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from("studio-young-assets")
+        .upload(filePath, file, {
+          contentType: file.type,
+          upsert: true,
+        });
+
+      if (uploadError) throw uploadError;
+
+      const {
+        data: { publicUrl },
+      } = supabase.storage.from("studio-young-assets").getPublicUrl(filePath);
+
+      const { error: dbError } = await supabase
+        .from("site_config")
+        .upsert({ key, value: publicUrl }, { onConflict: "key" });
+
+      if (dbError) throw dbError;
+
+      setConfig((prev) => ({ ...prev, [key]: publicUrl }));
+      toast.success(`${fileTypeLabel} uploaded successfully!`);
+    } catch (err: any) {
+      console.error(err);
+      toast.error(err.message || `Failed to upload ${fileTypeLabel.toLowerCase()}.`);
+    } finally {
+      setUploadingKey(null);
+    }
+  };
+
   const handleHeroSlideUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files || !e.target.files[0]) return;
     const file = e.target.files[0];
@@ -329,6 +385,7 @@ function ConfigComponent() {
     { id: "stats", label: "Stats & Numbers", icon: Hash },
     { id: "contact", label: "Contact Details", icon: Mail },
     { id: "social", label: "Social Links", icon: Share2 },
+    { id: "brochure", label: "Brochure Download", icon: BookOpen },
   ];
 
   return (
@@ -1104,6 +1161,181 @@ function ConfigComponent() {
                     placeholder="https://wa.me/..."
                     className="w-full bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded p-3 text-xs text-stone-900 dark:text-white focus:border-[#cb2026] focus:bg-white dark:focus:bg-transparent outline-none font-semibold"
                   />
+                </div>
+              </motion.div>
+            )}
+
+            {/* 7. BROCHURE DOWNLOAD */}
+            {activeTab === "brochure" && (
+              <motion.div
+                key="brochure"
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: 10 }}
+                transition={{ duration: 0.3 }}
+                className="space-y-6 max-w-3xl text-stone-900 dark:text-white"
+              >
+                <div>
+                  <span className="text-[10px] uppercase tracking-widest text-[#cb2026] font-bold">
+                    Signature Brochure Configurations
+                  </span>
+                  <p className="text-[10px] text-stone-400 dark:text-stone-500 mt-1">
+                    Manage the download link, titles, description and cover image for your brand
+                    brochure.
+                  </p>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-[10px] uppercase tracking-widest text-stone-400 font-bold">
+                    Section Heading / Title
+                  </label>
+                  <input
+                    type="text"
+                    value={config.brochure_heading || ""}
+                    onChange={(e) => handleTextChange("brochure_heading", e.target.value)}
+                    className="w-full bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded p-3 text-stone-900 dark:text-white text-xs font-semibold focus:border-[#cb2026] outline-none"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-[10px] uppercase tracking-widest text-stone-400 font-bold">
+                    Section Description / Sub-heading
+                  </label>
+                  <textarea
+                    value={config.brochure_subheading || ""}
+                    onChange={(e) => handleTextChange("brochure_subheading", e.target.value)}
+                    rows={3}
+                    className="w-full bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded p-3 text-stone-900 dark:text-white text-xs leading-relaxed focus:border-[#cb2026] outline-none"
+                  />
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-[10px] uppercase tracking-widest text-stone-400 font-bold">
+                    Download Button Text
+                  </label>
+                  <input
+                    type="text"
+                    value={config.brochure_button_text || ""}
+                    onChange={(e) => handleTextChange("brochure_button_text", e.target.value)}
+                    className="w-full bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded p-3 text-stone-900 dark:text-white text-xs font-semibold focus:border-[#cb2026] outline-none"
+                  />
+                </div>
+
+                <div className="h-px bg-stone-100 dark:bg-stone-850 my-6" />
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                  {/* PDF Document Upload */}
+                  <div className="space-y-3">
+                    <label className="text-[10px] uppercase tracking-widest text-[#cb2026] font-bold block">
+                      Brochure PDF Document
+                    </label>
+                    <p className="text-[10px] text-stone-400 dark:text-stone-500">
+                      Upload the catalog PDF file directly to secure storage (max 20MB).
+                    </p>
+
+                    <div className="flex items-center gap-3">
+                      <label className="flex items-center justify-center gap-2 border border-stone-300 dark:border-stone-700 bg-white dark:bg-stone-900 hover:border-[#cb2026] hover:bg-stone-50 dark:hover:bg-stone-800 px-4 py-2.5 rounded text-xs font-semibold cursor-pointer text-stone-600 dark:text-stone-300 transition-colors shadow-sm">
+                        {uploadingKey === "brochure_url" ? (
+                          <Loader2 size={14} className="animate-spin text-[#cb2026]" />
+                        ) : (
+                          <Upload size={14} />
+                        )}
+                        <span>Upload PDF</span>
+                        <input
+                          type="file"
+                          accept=".pdf"
+                          className="hidden"
+                          onChange={(e) =>
+                            handleConfigFileUpload("brochure_url", e, "PDF Brochure")
+                          }
+                          disabled={uploadingKey !== null}
+                        />
+                      </label>
+                    </div>
+
+                    {config.brochure_url ? (
+                      <div className="p-3.5 bg-stone-50 dark:bg-stone-900/60 rounded border border-stone-200 dark:border-stone-800 flex items-center justify-between gap-3 max-w-sm">
+                        <div className="flex items-center gap-2 text-stone-600 dark:text-stone-350 min-w-0">
+                          <FileText size={16} className="text-[#cb2026] flex-shrink-0" />
+                          <a
+                            href={config.brochure_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-xs font-semibold hover:text-[#cb2026] hover:underline truncate"
+                          >
+                            Download Uploaded Brochure
+                          </a>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => handleTextChange("brochure_url", "")}
+                          className="text-red-500 hover:text-red-700 cursor-pointer flex-shrink-0"
+                          title="Remove PDF"
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      </div>
+                    ) : (
+                      <p className="text-[10px] text-yellow-600 dark:text-yellow-500 font-medium">
+                        ⚠️ No PDF document uploaded yet. The homepage download button will stay
+                        disabled until a PDF is uploaded.
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Brochure Preview Cover Image */}
+                  <div className="space-y-3">
+                    <label className="text-[10px] uppercase tracking-widest text-[#cb2026] font-bold block">
+                      Brochure Cover / Preview Image
+                    </label>
+                    <p className="text-[10px] text-stone-400 dark:text-stone-500">
+                      Upload a preview image to display alongside the brochure download section (max
+                      10MB).
+                    </p>
+
+                    <div className="flex items-center gap-3">
+                      <label className="flex items-center justify-center gap-2 border border-stone-300 dark:border-stone-700 bg-white dark:bg-stone-900 hover:border-[#cb2026] hover:bg-stone-50 dark:hover:bg-stone-800 px-4 py-2.5 rounded text-xs font-semibold cursor-pointer text-stone-600 dark:text-stone-300 transition-colors shadow-sm">
+                        {uploadingKey === "brochure_preview_img" ? (
+                          <Loader2 size={14} className="animate-spin text-[#cb2026]" />
+                        ) : (
+                          <Upload size={14} />
+                        )}
+                        <span>Upload Cover Image</span>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          className="hidden"
+                          onChange={(e) =>
+                            handleConfigFileUpload(
+                              "brochure_preview_img",
+                              e,
+                              "Brochure Cover Image",
+                            )
+                          }
+                          disabled={uploadingKey !== null}
+                        />
+                      </label>
+                    </div>
+
+                    {config.brochure_preview_img && (
+                      <div className="relative aspect-[4/3] max-w-sm rounded border border-stone-200 dark:border-stone-800 bg-stone-900 mt-2 overflow-hidden group/cover">
+                        <img
+                          src={config.brochure_preview_img}
+                          alt="Brochure Cover Preview"
+                          className="w-full h-full object-cover"
+                        />
+                        <div className="absolute inset-0 bg-black/0 group-hover/cover:bg-black/50 transition-colors flex items-center justify-center">
+                          <button
+                            type="button"
+                            onClick={() => handleTextChange("brochure_preview_img", "")}
+                            className="opacity-0 group-hover/cover:opacity-100 transition-opacity bg-red-600 hover:bg-red-700 text-white p-2 rounded-full cursor-pointer shadow-lg"
+                          >
+                            <Trash2 size={14} />
+                          </button>
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </motion.div>
             )}
