@@ -282,14 +282,17 @@ function ConfigComponent() {
 
     setUploadingKey(key);
     try {
-      const fileExt = file.name.split(".").pop() || "";
+      const fileExt = file.name.split(".").pop()?.toLowerCase() || "";
       const fileName = `${key}_${Date.now()}.${fileExt}`;
       const filePath = `brochure/${fileName}`;
+
+      // Enforce correct application/pdf MIME type for PDF uploads
+      const contentType = fileExt === "pdf" ? "application/pdf" : file.type;
 
       const { error: uploadError } = await supabase.storage
         .from("studio-young-assets")
         .upload(filePath, file, {
-          contentType: file.type,
+          contentType,
           upsert: true,
         });
 
@@ -309,7 +312,15 @@ function ConfigComponent() {
       toast.success(`${fileTypeLabel} uploaded successfully!`);
     } catch (err: any) {
       console.error(err);
-      toast.error(err.message || `Failed to upload ${fileTypeLabel.toLowerCase()}.`);
+      let errMsg = err.message || `Failed to upload ${fileTypeLabel.toLowerCase()}.`;
+      if (
+        errMsg.toLowerCase().includes("mime") ||
+        errMsg.toLowerCase().includes("not allowed") ||
+        errMsg.toLowerCase().includes("not supported")
+      ) {
+        errMsg = `Supabase Storage error: The "studio-young-assets" bucket settings restrict uploads of type application/pdf. Please update the bucket configuration in your Supabase Dashboard to allow PDFs, or clear MIME type restrictions.`;
+      }
+      toast.error(errMsg, { duration: 8000 });
     } finally {
       setUploadingKey(null);
     }
@@ -1243,7 +1254,7 @@ function ConfigComponent() {
                         <span>Upload PDF</span>
                         <input
                           type="file"
-                          accept=".pdf"
+                          accept="application/pdf,.pdf"
                           className="hidden"
                           onChange={(e) =>
                             handleConfigFileUpload("brochure_url", e, "PDF Brochure")
