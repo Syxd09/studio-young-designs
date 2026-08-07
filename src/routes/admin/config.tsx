@@ -106,6 +106,7 @@ function ConfigComponent() {
         brochure_badge: "2026 EDITION",
         brochure_preview_subtitle: "STUDIO YOUNG DESIGNS",
         brochure_preview_title: "Signature Spatial Realizations",
+        brochure_preview_link: "",
       };
 
       const configMap = (configRes.data || []).reduce(
@@ -1273,6 +1274,23 @@ function ConfigComponent() {
                       className="w-full bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded p-3 text-stone-900 dark:text-white text-xs font-semibold focus:border-[#cb2026] outline-none"
                     />
                   </div>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-[10px] uppercase tracking-widest text-stone-400 font-bold">
+                    Cover Card Link Redirect (Optional)
+                  </label>
+                  <input
+                    type="text"
+                    value={config.brochure_preview_link || ""}
+                    onChange={(e) => handleTextChange("brochure_preview_link", e.target.value)}
+                    placeholder="e.g. /portfolio or https://example.com (Leave blank to remove arrow/click redirection)"
+                    className="w-full bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded p-3 text-stone-900 dark:text-white text-xs focus:border-[#cb2026] outline-none"
+                  />
+                  <p className="text-[10px] text-stone-400 dark:text-stone-500 italic">
+                    💡 Note: Leaving this link empty will automatically remove the arrow icon and
+                    click redirection from the cover image.
+                  </p>
                 </div>
 
                 <div className="h-px bg-stone-100 dark:bg-stone-850 my-6" />

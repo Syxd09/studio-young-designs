@@ -1,14 +1,8 @@
 import { useRef } from "react";
+import { Link } from "@tanstack/react-router";
 import { motion, useInView } from "framer-motion";
 import { Download, FileText, ArrowRight } from "lucide-react";
-import {
-  Reveal3D,
-  SplitHeading,
-  TextScramble,
-  Magnetic,
-  TiltCard,
-  EASE_SMOOTH,
-} from "./shared-animations";
+import { Reveal3D, SplitHeading, TextScramble, Magnetic, TiltCard } from "./shared-animations";
 
 interface BrochureProps {
   config?: Record<string, string>;
@@ -31,6 +25,46 @@ export function Brochure({ config = {} }: BrochureProps) {
   const previewBadge = config.brochure_badge || "2026 EDITION";
   const previewSubtitle = config.brochure_preview_subtitle || "STUDIO YOUNG DESIGNS";
   const previewTitle = config.brochure_preview_title || "Signature Spatial Realizations";
+  const previewLink = config.brochure_preview_link || "";
+
+  const renderCardContent = () => (
+    <TiltCard intensity={6}>
+      <div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg border border-gold/20 bg-charcoal-light shadow-2xl group/preview">
+        <img
+          src={previewImg}
+          alt="Studio Young Designs Signature Brochure Cover"
+          className="h-full w-full object-cover brightness-90 group-hover/preview:brightness-100 group-hover/preview:scale-[1.03] transition-all duration-700 ease-out"
+          loading="lazy"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-80" />
+
+        {/* Floating Elegant Badge */}
+        <div className="absolute top-4 right-4 bg-charcoal/95 border border-gold/30 text-gold text-[9px] uppercase tracking-[0.2em] px-3 py-1.5 rounded-sm font-semibold backdrop-blur-md">
+          {previewBadge}
+        </div>
+
+        {/* Brochure Overlay Details */}
+        <div className="absolute bottom-6 left-6 right-6 flex items-end justify-between text-white pointer-events-none">
+          <div className="space-y-1">
+            <span className="text-[10px] uppercase tracking-widest text-gold font-bold">
+              {previewSubtitle}
+            </span>
+            <h4 className="font-display text-lg tracking-wide">{previewTitle}</h4>
+          </div>
+
+          {previewLink && (
+            <motion.div
+              className="h-10 w-10 rounded-full border border-white/30 flex items-center justify-center bg-black/40 backdrop-blur-md text-white group-hover/preview:bg-gold group-hover/preview:text-charcoal group-hover/preview:border-gold transition-colors duration-500"
+              animate={inView ? { scale: [0.9, 1.05, 1] } : {}}
+              transition={{ duration: 0.6, delay: 0.8 }}
+            >
+              <ArrowRight size={16} />
+            </motion.div>
+          )}
+        </div>
+      </div>
+    </TiltCard>
+  );
 
   return (
     <section
@@ -101,40 +135,24 @@ export function Brochure({ config = {} }: BrochureProps) {
           {/* Premium Brochure Preview Frame Column */}
           <div className="lg:col-span-6 flex justify-center lg:justify-end">
             <Reveal3D delay={0.15} rotateY={-8} className="w-full max-w-lg">
-              <TiltCard intensity={6}>
-                <div className="relative aspect-[4/3] w-full overflow-hidden rounded-lg border border-gold/20 bg-charcoal-light shadow-2xl group/preview">
-                  <img
-                    src={previewImg}
-                    alt="Studio Young Designs Signature Brochure Cover"
-                    className="h-full w-full object-cover brightness-90 group-hover/preview:brightness-100 group-hover/preview:scale-[1.03] transition-all duration-700 ease-out"
-                    loading="lazy"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-80" />
-
-                  {/* Floating Elegant Badge */}
-                  <div className="absolute top-4 right-4 bg-charcoal/95 border border-gold/30 text-gold text-[9px] uppercase tracking-[0.2em] px-3 py-1.5 rounded-sm font-semibold backdrop-blur-md">
-                    {previewBadge}
-                  </div>
-
-                  {/* Brochure Overlay Details */}
-                  <div className="absolute bottom-6 left-6 right-6 flex items-end justify-between text-white pointer-events-none">
-                    <div className="space-y-1">
-                      <span className="text-[10px] uppercase tracking-widest text-gold font-bold">
-                        {previewSubtitle}
-                      </span>
-                      <h4 className="font-display text-lg tracking-wide">{previewTitle}</h4>
-                    </div>
-
-                    <motion.div
-                      className="h-10 w-10 rounded-full border border-white/30 flex items-center justify-center bg-black/40 backdrop-blur-md text-white group-hover/preview:bg-gold group-hover/preview:text-charcoal group-hover/preview:border-gold transition-colors duration-500"
-                      animate={inView ? { scale: [0.9, 1.05, 1] } : {}}
-                      transition={{ duration: 0.6, delay: 0.8 }}
-                    >
-                      <ArrowRight size={16} />
-                    </motion.div>
-                  </div>
-                </div>
-              </TiltCard>
+              {previewLink ? (
+                previewLink.startsWith("http") ? (
+                  <a
+                    href={previewLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block cursor-pointer group/link w-full"
+                  >
+                    {renderCardContent()}
+                  </a>
+                ) : (
+                  <Link to={previewLink} className="block cursor-pointer group/link w-full">
+                    {renderCardContent()}
+                  </Link>
+                )
+              ) : (
+                <div className="block w-full">{renderCardContent()}</div>
+              )}
             </Reveal3D>
           </div>
         </div>
