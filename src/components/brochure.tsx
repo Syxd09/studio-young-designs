@@ -28,6 +28,10 @@ export function Brochure({ config = {} }: BrochureProps) {
     config.brochure_preview_img ||
     "https://images.unsplash.com/photo-1618219908412-a29a1bb7b86e?auto=format&fit=crop&w=1200&q=80";
 
+  const previewBadge = config.brochure_badge || "2026 EDITION";
+  const previewSubtitle = config.brochure_preview_subtitle || "STUDIO YOUNG DESIGNS";
+  const previewTitle = config.brochure_preview_title || "Signature Spatial Realizations";
+
   return (
     <section
       id="brochure"
@@ -109,18 +113,16 @@ export function Brochure({ config = {} }: BrochureProps) {
 
                   {/* Floating Elegant Badge */}
                   <div className="absolute top-4 right-4 bg-charcoal/95 border border-gold/30 text-gold text-[9px] uppercase tracking-[0.2em] px-3 py-1.5 rounded-sm font-semibold backdrop-blur-md">
-                    2026 EDITION
+                    {previewBadge}
                   </div>
 
                   {/* Brochure Overlay Details */}
                   <div className="absolute bottom-6 left-6 right-6 flex items-end justify-between text-white pointer-events-none">
                     <div className="space-y-1">
                       <span className="text-[10px] uppercase tracking-widest text-gold font-bold">
-                        Studio Young Designs
+                        {previewSubtitle}
                       </span>
-                      <h4 className="font-display text-lg tracking-wide">
-                        Signature Spatial Realizations
-                      </h4>
+                      <h4 className="font-display text-lg tracking-wide">{previewTitle}</h4>
                     </div>
 
                     <motion.div

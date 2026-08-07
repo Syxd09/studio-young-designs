@@ -103,6 +103,9 @@ function ConfigComponent() {
         brochure_button_text: "Download Brochure",
         brochure_url: "",
         brochure_preview_img: "",
+        brochure_badge: "2026 EDITION",
+        brochure_preview_subtitle: "STUDIO YOUNG DESIGNS",
+        brochure_preview_title: "Signature Spatial Realizations",
       };
 
       const configMap = (configRes.data || []).reduce(
@@ -1230,6 +1233,46 @@ function ConfigComponent() {
                     onChange={(e) => handleTextChange("brochure_button_text", e.target.value)}
                     className="w-full bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded p-3 text-stone-900 dark:text-white text-xs font-semibold focus:border-[#cb2026] outline-none"
                   />
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="space-y-2">
+                    <label className="text-[10px] uppercase tracking-widest text-stone-400 font-bold">
+                      Cover Badge / Year
+                    </label>
+                    <input
+                      type="text"
+                      value={config.brochure_badge || "2026 EDITION"}
+                      onChange={(e) => handleTextChange("brochure_badge", e.target.value)}
+                      className="w-full bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded p-3 text-stone-900 dark:text-white text-xs font-semibold focus:border-[#cb2026] outline-none"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-[10px] uppercase tracking-widest text-stone-400 font-bold">
+                      Cover Subtitle / Brand
+                    </label>
+                    <input
+                      type="text"
+                      value={config.brochure_preview_subtitle || "STUDIO YOUNG DESIGNS"}
+                      onChange={(e) =>
+                        handleTextChange("brochure_preview_subtitle", e.target.value)
+                      }
+                      className="w-full bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded p-3 text-stone-900 dark:text-white text-xs font-semibold focus:border-[#cb2026] outline-none"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-[10px] uppercase tracking-widest text-stone-400 font-bold">
+                      Cover Title / Collection
+                    </label>
+                    <input
+                      type="text"
+                      value={config.brochure_preview_title || "Signature Spatial Realizations"}
+                      onChange={(e) => handleTextChange("brochure_preview_title", e.target.value)}
+                      className="w-full bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded p-3 text-stone-900 dark:text-white text-xs font-semibold focus:border-[#cb2026] outline-none"
+                    />
+                  </div>
                 </div>
 
                 <div className="h-px bg-stone-100 dark:bg-stone-850 my-6" />
