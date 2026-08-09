@@ -247,19 +247,6 @@ export function PortfolioTrack({
               decoding="async"
               className="h-full w-auto max-w-none object-cover transition-transform duration-1000 ease-out group-hover/slide:scale-[1.03]"
             />
-            {/* Subtle Hover Overlay with Title */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover/slide:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-6 pointer-events-none">
-              {item.title && (
-                <span className="font-display text-lg text-white uppercase tracking-wider font-medium">
-                  {item.title}
-                </span>
-              )}
-              {item.subtitle && (
-                <span className="text-xs text-white/80 uppercase tracking-widest font-sans mt-0.5">
-                  {item.subtitle}
-                </span>
-              )}
-            </div>
           </motion.div>
         ))}
       </div>
@@ -369,10 +356,6 @@ function PortfolioPage() {
                 alt={selected.title}
                 className="max-h-[75vh] max-w-full object-contain rounded-lg border border-gold/10"
               />
-              <div className="mt-4 text-center">
-                <div className="font-display text-2xl text-white">{selected.title}</div>
-                <div className="eyebrow mt-1 text-white/60">{selected.subtitle}</div>
-              </div>
             </motion.div>
             <button
               onClick={() => setSelected(null)}

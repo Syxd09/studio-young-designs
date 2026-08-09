@@ -948,10 +948,6 @@ function Portfolio({ config = {} }: { config?: Record<string, string> }) {
                 alt={selectedPiece.title}
                 className="max-h-[75vh] max-w-full object-contain rounded-lg border border-gold/10"
               />
-              <div className="mt-4 text-center">
-                <div className="font-display text-2xl text-white">{selectedPiece.title}</div>
-                <div className="eyebrow mt-1 text-white/60">{selectedPiece.place}</div>
-              </div>
             </motion.div>
             <button
               onClick={() => setSelectedPiece(null)}
@@ -1000,7 +996,6 @@ function PortfolioCard({
           whileHover={{ scale: 1.04 }}
           transition={{ duration: 1.4, ease: EASE_OUT_EXPO }}
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent opacity-70 transition-opacity duration-500 group-hover:opacity-90" />
 
         {/* Cursor-following "View" blob */}
         <motion.div
@@ -1017,27 +1012,6 @@ function PortfolioCard({
             View
           </motion.span>
         </motion.div>
-
-        <div className="absolute inset-x-0 bottom-0 flex items-end justify-between p-6 md:p-8">
-          <div className="text-white">
-            <div className="eyebrow text-white/70">{piece.place}</div>
-            <div className="mt-2 overflow-hidden">
-              <motion.span
-                className="block font-display text-2xl md:text-3xl"
-                whileHover={{ y: -4 }}
-                transition={{ type: "spring", stiffness: 300 }}
-              >
-                {piece.title}
-              </motion.span>
-            </div>
-            <motion.span
-              className="mt-3 block h-px bg-gold"
-              initial={{ width: 32 }}
-              whileHover={{ width: 96 }}
-              transition={{ duration: 0.5, ease: EASE_SMOOTH }}
-            />
-          </div>
-        </div>
       </div>
     </TiltCard>
   );
