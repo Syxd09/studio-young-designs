@@ -361,13 +361,13 @@ function PortfolioPage() {
               animate={{ scale: 1, opacity: 1, rotateX: 0 }}
               exit={{ scale: 0.8, opacity: 0 }}
               transition={{ duration: 0.5, ease: EASE_SMOOTH }}
-              className="relative"
+              className="relative flex flex-col items-center justify-center"
               onClick={(e) => e.stopPropagation()}
             >
               <img
                 src={selected.src}
                 alt={selected.title}
-                className="max-h-[80vh] max-w-full object-contain"
+                className="max-h-[75vh] max-w-full object-contain rounded-lg border border-gold/10"
               />
               <div className="mt-4 text-center">
                 <div className="font-display text-2xl text-white">{selected.title}</div>
