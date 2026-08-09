@@ -825,6 +825,8 @@ function ServiceRow({
    ═══════════════════════════════════════════════════════════════ */
 
 function Portfolio({ config = {} }: { config?: Record<string, string> }) {
+  const [selectedPiece, setSelectedPiece] = useState<any | null>(null);
+
   const { data: dbGallery = [] } = useQuery<any[]>({
     queryKey: ["gallery"],
     queryFn: async () => {
@@ -917,21 +919,61 @@ function Portfolio({ config = {} }: { config?: Record<string, string> }) {
               rotateY={(i % 2 === 0 ? 1 : -1) * 6}
               className={p.span === "wide" ? "md:col-span-2" : "md:col-span-1"}
             >
-              <PortfolioCard piece={p} />
+              <PortfolioCard piece={p} onSelect={() => setSelectedPiece(p)} />
             </Reveal3D>
           ))}
         </div>
       </div>
+
+      {/* Lightbox */}
+      <AnimatePresence>
+        {selectedPiece && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setSelectedPiece(null)}
+            className="fixed inset-0 z-[200] flex items-center justify-center bg-black/90 p-6 backdrop-blur-sm"
+          >
+            <motion.div
+              initial={{ scale: 0.8, opacity: 0, rotateX: 10 }}
+              animate={{ scale: 1, opacity: 1, rotateX: 0 }}
+              exit={{ scale: 0.8, opacity: 0 }}
+              transition={{ duration: 0.5, ease: EASE_SMOOTH }}
+              className="relative"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <img
+                src={selectedPiece.img}
+                alt={selectedPiece.title}
+                className="max-h-[80vh] max-w-full object-contain rounded-lg border border-gold/10"
+              />
+              <div className="mt-4 text-center">
+                <div className="font-display text-2xl text-white">{selectedPiece.title}</div>
+                <div className="eyebrow mt-1 text-white/60">{selectedPiece.place}</div>
+              </div>
+            </motion.div>
+            <button
+              onClick={() => setSelectedPiece(null)}
+              className="absolute right-6 top-6 text-3xl text-white/70 transition-colors hover:text-white cursor-pointer"
+            >
+              ×
+            </button>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }
 
 function PortfolioCard({
   piece,
+  onSelect,
 }: {
   piece: { img: string; title: string; place: string; span: string };
+  onSelect: () => void;
 }) {
-  const ref = useRef<HTMLAnchorElement>(null);
+  const ref = useRef<HTMLDivElement>(null);
   const { x, y } = useCursorTag(ref);
   const [hover, setHover] = useState(false);
 
@@ -943,12 +985,12 @@ function PortfolioCard({
 
   return (
     <TiltCard intensity={6}>
-      <Link
+      <div
         ref={ref}
-        to="/portfolio"
+        onClick={onSelect}
         onMouseEnter={() => setHover(true)}
         onMouseLeave={() => setHover(false)}
-        className={`group relative block overflow-hidden rounded-xl border border-stone-200/80 bg-[#FAF8F5] p-2 flex items-center justify-center ${getAspectClass(piece.span)}`}
+        className={`group relative block overflow-hidden rounded-xl border border-stone-200/80 bg-[#FAF8F5] p-2 flex items-center justify-center cursor-pointer ${getAspectClass(piece.span)}`}
       >
         <motion.img
           src={piece.img}
@@ -996,7 +1038,7 @@ function PortfolioCard({
             />
           </div>
         </div>
-      </Link>
+      </div>
     </TiltCard>
   );
 }
