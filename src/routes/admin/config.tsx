@@ -80,6 +80,7 @@ function ConfigComponent() {
         why_subtitle:
           "We are a small studio by choice. It lets us stay close to the drawing, to the wood, to the client — and to the standards we set ourselves in 1981.",
         // Stats
+        stats_heading: "What defines us",
         stat_years: "40+",
         stat_years_label: "Years of Experience",
         stat_spaces: "700+",
@@ -936,6 +937,20 @@ function ConfigComponent() {
                 transition={{ duration: 0.3 }}
                 className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-3xl text-stone-900 dark:text-white"
               >
+                {/* Section Heading */}
+                <div className="md:col-span-3 space-y-2 border border-stone-200 dark:border-stone-850 p-4 rounded bg-stone-50 dark:bg-stone-900/35">
+                  <label className="text-[10px] uppercase tracking-widest text-[#cb2026] font-bold block">
+                    Section Heading
+                  </label>
+                  <input
+                    type="text"
+                    value={config.stats_heading || ""}
+                    onChange={(e) => handleTextChange("stats_heading", e.target.value)}
+                    className="w-full bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded p-2.5 text-stone-900 dark:text-white focus:border-[#cb2026] outline-none text-xs font-semibold"
+                    placeholder="e.g. What defines us"
+                  />
+                </div>
+
                 {/* Years Experience */}
                 <div className="border border-stone-200 dark:border-stone-850 p-4 rounded bg-stone-50 dark:bg-stone-900/35 space-y-3">
                   <label className="text-[10px] uppercase tracking-widest text-[#cb2026] font-bold">

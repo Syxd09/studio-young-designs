@@ -1384,7 +1384,10 @@ function Counters({ config = {} }: { config?: Record<string, string> }) {
           <div className="mb-16 flex items-center gap-3">
             <span className="gold-rule" />
             <span className="eyebrow text-cream/60">
-              <TextScramble text="By the numbers" className="eyebrow text-cream/60" />
+              <TextScramble
+                text={config.stats_heading || "What defines us"}
+                className="eyebrow text-cream/60"
+              />
             </span>
           </div>
         </Reveal3D>
