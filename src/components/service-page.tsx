@@ -216,9 +216,9 @@ export function ServicePageLayout({ data }: { data: ServicePageData }) {
       />
 
       {/* Intro Section */}
-      <section className="bg-cream py-24 md:py-32">
+      <section className="bg-cream py-16 md:py-20">
         <div className="mx-auto max-w-[1400px] px-6 md:px-10">
-          <div className="grid grid-cols-1 gap-16 md:grid-cols-12">
+          <div className="grid grid-cols-1 gap-12 md:grid-cols-12">
             <div className="md:col-span-5">
               <Reveal3D rotateX={10}>
                 <div className="mb-6 flex items-center gap-3">
@@ -241,28 +241,9 @@ export function ServicePageLayout({ data }: { data: ServicePageData }) {
         </div>
       </section>
 
-      {/* Features Grid — WHAT WE OFFER */}
-      <section className="bg-[#FAF8F5] py-24 md:py-32">
-        <div className="mx-auto max-w-[1400px] px-6 md:px-10 space-y-12">
-          {/* Section Header */}
-          <Reveal3D rotateX={10}>
-            <div>
-              <div className="mb-4 flex items-center gap-3">
-                <span className="h-px w-6 bg-[#C5A059]" />
-                <span className="text-[11px] uppercase tracking-[0.25em] text-stone-500 font-sans font-semibold">
-                  <TextScramble text="What We Offer" />
-                </span>
-              </div>
-              <SplitHeading
-                text={mergedData.intro || "Thoughtful Kitchens. Timeless Living."}
-                className="text-4xl text-stone-900 md:text-5xl lg:text-6xl font-display font-normal leading-tight"
-              />
-              <p className="mt-4 max-w-3xl text-base text-stone-600 md:text-lg leading-relaxed font-sans">
-                {mergedData.subtitle}
-              </p>
-            </div>
-          </Reveal3D>
-
+      {/* Features Grid */}
+      <section className="bg-[#FAF8F5] py-16 md:py-20">
+        <div className="mx-auto max-w-[1400px] px-6 md:px-10 space-y-8">
           {/* Offer Cards Grid */}
           <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-8">
             {mergedData.features.map((feat, i) => {
