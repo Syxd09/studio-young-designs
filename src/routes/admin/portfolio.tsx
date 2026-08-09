@@ -521,10 +521,10 @@ function PortfolioAdminComponent() {
             <div className="p-4 flex-1 flex flex-col justify-between space-y-3">
               <div>
                 <h4 className="font-semibold text-sm text-stone-900 dark:text-stone-150 line-clamp-1">
-                  {item.title}
+                  {item.title || "Untitled Image"}
                 </h4>
                 <p className="text-[11px] text-stone-400 dark:text-stone-550 line-clamp-1 mt-0.5">
-                  {item.subtitle}
+                  {item.subtitle || "No subtitle"}
                 </p>
               </div>
 
@@ -656,6 +656,12 @@ function PortfolioAdminComponent() {
               </div>
 
               <form onSubmit={handleSave} className="space-y-4">
+                <div className="p-3 bg-amber-50 dark:bg-amber-950/20 border border-amber-200/40 dark:border-amber-800/40 rounded-lg text-[10px] text-amber-700 dark:text-amber-400 leading-relaxed font-sans">
+                  💡 <strong>Photography-First Layout:</strong> All text overlays and descriptions
+                  are hidden on the public website. Title and Subtitle are now optional, used solely
+                  for internal organization within the admin portal.
+                </div>
+
                 <div className="space-y-1">
                   <label className="text-[9px] uppercase tracking-widest text-stone-400 dark:text-stone-500 font-bold block">
                     Image File
@@ -696,7 +702,7 @@ function PortfolioAdminComponent() {
 
                 <div className="space-y-1">
                   <label className="text-[9px] uppercase tracking-widest text-stone-400 dark:text-stone-500 font-bold block">
-                    Title
+                    Title (Optional)
                   </label>
                   <input
                     type="text"
@@ -704,13 +710,12 @@ function PortfolioAdminComponent() {
                     onChange={(e) => setTitle(e.target.value)}
                     placeholder="e.g. Walnut Modular Kitchen"
                     className="w-full bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded p-2.5 text-xs text-stone-900 dark:text-white placeholder-stone-400 dark:placeholder-stone-600 outline-none focus:border-[#cb2026] focus:bg-white dark:focus:bg-transparent"
-                    required
                   />
                 </div>
 
                 <div className="space-y-1">
                   <label className="text-[9px] uppercase tracking-widest text-stone-400 dark:text-stone-500 font-bold block">
-                    Subtitle
+                    Subtitle (Optional)
                   </label>
                   <input
                     type="text"
@@ -718,7 +723,6 @@ function PortfolioAdminComponent() {
                     onChange={(e) => setSubtitle(e.target.value)}
                     placeholder="e.g. Dining · Bangalore"
                     className="w-full bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded p-2.5 text-xs text-stone-900 dark:text-white placeholder-stone-400 dark:placeholder-stone-600 outline-none focus:border-[#cb2026] focus:bg-white dark:focus:bg-transparent"
-                    required
                   />
                 </div>
 
