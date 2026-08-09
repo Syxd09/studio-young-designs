@@ -107,6 +107,7 @@ function ConfigComponent() {
         brochure_preview_subtitle: "STUDIO YOUNG DESIGNS",
         brochure_preview_title: "Signature Spatial Realizations",
         brochure_preview_link: "",
+        show_youtube_banner: "true",
       };
 
       const configMap = (configRes.data || []).reduce(
@@ -899,6 +900,28 @@ function ConfigComponent() {
                     placeholder="https://www.youtube.com/@studioyoungdesigns2118"
                     className="w-full bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded p-3 text-stone-900 dark:text-white text-xs"
                   />
+                </div>
+
+                <div className="flex items-center justify-between p-4 bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded mt-4">
+                  <div className="space-y-1">
+                    <span className="text-[10px] uppercase tracking-widest text-[#cb2026] font-bold block">
+                      YouTube Banner Visibility
+                    </span>
+                    <span className="text-[10px] text-stone-400 dark:text-stone-500 block leading-tight">
+                      Choose whether to show or hide the YouTube channel subscription banner
+                      underneath the video.
+                    </span>
+                  </div>
+                  <select
+                    value={
+                      config.show_youtube_banner === undefined ? "true" : config.show_youtube_banner
+                    }
+                    onChange={(e) => handleTextChange("show_youtube_banner", e.target.value)}
+                    className="bg-white dark:bg-stone-950 border border-stone-200 dark:border-stone-850 rounded p-2 text-xs font-semibold text-stone-800 dark:text-cream cursor-pointer"
+                  >
+                    <option value="true">Visible</option>
+                    <option value="false">Hidden</option>
+                  </select>
                 </div>
               </motion.div>
             )}

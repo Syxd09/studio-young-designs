@@ -1131,54 +1131,56 @@ export function VideoShowcase({
         </Reveal3D>
 
         {/* YouTube Channel Subscription Banner */}
-        <Reveal3D delay={0.3} rotateX={6}>
-          <div className="mt-8 max-w-5xl mx-auto border border-gold/25 bg-gradient-to-r from-charcoal-light via-[#1e1c1b] to-charcoal-light p-6 md:p-8 rounded-sm shadow-xl flex flex-col sm:flex-row items-center justify-between gap-6">
-            <div className="flex items-center gap-5">
-              {/* Studio Young Designs Logo on White Background */}
-              <div className="h-16 w-16 rounded-full bg-white border border-gold/40 p-2.5 flex items-center justify-center shadow-xl flex-shrink-0">
-                <img
-                  src="/logo-transparent.png"
-                  alt="Studio Young Designs"
-                  className="h-full w-full object-contain"
-                />
-              </div>
-              <div>
-                <h4 className="font-display text-xl md:text-2xl text-cream font-semibold tracking-wide flex items-center gap-2">
-                  <span>{config.youtube_channel_name || "Studio Young Designs"}</span>
-                </h4>
-                <p className="text-xs text-gold/90 font-mono mt-0.5 font-medium">
-                  {config.youtube_channel_handle || "@studioyoungdesigns2118"}
-                </p>
-                <p className="text-xs text-cream/60 mt-1 font-sans font-light">
-                  Subscribe to explore our full library of interior walkthroughs, kitchen tours, and
-                  design stories.
-                </p>
-              </div>
-            </div>
-
-            <Magnetic>
-              <a
-                href={
-                  config.youtube_channel_url || "https://www.youtube.com/@studioyoungdesigns2118"
-                }
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group inline-flex items-center gap-3 bg-red-600 hover:bg-red-700 text-white px-6 py-3.5 text-xs font-semibold uppercase tracking-[0.2em] transition-all flex-shrink-0 shadow-lg rounded-sm cursor-pointer"
-              >
-                {/* Official YouTube Play Icon */}
-                <svg className="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24">
-                  <path
-                    d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814z"
-                    fill="#FFFFFF"
+        {config.show_youtube_banner !== "false" && (
+          <Reveal3D delay={0.3} rotateX={6}>
+            <div className="mt-8 max-w-5xl mx-auto border border-gold/25 bg-gradient-to-r from-charcoal-light via-[#1e1c1b] to-charcoal-light p-6 md:p-8 rounded-sm shadow-xl flex flex-col sm:flex-row items-center justify-between gap-6">
+              <div className="flex items-center gap-5">
+                {/* Studio Young Designs Logo on White Background */}
+                <div className="h-16 w-16 rounded-full bg-white border border-gold/40 p-2.5 flex items-center justify-center shadow-xl flex-shrink-0">
+                  <img
+                    src="/logo-transparent.png"
+                    alt="Studio Young Designs"
+                    className="h-full w-full object-contain"
                   />
-                  <path d="M9.545 15.568V8.432L15.818 12l-6.273 3.568z" fill="#CC0000" />
-                </svg>
-                <span>Visit YouTube Channel</span>
-                <span className="group-hover:translate-x-1 transition-transform">→</span>
-              </a>
-            </Magnetic>
-          </div>
-        </Reveal3D>
+                </div>
+                <div>
+                  <h4 className="font-display text-xl md:text-2xl text-cream font-semibold tracking-wide flex items-center gap-2">
+                    <span>{config.youtube_channel_name || "Studio Young Designs"}</span>
+                  </h4>
+                  <p className="text-xs text-gold/90 font-mono mt-0.5 font-medium">
+                    {config.youtube_channel_handle || "@studioyoungdesigns2118"}
+                  </p>
+                  <p className="text-xs text-cream/60 mt-1 font-sans font-light">
+                    Subscribe to explore our full library of interior walkthroughs, kitchen tours,
+                    and design stories.
+                  </p>
+                </div>
+              </div>
+
+              <Magnetic>
+                <a
+                  href={
+                    config.youtube_channel_url || "https://www.youtube.com/@studioyoungdesigns2118"
+                  }
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group inline-flex items-center gap-3 bg-red-600 hover:bg-red-700 text-white px-6 py-3.5 text-xs font-semibold uppercase tracking-[0.2em] transition-all flex-shrink-0 shadow-lg rounded-sm cursor-pointer"
+                >
+                  {/* Official YouTube Play Icon */}
+                  <svg className="w-5 h-5 flex-shrink-0" viewBox="0 0 24 24">
+                    <path
+                      d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814z"
+                      fill="#FFFFFF"
+                    />
+                    <path d="M9.545 15.568V8.432L15.818 12l-6.273 3.568z" fill="#CC0000" />
+                  </svg>
+                  <span>Visit YouTube Channel</span>
+                  <span className="group-hover:translate-x-1 transition-transform">→</span>
+                </a>
+              </Magnetic>
+            </div>
+          </Reveal3D>
+        )}
       </div>
     </section>
   );
