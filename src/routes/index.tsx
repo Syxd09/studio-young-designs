@@ -13,7 +13,7 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/utils/supabase";
 import { toast } from "sonner";
-import { Loader2, Star, X, Play, Youtube, CheckCircle2 } from "lucide-react";
+import { Loader2, Star, X, Play, Youtube, CheckCircle2, Download } from "lucide-react";
 
 import {
   PageWrapper,
@@ -30,7 +30,6 @@ import {
   EASE_OUT_EXPO,
 } from "@/components/shared-animations";
 import { sendEnquiryEmail } from "@/utils/email";
-import { Brochure } from "@/components/brochure";
 
 import heroImg from "@/assets/hero.jpg";
 import aboutImg from "@/assets/about.jpg";
@@ -609,6 +608,26 @@ function Why({ config = {}, items = [] }: { config?: Record<string, string>; ite
             </Reveal3D>
           ))}
         </div>
+
+        {/* Centered Download Brochure Button */}
+        <div className="mt-16 flex justify-center">
+          <Reveal3D delay={0.2} rotateX={10}>
+            <Magnetic>
+              <a
+                href={config.brochure_url || "/young-designs-brochure.pdf"}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group relative inline-flex items-center gap-3 overflow-hidden border border-charcoal/20 hover:border-charcoal bg-transparent px-8 py-4.5 text-[11px] uppercase tracking-[0.28em] text-charcoal font-bold justify-center transition-all duration-300 rounded-sm shadow-sm hover:bg-charcoal hover:text-white"
+              >
+                <Download
+                  size={14}
+                  className="text-[#cb2026] group-hover:scale-110 transition-transform duration-300"
+                />
+                <span>{config.brochure_button_text || "Download Brochure"}</span>
+              </a>
+            </Magnetic>
+          </Reveal3D>
+        </div>
       </div>
     </section>
   );
@@ -670,7 +689,10 @@ function Services({
       : defaultItems;
 
   return (
-    <section id="services" className="relative bg-charcoal py-32 text-cream md:py-40">
+    <section
+      id="services"
+      className="relative bg-charcoal pt-20 pb-32 text-cream md:pt-24 md:pb-40"
+    >
       <div className="mx-auto max-w-[1400px] px-6 md:px-10">
         <div className="mb-24 grid grid-cols-1 items-end gap-8 md:grid-cols-12">
           <div className="md:col-span-8">
@@ -2404,7 +2426,6 @@ function Home() {
       <Hero config={config} images={images} />
       <About config={config} images={images} />
       <Why config={config} items={whyItems} />
-      <Brochure config={config} />
       <Services services={services} config={config} />
       <Portfolio config={config} />
       <VideoShowcase config={config} />
