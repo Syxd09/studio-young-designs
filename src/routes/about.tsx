@@ -428,6 +428,10 @@ function AboutPage() {
             config.about_video_subtitle ||
             "Step inside our Bangalore manufacturing facility and experience the precision of master craftspeople working with solid timber, natural stone, and fine brass details.",
           video_poster_url: config.about_video_poster_url || layoutImages.about_img || aboutImg,
+          show_youtube_banner: config.show_youtube_banner,
+          youtube_channel_name: config.youtube_channel_name,
+          youtube_channel_handle: config.youtube_channel_handle,
+          youtube_channel_url: config.youtube_channel_url,
         }}
         eyebrow="Atelier In Motion"
         className="pt-24 pb-8 md:pt-32 md:pb-12"
