@@ -93,6 +93,7 @@ function ConfigComponent() {
         stat_inhouse_label: "MANUFACTURING\nEXCELLENCE",
         // Contact
         contact_phone: "+91-9902599515",
+        contact_phone_2: "+91-7829502213",
         contact_email: "info@studioyoungdesigns.com",
         contact_address:
           "No.105, Parvathi Plaza, Richmond Rd, Richmond Town, Bengaluru, Karnataka 560025",
@@ -1105,6 +1106,19 @@ function ConfigComponent() {
                     type="text"
                     value={config.contact_phone || ""}
                     onChange={(e) => handleTextChange("contact_phone", e.target.value)}
+                    className="w-full bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded p-3 text-xs text-stone-900 dark:text-white focus:border-[#cb2026] focus:bg-white dark:focus:bg-transparent outline-none font-semibold"
+                  />
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="text-[10px] uppercase tracking-widest text-[#cb2026] font-bold flex items-center gap-1.5">
+                    <Phone size={12} />
+                    <span>Second Contact Number</span>
+                  </label>
+                  <input
+                    type="text"
+                    value={config.contact_phone_2 || ""}
+                    onChange={(e) => handleTextChange("contact_phone_2", e.target.value)}
                     className="w-full bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded p-3 text-xs text-stone-900 dark:text-white focus:border-[#cb2026] focus:bg-white dark:focus:bg-transparent outline-none font-semibold"
                   />
                 </div>

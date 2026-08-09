@@ -2078,12 +2078,18 @@ function Contact({
               </div>
               <div>
                 <div className="eyebrow text-cream/50">Direct</div>
-                <div className="mt-2 text-base">
+                <div className="mt-2 text-base space-y-1">
                   <a
                     href={`tel:${config.contact_phone || "+919902599515"}`}
-                    className="hover:text-gold transition-colors"
+                    className="hover:text-gold transition-colors block"
                   >
-                    {config.contact_phone || "+91-9902599515"}
+                    {config.contact_phone || "+91 99025 99515"}
+                  </a>
+                  <a
+                    href={`tel:${config.contact_phone_2 || "+917829502213"}`}
+                    className="hover:text-gold transition-colors block"
+                  >
+                    {config.contact_phone_2 || "+91 78295 02213"}
                   </a>
                 </div>
               </div>
