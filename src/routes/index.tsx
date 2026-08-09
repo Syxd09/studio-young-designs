@@ -13,7 +13,17 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { supabase } from "@/utils/supabase";
 import { toast } from "sonner";
-import { Loader2, Star, X, Play, Youtube, CheckCircle2, Download } from "lucide-react";
+import {
+  Loader2,
+  Star,
+  X,
+  Play,
+  Youtube,
+  CheckCircle2,
+  Download,
+  ChevronLeft,
+  ChevronRight,
+} from "lucide-react";
 
 import {
   PageWrapper,
@@ -825,24 +835,7 @@ function ServiceRow({
    ═══════════════════════════════════════════════════════════════ */
 
 function Portfolio({ config = {} }: { config?: Record<string, string> }) {
-  const [selectedPiece, setSelectedPiece] = useState<any | null>(null);
-
-  useEffect(() => {
-    if (selectedPiece) {
-      document.body.style.overflow = "hidden";
-      document.documentElement.style.overflow = "hidden";
-      if ((window as any).lenis) (window as any).lenis.stop();
-    } else {
-      document.body.style.overflow = "";
-      document.documentElement.style.overflow = "";
-      if ((window as any).lenis) (window as any).lenis.start();
-    }
-    return () => {
-      document.body.style.overflow = "";
-      document.documentElement.style.overflow = "";
-      if ((window as any).lenis) (window as any).lenis.start();
-    };
-  }, [selectedPiece]);
+  const [selectedIdx, setSelectedIdx] = useState<number | null>(null);
 
   const { data: dbGallery = [] } = useQuery<any[]>({
     queryKey: ["gallery"],
@@ -901,6 +894,46 @@ function Portfolio({ config = {} }: { config?: Record<string, string> }) {
     ];
   }, [dbGallery, config.homepage_selected_gallery_ids]);
 
+  const isOpen = selectedIdx !== null;
+  const currentPiece = isOpen ? pieces[selectedIdx] : null;
+
+  const goNext = (e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    if (selectedIdx !== null) setSelectedIdx((selectedIdx + 1) % pieces.length);
+  };
+
+  const goPrev = (e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    if (selectedIdx !== null)
+      setSelectedIdx((selectedIdx - 1 + pieces.length) % pieces.length);
+  };
+
+  // Scroll lock + keyboard navigation
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+      document.documentElement.style.overflow = "hidden";
+      if ((window as any).lenis) (window as any).lenis.stop();
+
+      const handleKey = (e: KeyboardEvent) => {
+        if (e.key === "ArrowRight") goNext();
+        else if (e.key === "ArrowLeft") goPrev();
+        else if (e.key === "Escape") setSelectedIdx(null);
+      };
+      window.addEventListener("keydown", handleKey);
+      return () => {
+        window.removeEventListener("keydown", handleKey);
+        document.body.style.overflow = "";
+        document.documentElement.style.overflow = "";
+        if ((window as any).lenis) (window as any).lenis.start();
+      };
+    } else {
+      document.body.style.overflow = "";
+      document.documentElement.style.overflow = "";
+      if ((window as any).lenis) (window as any).lenis.start();
+    }
+  }, [isOpen, selectedIdx]);
+
   return (
     <section id="portfolio" className="relative bg-background py-32 md:py-40">
       <div className="mx-auto max-w-[1400px] px-6 md:px-10">
@@ -936,23 +969,42 @@ function Portfolio({ config = {} }: { config?: Record<string, string> }) {
               rotateY={(i % 2 === 0 ? 1 : -1) * 6}
               className={p.span === "wide" ? "md:col-span-2" : "md:col-span-1"}
             >
-              <PortfolioCard piece={p} onSelect={() => setSelectedPiece(p)} />
+              <PortfolioCard piece={p} onSelect={() => setSelectedIdx(i)} />
             </Reveal3D>
           ))}
         </div>
       </div>
 
-      {/* Lightbox */}
+      {/* Lightbox with Navigation */}
       <AnimatePresence>
-        {selectedPiece && (
+        {isOpen && currentPiece && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            onClick={() => setSelectedPiece(null)}
+            onClick={() => setSelectedIdx(null)}
             className="fixed inset-0 z-[200] flex items-center justify-center bg-black/90 p-6 backdrop-blur-sm"
           >
+            {/* Previous Button */}
+            <button
+              onClick={(e) => goPrev(e)}
+              className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 z-30 h-12 w-12 rounded-full bg-white/10 border border-white/20 text-white/80 flex items-center justify-center hover:bg-white/25 hover:text-white transition-all duration-300 cursor-pointer backdrop-blur-md"
+              aria-label="Previous image"
+            >
+              <ChevronLeft size={24} />
+            </button>
+
+            {/* Next Button */}
+            <button
+              onClick={(e) => goNext(e)}
+              className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 z-30 h-12 w-12 rounded-full bg-white/10 border border-white/20 text-white/80 flex items-center justify-center hover:bg-white/25 hover:text-white transition-all duration-300 cursor-pointer backdrop-blur-md"
+              aria-label="Next image"
+            >
+              <ChevronRight size={24} />
+            </button>
+
             <motion.div
+              key={selectedIdx}
               initial={{ scale: 0.8, opacity: 0, rotateX: 10 }}
               animate={{ scale: 1, opacity: 1, rotateX: 0 }}
               exit={{ scale: 0.8, opacity: 0 }}
@@ -961,17 +1013,24 @@ function Portfolio({ config = {} }: { config?: Record<string, string> }) {
               onClick={(e) => e.stopPropagation()}
             >
               <img
-                src={selectedPiece.img}
-                alt={selectedPiece.title}
+                src={currentPiece.img}
+                alt={currentPiece.title || "Gallery"}
                 className="max-h-[75vh] max-w-full object-contain rounded-lg border border-gold/10"
               />
             </motion.div>
+
+            {/* Close Button */}
             <button
-              onClick={() => setSelectedPiece(null)}
+              onClick={() => setSelectedIdx(null)}
               className="absolute right-6 top-6 text-3xl text-white/70 transition-colors hover:text-white cursor-pointer"
             >
               ×
             </button>
+
+            {/* Image Counter */}
+            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 text-white/50 text-xs uppercase tracking-widest font-sans">
+              {selectedIdx! + 1} / {pieces.length}
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

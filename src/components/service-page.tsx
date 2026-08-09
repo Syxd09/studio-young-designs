@@ -383,25 +383,48 @@ export function ServicePageLayout({ data }: { data: ServicePageData }) {
 /* ─── Service Gallery ─── */
 
 function ServiceGallery({ images }: { images: GalleryImage[] }) {
-  const [selected, setSelected] = useState<GalleryImage | null>(null);
+  const [selectedIdx, setSelectedIdx] = useState<number | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
+  const isOpen = selectedIdx !== null;
+  const currentImage = isOpen ? images[selectedIdx] : null;
+
+  const goNext = (e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    if (selectedIdx !== null) setSelectedIdx((selectedIdx + 1) % images.length);
+  };
+
+  const goPrev = (e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    if (selectedIdx !== null)
+      setSelectedIdx((selectedIdx - 1 + images.length) % images.length);
+  };
+
+  // Scroll lock + keyboard navigation
   useEffect(() => {
-    if (selected) {
+    if (isOpen) {
       document.body.style.overflow = "hidden";
       document.documentElement.style.overflow = "hidden";
       if ((window as any).lenis) (window as any).lenis.stop();
+
+      const handleKey = (e: KeyboardEvent) => {
+        if (e.key === "ArrowRight") goNext();
+        else if (e.key === "ArrowLeft") goPrev();
+        else if (e.key === "Escape") setSelectedIdx(null);
+      };
+      window.addEventListener("keydown", handleKey);
+      return () => {
+        window.removeEventListener("keydown", handleKey);
+        document.body.style.overflow = "";
+        document.documentElement.style.overflow = "";
+        if ((window as any).lenis) (window as any).lenis.start();
+      };
     } else {
       document.body.style.overflow = "";
       document.documentElement.style.overflow = "";
       if ((window as any).lenis) (window as any).lenis.start();
     }
-    return () => {
-      document.body.style.overflow = "";
-      document.documentElement.style.overflow = "";
-      if ((window as any).lenis) (window as any).lenis.start();
-    };
-  }, [selected]);
+  }, [isOpen, selectedIdx]);
 
   // Tripled images list for infinite loop
   const loopImages = useMemo(() => {
@@ -516,7 +539,11 @@ function ServiceGallery({ images }: { images: GalleryImage[] }) {
               <div
                 key={img.src + idx}
                 className="flex-none relative h-full w-auto group/slide cursor-pointer overflow-hidden rounded-sm select-none"
-                onClick={() => setSelected(img)}
+                onClick={() => {
+                  // Map the looped index back to the real image index
+                  const realIdx = idx % images.length;
+                  setSelectedIdx(realIdx);
+                }}
               >
                 <img
                   src={img.src}
@@ -531,17 +558,36 @@ function ServiceGallery({ images }: { images: GalleryImage[] }) {
         </div>
       </div>
 
-      {/* Lightbox */}
+      {/* Lightbox with Navigation */}
       <AnimatePresence>
-        {selected && (
+        {isOpen && currentImage && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            onClick={() => setSelected(null)}
+            onClick={() => setSelectedIdx(null)}
             className="fixed inset-0 z-[200] flex items-center justify-center bg-black/90 p-6 backdrop-blur-sm"
           >
+            {/* Previous Button */}
+            <button
+              onClick={(e) => goPrev(e)}
+              className="absolute left-4 md:left-8 top-1/2 -translate-y-1/2 z-30 h-12 w-12 rounded-full bg-white/10 border border-white/20 text-white/80 flex items-center justify-center hover:bg-white/25 hover:text-white transition-all duration-300 cursor-pointer backdrop-blur-md"
+              aria-label="Previous image"
+            >
+              <ChevronLeft size={24} />
+            </button>
+
+            {/* Next Button */}
+            <button
+              onClick={(e) => goNext(e)}
+              className="absolute right-4 md:right-8 top-1/2 -translate-y-1/2 z-30 h-12 w-12 rounded-full bg-white/10 border border-white/20 text-white/80 flex items-center justify-center hover:bg-white/25 hover:text-white transition-all duration-300 cursor-pointer backdrop-blur-md"
+              aria-label="Next image"
+            >
+              <ChevronRight size={24} />
+            </button>
+
             <motion.div
+              key={selectedIdx}
               initial={{ scale: 0.8, opacity: 0, rotateX: 10 }}
               animate={{ scale: 1, opacity: 1, rotateX: 0 }}
               exit={{ scale: 0.8, opacity: 0 }}
@@ -550,17 +596,24 @@ function ServiceGallery({ images }: { images: GalleryImage[] }) {
               onClick={(e) => e.stopPropagation()}
             >
               <img
-                src={selected.src}
-                alt="Gallery view"
-                className="max-h-[80vh] max-w-full object-contain"
+                src={currentImage.src}
+                alt={currentImage.alt || "Gallery"}
+                className="max-h-[80vh] max-w-full object-contain rounded-lg border border-gold/10"
               />
-              <button
-                onClick={() => setSelected(null)}
-                className="absolute right-0 -top-12 text-3xl text-white/70 hover:text-white transition-colors cursor-pointer"
-              >
-                ×
-              </button>
             </motion.div>
+
+            {/* Close Button */}
+            <button
+              onClick={() => setSelectedIdx(null)}
+              className="absolute right-6 top-6 text-3xl text-white/70 transition-colors hover:text-white cursor-pointer"
+            >
+              ×
+            </button>
+
+            {/* Image Counter */}
+            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 text-white/50 text-xs uppercase tracking-widest font-sans">
+              {selectedIdx! + 1} / {images.length}
+            </div>
           </motion.div>
         )}
       </AnimatePresence>
