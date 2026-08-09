@@ -830,11 +830,14 @@ function Portfolio({ config = {} }: { config?: Record<string, string> }) {
   useEffect(() => {
     if (selectedPiece) {
       document.body.style.overflow = "hidden";
+      document.documentElement.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "";
+      document.documentElement.style.overflow = "";
     }
     return () => {
       document.body.style.overflow = "";
+      document.documentElement.style.overflow = "";
     };
   }, [selectedPiece]);
 
@@ -1489,11 +1492,14 @@ function Testimonials({ testimonials = [] }: { testimonials?: any[] }) {
   useEffect(() => {
     if (expandedReview || isReviewModalOpen) {
       document.body.style.overflow = "hidden";
+      document.documentElement.style.overflow = "hidden";
     } else {
       document.body.style.overflow = "";
+      document.documentElement.style.overflow = "";
     }
     return () => {
       document.body.style.overflow = "";
+      document.documentElement.style.overflow = "";
     };
   }, [expandedReview, isReviewModalOpen]);
 
