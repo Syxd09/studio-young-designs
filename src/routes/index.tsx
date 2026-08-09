@@ -831,13 +831,16 @@ function Portfolio({ config = {} }: { config?: Record<string, string> }) {
     if (selectedPiece) {
       document.body.style.overflow = "hidden";
       document.documentElement.style.overflow = "hidden";
+      if ((window as any).lenis) (window as any).lenis.stop();
     } else {
       document.body.style.overflow = "";
       document.documentElement.style.overflow = "";
+      if ((window as any).lenis) (window as any).lenis.start();
     }
     return () => {
       document.body.style.overflow = "";
       document.documentElement.style.overflow = "";
+      if ((window as any).lenis) (window as any).lenis.start();
     };
   }, [selectedPiece]);
 
@@ -1493,13 +1496,16 @@ function Testimonials({ testimonials = [] }: { testimonials?: any[] }) {
     if (expandedReview || isReviewModalOpen) {
       document.body.style.overflow = "hidden";
       document.documentElement.style.overflow = "hidden";
+      if ((window as any).lenis) (window as any).lenis.stop();
     } else {
       document.body.style.overflow = "";
       document.documentElement.style.overflow = "";
+      if ((window as any).lenis) (window as any).lenis.start();
     }
     return () => {
       document.body.style.overflow = "";
       document.documentElement.style.overflow = "";
+      if ((window as any).lenis) (window as any).lenis.start();
     };
   }, [expandedReview, isReviewModalOpen]);
 

@@ -33,6 +33,7 @@ export function SmoothScrollProvider({ children }: { children: React.ReactNode }
     });
 
     lenisRef.current = lenis;
+    (window as any).lenis = lenis;
 
     function raf(time: number) {
       if (lenisRef.current) {
@@ -48,6 +49,9 @@ export function SmoothScrollProvider({ children }: { children: React.ReactNode }
       if (lenisRef.current) {
         lenisRef.current.destroy();
         lenisRef.current = null;
+      }
+      if ((window as any).lenis) {
+        (window as any).lenis = null;
       }
     };
   }, [location.pathname]);
