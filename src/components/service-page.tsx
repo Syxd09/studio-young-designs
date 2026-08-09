@@ -345,9 +345,9 @@ export function ServicePageLayout({ data }: { data: ServicePageData }) {
               text="Ready to begin your project?"
               className="mx-auto max-w-3xl text-4xl text-cream md:text-6xl"
             />
-            <p className="mx-auto mt-8 max-w-lg text-base leading-relaxed text-cream/70">
-              Tell us about your space. We'll arrange a quiet visit to your home or our Bangalore
-              studio.
+            <p className="mx-auto mt-8 max-w-xl text-base leading-relaxed text-cream/70">
+              Every exceptional space begins with a conversation. Share your vision with us, and
+              let's explore what we can create together.
             </p>
             <div className="mt-12 flex flex-wrap items-center justify-center gap-4">
               <Magnetic>
