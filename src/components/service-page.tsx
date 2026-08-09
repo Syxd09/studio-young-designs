@@ -386,6 +386,23 @@ function ServiceGallery({ images }: { images: GalleryImage[] }) {
   const [selected, setSelected] = useState<GalleryImage | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
+  useEffect(() => {
+    if (selected) {
+      document.body.style.overflow = "hidden";
+      document.documentElement.style.overflow = "hidden";
+      if ((window as any).lenis) (window as any).lenis.stop();
+    } else {
+      document.body.style.overflow = "";
+      document.documentElement.style.overflow = "";
+      if ((window as any).lenis) (window as any).lenis.start();
+    }
+    return () => {
+      document.body.style.overflow = "";
+      document.documentElement.style.overflow = "";
+      if ((window as any).lenis) (window as any).lenis.start();
+    };
+  }, [selected]);
+
   // Tripled images list for infinite loop
   const loopImages = useMemo(() => {
     if (!images || images.length === 0) return [];
@@ -508,19 +525,6 @@ function ServiceGallery({ images }: { images: GalleryImage[] }) {
                   decoding="async"
                   className="h-full w-auto max-w-none object-cover transition-transform duration-700 ease-out group-hover/slide:scale-[1.02]"
                 />
-                {/* Subtle Hover Overlay with Title */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover/slide:opacity-100 transition-opacity duration-500 flex flex-col justify-end p-6 pointer-events-none">
-                  {img.title && (
-                    <span className="font-display text-lg text-white uppercase tracking-wider font-medium">
-                      {img.title}
-                    </span>
-                  )}
-                  {img.alt && (
-                    <span className="text-xs text-white/80 uppercase tracking-widest font-sans mt-0.5">
-                      {img.alt}
-                    </span>
-                  )}
-                </div>
               </div>
             ))}
           </div>
@@ -547,17 +551,9 @@ function ServiceGallery({ images }: { images: GalleryImage[] }) {
             >
               <img
                 src={selected.src}
-                alt={selected.title}
+                alt="Gallery view"
                 className="max-h-[80vh] max-w-full object-contain"
               />
-              <div className="mt-4 text-center">
-                <div className="font-display text-2xl text-white">{selected.title}</div>
-                {selected.alt && (
-                  <div className="text-sm text-stone-400 mt-1 uppercase tracking-widest">
-                    {selected.alt}
-                  </div>
-                )}
-              </div>
               <button
                 onClick={() => setSelected(null)}
                 className="absolute right-0 -top-12 text-3xl text-white/70 hover:text-white transition-colors cursor-pointer"
