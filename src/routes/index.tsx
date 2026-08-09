@@ -560,7 +560,7 @@ function Why({ config = {}, items = [] }: { config?: Record<string, string>; ite
       : defaultItems;
 
   return (
-    <section className="relative bg-background py-32 md:py-40">
+    <section className="relative bg-background pt-32 pb-16 md:pt-40 md:pb-20">
       <div className="mx-auto max-w-[1400px] px-6 md:px-10">
         <div className="mb-20 grid grid-cols-1 items-end gap-8 md:grid-cols-12">
           <div className="md:col-span-6">
@@ -610,20 +610,23 @@ function Why({ config = {}, items = [] }: { config?: Record<string, string>; ite
         </div>
 
         {/* Centered Download Brochure Button */}
-        <div className="mt-16 flex justify-center">
+        <div className="mt-12 flex justify-center">
           <Reveal3D delay={0.2} rotateX={10}>
             <Magnetic>
               <a
                 href={config.brochure_url || "/young-designs-brochure.pdf"}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group relative inline-flex items-center gap-3 overflow-hidden border border-charcoal/20 hover:border-charcoal bg-transparent px-8 py-4.5 text-[11px] uppercase tracking-[0.28em] text-charcoal font-bold justify-center transition-all duration-300 rounded-sm shadow-sm hover:bg-charcoal hover:text-white"
+                className="group relative inline-flex items-center gap-3 overflow-hidden bg-white border border-charcoal/15 px-8 py-4.5 text-[11px] uppercase tracking-[0.28em] text-charcoal font-bold justify-center transition-all duration-300 rounded-sm shadow-sm"
               >
+                <span className="absolute inset-0 origin-left scale-x-0 bg-gold transition-transform duration-500 ease-out group-hover:scale-x-100" />
                 <Download
                   size={14}
-                  className="text-[#cb2026] group-hover:scale-110 transition-transform duration-300"
+                  className="relative text-[#cb2026] group-hover:text-charcoal group-hover:scale-110 transition-transform duration-500 z-10"
                 />
-                <span>{config.brochure_button_text || "Download Brochure"}</span>
+                <span className="relative z-10">
+                  {config.brochure_button_text || "Download Brochure"}
+                </span>
               </a>
             </Magnetic>
           </Reveal3D>
