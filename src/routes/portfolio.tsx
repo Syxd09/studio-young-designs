@@ -257,6 +257,17 @@ export function PortfolioTrack({
 function PortfolioPage() {
   const [selected, setSelected] = useState<any | null>(null);
 
+  useEffect(() => {
+    if (selected) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [selected]);
+
   const { data: items = [] } = useQuery<any[]>({
     queryKey: ["gallery"],
     queryFn: async () => {

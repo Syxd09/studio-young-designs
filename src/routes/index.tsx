@@ -827,6 +827,17 @@ function ServiceRow({
 function Portfolio({ config = {} }: { config?: Record<string, string> }) {
   const [selectedPiece, setSelectedPiece] = useState<any | null>(null);
 
+  useEffect(() => {
+    if (selectedPiece) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [selectedPiece]);
+
   const { data: dbGallery = [] } = useQuery<any[]>({
     queryKey: ["gallery"],
     queryFn: async () => {
@@ -1474,6 +1485,17 @@ function Testimonials({ testimonials = [] }: { testimonials?: any[] }) {
   const [companyName, setCompanyName] = useState("");
   const [rating, setRating] = useState(5);
   const [reviewContent, setReviewContent] = useState("");
+
+  useEffect(() => {
+    if (expandedReview || isReviewModalOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [expandedReview, isReviewModalOpen]);
 
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
