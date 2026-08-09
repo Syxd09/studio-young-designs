@@ -1683,7 +1683,7 @@ function Testimonials({ testimonials = [] }: { testimonials?: any[] }) {
                 </button>
               </div>
 
-              <blockquote className="font-display text-xl md:text-2xl leading-relaxed text-stone-900">
+              <blockquote className="font-display text-xl md:text-2xl leading-relaxed text-stone-900 max-h-[48vh] overflow-y-auto pr-3 scrollbar-thin">
                 <span className="text-[#cb2026] font-serif mr-1">"</span>
                 {expandedReview.q}
                 <span className="text-[#cb2026] font-serif ml-1">"</span>
