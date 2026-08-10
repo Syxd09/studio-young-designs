@@ -430,11 +430,6 @@ function PortfolioPage() {
             >
               ×
             </button>
-
-            {/* Image Counter */}
-            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 text-white/50 text-xs uppercase tracking-widest font-sans">
-              {selectedIdx! + 1} / {galleryList.length}
-            </div>
           </motion.div>
         )}
       </AnimatePresence>

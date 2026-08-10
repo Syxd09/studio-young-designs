@@ -1026,11 +1026,6 @@ function Portfolio({ config = {} }: { config?: Record<string, string> }) {
             >
               ×
             </button>
-
-            {/* Image Counter */}
-            <div className="absolute bottom-6 left-1/2 -translate-x-1/2 text-white/50 text-xs uppercase tracking-widest font-sans">
-              {selectedIdx! + 1} / {pieces.length}
-            </div>
           </motion.div>
         )}
       </AnimatePresence>
