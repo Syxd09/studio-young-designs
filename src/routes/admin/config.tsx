@@ -98,6 +98,9 @@ function ConfigComponent() {
         contact_address:
           "No.105, Parvathi Plaza, Richmond Rd, Richmond Town, Bengaluru, Karnataka 560025",
         contact_hours: "Mon–Sat · 10:30 AM – 8:00 PM",
+        emailjs_service_id: "",
+        emailjs_template_id: "",
+        emailjs_public_key: "",
         // Brochure
         brochure_heading: "Download Our Signature Brochure",
         brochure_subheading:
@@ -1147,6 +1150,51 @@ function ConfigComponent() {
                     onChange={(e) => handleTextChange("contact_hours", e.target.value)}
                     className="w-full bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded p-3 text-xs text-stone-900 dark:text-white focus:border-[#cb2026] focus:bg-white dark:focus:bg-transparent outline-none font-semibold"
                   />
+                </div>
+
+                {/* EmailJS Setup */}
+                <div className="md:col-span-2 border-t border-stone-200 dark:border-stone-800 pt-6 mt-4">
+                  <h4 className="text-xs font-semibold uppercase tracking-wider text-stone-900 dark:text-cream mb-4">
+                    EmailJS Contact Notification Settings
+                  </h4>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div className="space-y-1.5">
+                      <label className="text-[10px] uppercase tracking-widest text-[#cb2026] font-bold">
+                        EmailJS Service ID
+                      </label>
+                      <input
+                        type="text"
+                        value={config.emailjs_service_id || ""}
+                        onChange={(e) => handleTextChange("emailjs_service_id", e.target.value)}
+                        placeholder="e.g. service_xxxxxxx"
+                        className="w-full bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded p-3 text-xs text-stone-900 dark:text-white focus:border-[#cb2026] focus:bg-white dark:focus:bg-transparent outline-none font-semibold"
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="text-[10px] uppercase tracking-widest text-[#cb2026] font-bold">
+                        EmailJS Template ID
+                      </label>
+                      <input
+                        type="text"
+                        value={config.emailjs_template_id || ""}
+                        onChange={(e) => handleTextChange("emailjs_template_id", e.target.value)}
+                        placeholder="e.g. template_xxxxxxx"
+                        className="w-full bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded p-3 text-xs text-stone-900 dark:text-white focus:border-[#cb2026] focus:bg-white dark:focus:bg-transparent outline-none font-semibold"
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="text-[10px] uppercase tracking-widest text-[#cb2026] font-bold">
+                        EmailJS Public Key
+                      </label>
+                      <input
+                        type="text"
+                        value={config.emailjs_public_key || ""}
+                        onChange={(e) => handleTextChange("emailjs_public_key", e.target.value)}
+                        placeholder="e.g. user_xxxxxxxxxxxxxx"
+                        className="w-full bg-stone-50 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded p-3 text-xs text-stone-900 dark:text-white focus:border-[#cb2026] focus:bg-white dark:focus:bg-transparent outline-none font-semibold"
+                      />
+                    </div>
+                  </div>
                 </div>
               </motion.div>
             )}

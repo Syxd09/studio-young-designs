@@ -40,6 +40,7 @@ import {
   EASE_OUT_EXPO,
 } from "@/components/shared-animations";
 import { sendEnquiryEmail } from "@/utils/email";
+import emailjs from "@emailjs/browser";
 
 import heroImg from "@/assets/hero.jpg";
 import aboutImg from "@/assets/about.jpg";
@@ -2003,18 +2004,33 @@ function Contact({
 
       if (error) throw error;
 
+      // EmailJS client-side dispatch
       try {
-        await sendEnquiryEmail({
-          data: {
-            name,
-            email,
-            phone,
-            service,
-            message: fullMessage,
-          },
-        });
+        const serviceId = config.emailjs_service_id || "YOUR_SERVICE_ID";
+        const templateId = config.emailjs_template_id || "YOUR_TEMPLATE_ID";
+        const publicKey = config.emailjs_public_key || "YOUR_PUBLIC_KEY";
+
+        if (serviceId !== "YOUR_SERVICE_ID" && publicKey !== "YOUR_PUBLIC_KEY") {
+          await emailjs.send(
+            serviceId,
+            templateId,
+            {
+              from_name: name,
+              from_email: email,
+              from_phone: phone,
+              service_type: service,
+              message: fullMessage,
+            },
+            publicKey
+          );
+        } else {
+          // Fallback to local server fn if EmailJS keys are not yet configured in admin panel
+          await sendEnquiryEmail({
+            data: { name, email, phone, service, message: fullMessage },
+          });
+        }
       } catch (emailError) {
-        console.error("Failed to send notification email via Resend:", emailError);
+        console.error("Failed to send notification email:", emailError);
       }
 
       setSubmittedData({
