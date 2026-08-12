@@ -176,6 +176,16 @@ function RootShell({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <head>
+        {/* Google tag (gtag.js) */}
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-50WQYWJB49" />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', 'G-50WQYWJB49');`,
+          }}
+        />
         <script
           dangerouslySetInnerHTML={{
             __html: `(function(){if('scrollRestoration' in history){history.scrollRestoration='manual';}window.scrollTo(0,0);})();`,
