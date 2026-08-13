@@ -387,12 +387,15 @@ function AboutPage() {
                 <div className="mb-6 flex items-center gap-3">
                   <span className="gold-rule" />
                   <span className="eyebrow text-cream/60">
-                    <TextScramble text="Our Ethos" className="eyebrow text-cream/60" />
+                    <TextScramble
+                      text={config.about_ethos_eyebrow || "Our Ethos"}
+                      className="eyebrow text-cream/60"
+                    />
                   </span>
                 </div>
               </Reveal3D>
               <SplitHeading
-                text="The four pillars behind every Studio Young interior."
+                text={config.about_ethos_heading || "The four pillars behind every Studio Young interior."}
                 className="text-3xl md:text-5xl text-cream font-display"
               />
             </div>

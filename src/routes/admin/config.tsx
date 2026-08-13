@@ -113,6 +113,8 @@ function ConfigComponent() {
         brochure_preview_title: "Signature Spatial Realizations",
         brochure_preview_link: "",
         show_youtube_banner: "true",
+        about_ethos_eyebrow: "Our Ethos",
+        about_ethos_heading: "The four pillars behind every Studio Young interior.",
       };
 
       const configMap = (configRes.data || []).reduce(

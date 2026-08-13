@@ -144,6 +144,8 @@ function AdminAboutComponent() {
           "At Studio Young Designs, we believe true luxury is measured not by extravagance, but by flawless execution, enduring materials, and spaces that enrich everyday living. Every home we create reflects our commitment to craftsmanship, innovation, and trust—delivering timeless interiors that families will cherish for generations.",
         about_quote:
           "We remain a small studio by choice. It lets us stay close to the drawing, to the wood, to the client...",
+        about_ethos_eyebrow: "Our Ethos",
+        about_ethos_heading: "The four pillars behind every Studio Young interior.",
       };
 
       const finalConfig = {
@@ -1034,6 +1036,39 @@ function AdminAboutComponent() {
                     <Plus size={14} />
                     <span>Add Pillar</span>
                   </button>
+                </div>
+
+                {/* Ethos Header Controls */}
+                <div className="space-y-4 p-4 border border-stone-200 dark:border-stone-800 bg-stone-50 dark:bg-stone-900/40 rounded-lg">
+                  <h4 className="text-xs font-bold text-[#cb2026] uppercase tracking-wider">
+                    Ethos Section Header Settings
+                  </h4>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="space-y-1.5">
+                      <label className="text-[10px] uppercase tracking-widest text-stone-400 dark:text-stone-500 font-bold block">
+                        Section Eyebrow Label
+                      </label>
+                      <input
+                        type="text"
+                        value={config.about_ethos_eyebrow || ""}
+                        onChange={(e) => handleConfigChange("about_ethos_eyebrow", e.target.value)}
+                        placeholder="Our Ethos"
+                        className="w-full bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded p-2.5 text-stone-900 dark:text-white focus:border-[#cb2026] outline-none text-xs font-semibold"
+                      />
+                    </div>
+                    <div className="space-y-1.5">
+                      <label className="text-[10px] uppercase tracking-widest text-stone-400 dark:text-stone-500 font-bold block">
+                        Section Main Heading
+                      </label>
+                      <input
+                        type="text"
+                        value={config.about_ethos_heading || ""}
+                        onChange={(e) => handleConfigChange("about_ethos_heading", e.target.value)}
+                        placeholder="The four pillars behind every Studio Young interior."
+                        className="w-full bg-white dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded p-2.5 text-stone-900 dark:text-white focus:border-[#cb2026] outline-none text-xs font-semibold"
+                      />
+                    </div>
+                  </div>
                 </div>
 
                 <div className="space-y-4">
