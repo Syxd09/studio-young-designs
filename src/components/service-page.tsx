@@ -202,8 +202,74 @@ export function ServicePageLayout({ data }: { data: ServicePageData }) {
         : data.gallery,
   };
 
+  const pageUrl = `https://www.studioyoungdesigns.com/services/${mergedData.slug}`;
+  const serviceJsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          {
+            "@type": "ListItem",
+            position: 1,
+            name: "Home",
+            item: "https://www.studioyoungdesigns.com",
+          },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: "Services",
+            item: "https://www.studioyoungdesigns.com/services",
+          },
+          {
+            "@type": "ListItem",
+            position: 3,
+            name: mergedData.title,
+            item: pageUrl,
+          },
+        ],
+      },
+      {
+        "@type": "Service",
+        "@id": `${pageUrl}/#service`,
+        name: `${mergedData.title} in Bangalore`,
+        serviceType: mergedData.title,
+        provider: {
+          "@type": "LocalBusiness",
+          name: "Studio Young Designs",
+          url: "https://www.studioyoungdesigns.com",
+          telephone: "+91-9902599515",
+          priceRange: "₹₹₹₹",
+          address: {
+            "@type": "PostalAddress",
+            streetAddress: "No.105, Parvathi Plaza, Richmond Rd, Richmond Town",
+            addressLocality: "Bengaluru",
+            addressRegion: "Karnataka",
+            postalCode: "560025",
+            addressCountry: "IN",
+          },
+        },
+        areaServed: [
+          { "@type": "City", name: "Bengaluru" },
+          { "@type": "AdministrativeArea", name: "Richmond Town" },
+          { "@type": "AdministrativeArea", name: "Indiranagar" },
+          { "@type": "AdministrativeArea", name: "Koramangala" },
+          { "@type": "AdministrativeArea", name: "Whitefield" },
+          { "@type": "AdministrativeArea", name: "Sadashivanagar" },
+        ],
+        description: mergedData.subtitle || mergedData.description,
+        image: mergedData.heroImage || "https://www.studioyoungdesigns.com/og.jpg",
+        url: pageUrl,
+      },
+    ],
+  };
+
   return (
     <PageWrapper>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(serviceJsonLd) }}
+      />
       <PageHero
         image={mergedData.heroImage}
         title={mergedData.title}

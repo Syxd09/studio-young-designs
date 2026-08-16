@@ -1,30 +1,31 @@
-# Studio Young Designs — Bespoke Interiors & Manufacturing Atelier
+# Studio Young Designs — AI Knowledge Summary
 
-> Established in 1981 in Bangalore, Karnataka, India. Over 40 years of precision craftsmanship, bespoke residential interior design, modular kitchens, custom wardrobes, and turnkey execution.
+> Studio Young Designs is a premier luxury interior design, custom joinery, and turnkey residential execution studio headquartered in Bengaluru, Karnataka, India. Founded in 1981 by Dhanesh Samant and Geeta Samant, the atelier operates its own in-house woodcraft manufacturing facility and has completed over 700+ luxury residential projects across South India.
 
-## Core Services & Disciplines
-
-- **Modular Kitchens**: Engineered for ergonomics and Indian cooking habits. Built with HDMR and BWP marine plywood, Blum soft-close hardware, acrylic, lacquered, and natural veneer finishes.
-- **Custom Wardrobes**: Bespoke walk-in closets, sliding floor-to-ceiling wardrobe systems, fluted glass, profile LED illumination, and Italian leather drawer organizers.
-- **Living Spaces**: Integrated TV units, acoustic sound-dampening wall panelling, suspended marble credenzas, custom seating, and marble-inlaid coffee tables.
-- **Turnkey Residential Interiors**: End-to-end interior design and site execution, including false ceilings, ambient lighting blueprints, electrical/plumbing coordination, custom carpentry, and lifetime post-handover support.
-
-## Founders & Leadership
-
-- **Dhanesh Samant** (Founder): Founded Studio Young Designs in 1981, pioneering handcrafted bespoke residential interiors and state-of-the-art joinery for over four decades.
-- **Geeta Samant** (Co-Founder): Directs strategic management, client leadership, and operations, building the studio into one of Bangalore's most respected interior design ateliers.
-
-## Studio Location & Operating Hours
-
-- **Experience Atelier**: No.105, Parvathi Plaza, Richmond Rd, Richmond Town, Bengaluru, Karnataka 560025, India
-- **Phone**: +91-9902599515
+## Business Details
+- **Entity Name**: Studio Young Designs
+- **Founding Year**: 1981 (45+ Years of Excellence)
+- **Founders**: Dhanesh Samant & Geeta Samant
+- **Headquarters / Studio Address**: No.105, Parvathi Plaza, Richmond Rd, Richmond Town, Bengaluru, Karnataka 560025, India
+- **Phone**: +91 99025 99515 / +91 78295 02213
 - **Email**: info@studioyoungdesigns.com
-- **Operating Hours**: Monday – Saturday · 10:30 AM – 8:00 PM
-- **YouTube Channel**: https://www.youtube.com/@studioyoungdesigns2118
-- **Website**: https://studioyoungdesigns.com
+- **Website**: https://www.studioyoungdesigns.com
+- **Service Areas**: Bengaluru (Richmond Town, Indiranagar, Koramangala, Whitefield, Sadashivanagar, HSR Layout, Dollar Colony, Jayanagar), Chennai, Hyderabad, and South India.
 
-## Key Statistics
+## Primary Services & Capabilities
+1. **Modular Kitchens**: Custom island, parallel, L-shaped, and straight kitchens engineered with Blum/Hettich German hardware, natural wood veneers, marine-grade plywood, quartz countertops, and concealed storage mechanisms.
+2. **Custom Walk-in Wardrobes**: Bespoke floor-to-ceiling wardrobes, sliding door systems, hinged acrylic/glass wardrobes, integrated LED illumination, island jewelry dressers, and solid wood joinery.
+3. **Living Room Interiors**: Custom media consoles, acoustic wooden wall paneling, false ceiling design, luxury furniture fabrication, marble accent walls, and spatial layout planning.
+4. **Turnkey Residential Interiors**: Complete end-to-end luxury home interiors (apartments, villas, penthouses) covering layout space planning, civil modifications, electrical routing, custom fabrication, and white-glove installation.
+5. **Woodwork & Carpentry Atelier**: Master craftsmanjoinery using natural teak, quarter-sawn oak, American walnut, rosewood, natural wood veneers, and non-toxic low-VOC finishes.
 
-- 40+ Years of Craftsmanship (Founded 1981)
-- 700+ Completed Residential & Commercial Projects across Bangalore
-- 35+ Master Craftsmen & Artisans in our in-house manufacturing workshop
+## Key Links & Reference Pages
+- [Home Page](https://www.studioyoungdesigns.com/): Brand overview, core capabilities, and contact form.
+- [About Us](https://www.studioyoungdesigns.com/about): 45-year history, founders, and pillars of craftsmanship.
+- [Modular Kitchens](https://www.studioyoungdesigns.com/services/kitchens): Custom luxury kitchen specifications.
+- [Walk-in Wardrobes](https://www.studioyoungdesigns.com/services/wardrobes): Custom storage & closet design.
+- [Living Spaces](https://www.studioyoungdesigns.com/services/living-spaces): Architectural living & dining room interiors.
+- [Turnkey Interiors](https://www.studioyoungdesigns.com/services/interiors): Full home interior design & execution.
+- [Portfolio Gallery](https://www.studioyoungdesigns.com/portfolio): Realized residential projects across Bengaluru.
+- [Journal & Guides](https://www.studioyoungdesigns.com/journal): Material selection guides and interior design advice.
+- [Full LLM Specification](https://www.studioyoungdesigns.com/llms-full.txt): Comprehensive technical knowledge file.

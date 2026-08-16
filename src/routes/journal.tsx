@@ -32,18 +32,30 @@ import aboutImg from "@/assets/about.jpg";
 export const Route = createFileRoute("/journal")({
   head: () => ({
     meta: [
-      { title: "Journal & Design Insights — Studio Young Designs" },
+      { title: "Interior Design Journal & Buyer Guides | Studio Young Designs Bangalore" },
       {
         name: "description",
         content:
-          "Explore the Studio Young Designs journal. Read about modular kitchen guides in Bangalore, bespoke wardrobe design, timeless interior trends, and expert turnkey execution.",
+          "Explore the Studio Young Designs journal. Read expert modular kitchen guides, custom walk-in wardrobe tips, woodcraft material breakdowns, and luxury turnkey interior advice in Bangalore.",
       },
       {
         name: "keywords",
         content:
-          "Bangalore interior design blog, modular kitchen tips, luxury wardrobe ideas, turnkey interiors Bangalore, home styling tips",
+          "Bangalore interior design blog, modular kitchen guide Bangalore, luxury wardrobe ideas, turnkey interiors Bangalore, home styling tips, custom furniture advice",
       },
+      {
+        property: "og:title",
+        content: "Interior Design Journal & Buyer Guides | Studio Young Designs Bangalore",
+      },
+      {
+        property: "og:description",
+        content:
+          "Read expert modular kitchen guides, custom walk-in wardrobe tips, woodcraft material breakdowns, and luxury turnkey interior advice in Bangalore.",
+      },
+      { property: "og:image", content: "https://www.studioyoungdesigns.com/og.jpg" },
       { property: "og:url", content: "https://www.studioyoungdesigns.com/journal" },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [{ rel: "canonical", href: "https://www.studioyoungdesigns.com/journal" }],
   }),
@@ -234,8 +246,43 @@ function JournalPage() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, []);
 
+  const journalSchema = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          {
+            "@type": "ListItem",
+            position: 1,
+            name: "Home",
+            item: "https://www.studioyoungdesigns.com",
+          },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: "Journal",
+            item: "https://www.studioyoungdesigns.com/journal",
+          },
+        ],
+      },
+      {
+        "@type": "Blog",
+        "@id": "https://www.studioyoungdesigns.com/journal/#blog",
+        name: "Studio Young Designs Journal & Design Notebook",
+        description:
+          "Insights on luxury interiors, modular kitchens, custom walk-in wardrobes, and architectural joinery in Bangalore.",
+        url: "https://www.studioyoungdesigns.com/journal",
+      },
+    ],
+  };
+
   return (
     <PageWrapper>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(journalSchema) }}
+      />
       <PageHero
         image={
           layoutImages.journal_hero_bg ||

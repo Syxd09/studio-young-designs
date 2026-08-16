@@ -14,23 +14,28 @@ export const Route = createFileRoute("/services/$slug")({
 
     return {
       meta: [
-        { title: `${formattedTitle} — Studio Young Designs` },
+        { title: `${formattedTitle} in Bangalore | Studio Young Designs` },
         {
           name: "description",
-          content: `Bespoke luxury ${formattedTitle.toLowerCase()} design, custom manufacturing, and turnkey execution in Bangalore by Studio Young Designs.`,
+          content: `Bespoke luxury ${formattedTitle.toLowerCase()} design, custom manufacturing, and turnkey execution in Bangalore by Studio Young Designs. 45+ years of craftsmanship.`,
         },
-        { property: "og:title", content: `${formattedTitle} — Studio Young Designs` },
+        {
+          name: "keywords",
+          content: `${formattedTitle.toLowerCase()} Bangalore, custom ${formattedTitle.toLowerCase()} Bangalore, luxury ${formattedTitle.toLowerCase()} design, interior designers Bangalore, custom woodwork Bangalore`,
+        },
+        { property: "og:title", content: `${formattedTitle} in Bangalore | Studio Young Designs` },
         {
           property: "og:description",
-          content: `Bespoke luxury ${formattedTitle.toLowerCase()} design and execution in Bangalore.`,
+          content: `Bespoke luxury ${formattedTitle.toLowerCase()} design, custom manufacturing, and turnkey execution in Bangalore.`,
         },
         { property: "og:image", content: "https://www.studioyoungdesigns.com/og.jpg" },
         { property: "og:url", content: `https://www.studioyoungdesigns.com/services/${slug}` },
+        { property: "og:type", content: "article" },
         { name: "twitter:card", content: "summary_large_image" },
-        { name: "twitter:title", content: `${formattedTitle} — Studio Young Designs` },
+        { name: "twitter:title", content: `${formattedTitle} in Bangalore | Studio Young Designs` },
         {
           name: "twitter:description",
-          content: `Bespoke luxury ${formattedTitle.toLowerCase()} design and execution in Bangalore.`,
+          content: `Bespoke luxury ${formattedTitle.toLowerCase()} design and turnkey execution in Bangalore.`,
         },
         { name: "twitter:image", content: "https://www.studioyoungdesigns.com/og.jpg" },
       ],

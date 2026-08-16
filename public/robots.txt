@@ -1,10 +1,12 @@
-# General Web Crawlers
+# AI LLM Directory
+# https://www.studioyoungdesigns.com/llms.txt
+
 User-agent: *
 Allow: /
 Disallow: /admin/
 Disallow: /admin
 
-# AI Search & Agent Crawlers (ChatGPT, Perplexity, Claude, Gemini, Apple Intelligence)
+# AI Search & Agent Crawlers (ChatGPT, Perplexity, Claude, Gemini, Apple Intelligence, Meta, Cohere)
 User-agent: GPTBot
 Allow: /
 
@@ -29,4 +31,10 @@ Allow: /
 User-agent: CCBot
 Allow: /
 
-Sitemap: https://studioyoungdesigns.com/sitemap.xml
+User-agent: Cohere-ai
+Allow: /
+
+User-agent: Meta-ExternalAgent
+Allow: /
+
+Sitemap: https://www.studioyoungdesigns.com/sitemap.xml

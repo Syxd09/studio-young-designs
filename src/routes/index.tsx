@@ -55,7 +55,45 @@ import p4 from "@/assets/portfolio-4.jpg";
 
 export const Route = createFileRoute("/")({
   head: () => ({
-    meta: [{ property: "og:image", content: "https://www.studioyoungdesigns.com/og.jpg" }],
+    meta: [
+      {
+        title:
+          "Studio Young Designs — Luxury Interior Designers in Bangalore | Modular Kitchens & Custom Wardrobes",
+      },
+      {
+        name: "description",
+        content:
+          "Premier interior design studio in Bangalore since 1981. Specializing in bespoke turnkey residential interiors, modular kitchens, custom walk-in wardrobes, and handcrafted woodwork.",
+      },
+      {
+        name: "keywords",
+        content:
+          "interior designers near me, interior designers Bangalore, luxury home interiors Bangalore, modular kitchen Bangalore, custom wardrobes Bangalore, turnkey interior design, Richmond Road Bangalore, custom woodwork, carpentry atelier",
+      },
+      {
+        property: "og:title",
+        content: "Studio Young Designs — Luxury Interior Designers in Bangalore",
+      },
+      {
+        property: "og:description",
+        content:
+          "Bespoke luxury interior design, modular kitchens, custom walk-in wardrobes, and turnkey residential execution in Bangalore since 1981.",
+      },
+      { property: "og:image", content: "https://www.studioyoungdesigns.com/og.jpg" },
+      { property: "og:url", content: "https://www.studioyoungdesigns.com" },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+      {
+        name: "twitter:title",
+        content: "Studio Young Designs — Luxury Interior Designers in Bangalore",
+      },
+      {
+        name: "twitter:description",
+        content:
+          "Bespoke luxury interior design, modular kitchens, custom walk-in wardrobes, and turnkey residential execution in Bangalore since 1981.",
+      },
+      { name: "twitter:image", content: "https://www.studioyoungdesigns.com/og.jpg" },
+    ],
     links: [
       { rel: "canonical", href: "https://www.studioyoungdesigns.com" },
       { rel: "preload", as: "image", href: heroImg, fetchPriority: "high" },

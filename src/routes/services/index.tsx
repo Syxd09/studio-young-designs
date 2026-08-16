@@ -20,13 +20,30 @@ import svcComplete from "@/assets/service-complete.jpg";
 export const Route = createFileRoute("/services/")({
   head: () => ({
     meta: [
-      { title: "Our Signature Services — Studio Young Designs" },
+      { title: "Interior Design & Joinery Services in Bangalore | Studio Young Designs" },
       {
         name: "description",
         content:
-          "Thoughtfully designed. Expertly crafted. Flawlessly executed. Discover Studio Young Designs signature services.",
+          "Explore bespoke interior design services in Bangalore: Modular Kitchens, Custom Walk-in Wardrobes, Living Room Interiors, and Turnkey Home Execution since 1981.",
       },
+      {
+        name: "keywords",
+        content:
+          "interior design services Bangalore, modular kitchen services Bangalore, custom wardrobes Bangalore, turnkey home interiors Bangalore, bespoke carpentry Bangalore",
+      },
+      {
+        property: "og:title",
+        content: "Interior Design & Joinery Services in Bangalore | Studio Young Designs",
+      },
+      {
+        property: "og:description",
+        content:
+          "Explore bespoke interior design services in Bangalore: Modular Kitchens, Custom Walk-in Wardrobes, Living Room Interiors, and Turnkey Home Execution.",
+      },
+      { property: "og:image", content: "https://www.studioyoungdesigns.com/og.jpg" },
       { property: "og:url", content: "https://www.studioyoungdesigns.com/services" },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [{ rel: "canonical", href: "https://www.studioyoungdesigns.com/services" }],
   }),
@@ -153,8 +170,41 @@ function ServicesPage() {
           }))
       : signatureServices;
 
+  const servicesSchema = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          {
+            "@type": "ListItem",
+            position: 1,
+            name: "Home",
+            item: "https://www.studioyoungdesigns.com",
+          },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: "Services",
+            item: "https://www.studioyoungdesigns.com/services",
+          },
+        ],
+      },
+      {
+        "@type": "OfferCatalog",
+        "@id": "https://www.studioyoungdesigns.com/services/#catalog",
+        name: "Studio Young Designs Interior & Joinery Catalog",
+        url: "https://www.studioyoungdesigns.com/services",
+      },
+    ],
+  };
+
   return (
     <PageWrapper>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(servicesSchema) }}
+      />
       <PageHero
         image={
           layoutImages.services_hero_bg ||

@@ -32,22 +32,30 @@ import { VideoShowcase } from "./index";
 export const Route = createFileRoute("/about")({
   head: () => ({
     meta: [
-      { title: "About Us — Studio Young Designs | 40+ Years of Bespoke Craftsmanship" },
+      { title: "About Us — Studio Young Designs | 45+ Years of Woodcraft & Interior Mastery" },
       {
         name: "description",
         content:
-          "Discover the legacy of Studio Young Designs in Bangalore. Since 1981, crafting bespoke interiors, modular kitchens, custom wardrobes, and architectural spaces with timeless joinery.",
+          "Discover the legacy of Studio Young Designs in Bangalore. Since 1981, crafting bespoke interiors, modular kitchens, custom walk-in wardrobes, and architectural spaces with in-house master joinery.",
       },
       {
         name: "keywords",
         content:
-          "About Studio Young Designs, luxury interior designers Bangalore, bespoke furniture atelier, 40 years interior design Bangalore, custom joinery Bangalore",
+          "About Studio Young Designs, luxury interior designers Bangalore, bespoke furniture atelier, 45 years interior design Bangalore, custom joinery Bangalore, Dhanesh Samant, Geeta Samant",
       },
       {
         property: "og:title",
-        content: "About Us — Studio Young Designs | Bespoke Interiors Bangalore",
+        content: "About Us — Studio Young Designs | 45+ Years of Woodcraft & Interior Mastery",
       },
+      {
+        property: "og:description",
+        content:
+          "Discover the legacy of Studio Young Designs in Bangalore. Since 1981, crafting bespoke interiors, modular kitchens, custom walk-in wardrobes, and architectural spaces.",
+      },
+      { property: "og:image", content: "https://www.studioyoungdesigns.com/og.jpg" },
       { property: "og:url", content: "https://www.studioyoungdesigns.com/about" },
+      { property: "og:type", content: "article" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [{ rel: "canonical", href: "https://www.studioyoungdesigns.com/about" }],
   }),
@@ -164,8 +172,52 @@ function AboutPage() {
     ];
   }, [config.about_ethos_data]);
 
+  const aboutSchema = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          {
+            "@type": "ListItem",
+            position: 1,
+            name: "Home",
+            item: "https://www.studioyoungdesigns.com",
+          },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: "About Us",
+            item: "https://www.studioyoungdesigns.com/about",
+          },
+        ],
+      },
+      {
+        "@type": "AboutPage",
+        "@id": "https://www.studioyoungdesigns.com/about/#webpage",
+        url: "https://www.studioyoungdesigns.com/about",
+        name: "About Us — Studio Young Designs",
+        description:
+          "Four decades of bespoke interior craftsmanship, in-house manufacturing, and luxury turnkey residential execution in Bangalore since 1981.",
+        mainEntity: {
+          "@type": "Organization",
+          name: "Studio Young Designs",
+          foundingDate: "1981",
+          founder: [
+            { "@type": "Person", name: "Dhanesh Samant" },
+            { "@type": "Person", name: "Geeta Samant" },
+          ],
+        },
+      },
+    ],
+  };
+
   return (
     <PageWrapper>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(aboutSchema) }}
+      />
       {/* Hero Header */}
       <PageHero
         image={layoutImages.about_hero_bg || heroImg}

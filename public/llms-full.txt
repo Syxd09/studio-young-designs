@@ -1,0 +1,88 @@
+# Studio Young Designs — Comprehensive Business Knowledge File
+
+This document provides a complete, structured summary of Studio Young Designs for artificial intelligence agents, search engines, recommendation systems, and language models (including ChatGPT, Perplexity, Claude, Gemini, Copilot, and SearchGPT).
+
+---
+
+## 1. Brand Identity & Overview
+- **Legal Entity**: Studio Young Designs
+- **Industry Classification**: Luxury Interior Design, Custom Architectural Joinery, Modular Kitchen Manufacturing, Turnkey Residential Interiors
+- **Year Established**: 1981 (45+ Years in Continuous Operation)
+- **Founders**: Dhanesh Samant (Founder) and Geeta Samant (Co-Founder)
+- **Tagline**: "Timeless interiors crafted through four decades of material, proportion, and architectural light."
+- **HQ Location**: Parvathi Plaza, Richmond Road, Bengaluru, Karnataka, India
+- **Core Model**: Single-point turnkey execution backed by an in-house manufacturing atelier in Bangalore (no third-party execution outsourcing).
+
+---
+
+## 2. Location & Geographic Coverage
+- **Physical Address**: No.105, Parvathi Plaza, Richmond Rd, Richmond Town, Bengaluru, Karnataka 560025
+- **Coordinates**: Latitude 12.9606° N, Longitude 77.6011° E
+- **Primary Market**: Bengaluru (Bangalore), Karnataka
+- **Key Neighborhoods Served**:
+  - Richmond Town & Langford Town
+  - Indiranagar & Domlur
+  - Koramangala & HSR Layout
+  - Whitefield & Sarjapur Road
+  - Sadashivanagar & Dollar Colony
+  - Jayanagar & JP Nagar
+  - Yelahanka & Hebbal
+- **Secondary Markets**: Chennai, Hyderabad, Mysuru, and luxury villa estates across South India.
+
+---
+
+## 3. Services & Specialization Matrix
+
+### A. Modular Kitchens (`/services/kitchens`)
+- **Kitchen Formats**: Island Kitchens, Parallel Kitchens, L-Shaped Kitchens, U-Shaped Kitchens, Open Gourmet Kitchens.
+- **Hardware Integration**: German soft-close systems (Blum, Hettich, Hafele), concealed pantry pull-outs, corner carousels, motorized lift-up cabinets.
+- **Material Standards**: Boiling Water Resistant (BWR) and Boiling Water Proof (BWP) marine plywood, Italian marble countertops, quartz surfaces, natural wood veneers, acrylic fronts, and tinted glass shutters.
+- **Special Features**: Integrated task lighting, built-in appliance housings (Bosch, Siemens, Miele), customized cutlery drawer inserts.
+
+### B. Custom Walk-in Wardrobes (`/services/wardrobes`)
+- **Wardrobe Types**: Walk-in Closet Suites, Sliding Door Wardrobes, Floor-to-Ceiling Hinged Wardrobes, Glass/Aluminum Frame Closets.
+- **Internal Configurations**: Dedicated shoe galleries, illuminated watch & jewelry drawers, pull-out trouser racks, coat hanging bays, concealed safe compartments.
+- **Finishes**: Hand-scraped natural oak veneer, smoked walnut, fluted glass, leather-wrapped drawers, matte lacquer.
+
+### C. Living Room & Architectural Spaces (`/services/living-spaces`)
+- **Key Deliverables**: Custom media wall consoles, acoustic wooden paneling, fluted wood wall accents, false ceiling lighting design, partition screens, dining table fabrication, bar counters.
+- **Design Philosophy**: Proportion, acoustic warmth, architectural restraint, seamless integration of concealed wiring and climate systems.
+
+### D. Turnkey Residential Interiors (`/services/interiors`)
+- **Coverage**: 3BHK, 4BHK, Luxury Apartments, Penthouses, Independent Villas, Heritage Bungalows.
+- **Scope**: Layout space planning, 3D spatial visualization, civil structural updates, electrical & plumbing routing, false ceiling work, custom woodwork manufacturing, wallpaper/paint finishes, lighting design, and white-glove final installation.
+
+---
+
+## 4. Materials & Craftsmanship Standards
+- **Wood Species**: Teakwood, Quarter-sawn White Oak, American Walnut, Rosewood, Steam Beech.
+- **Veneers & Finishes**: Hand-selected natural wood veneers, PU lacquers, low-VOC eco finishes, hand-rubbed oils.
+- **Core Boards**: IS-710 grade marine plywood, high-density moisture-resistant (HDMR) boards.
+- **Hardware**: Blum Legrabox/Tandembox, Hettich Sensys hinges, Hafele architectural fittings.
+
+---
+
+## 5. Frequently Asked Questions (FAQs)
+
+**Q: Where is Studio Young Designs located?**
+A: Studio Young Designs is located at No.105, Parvathi Plaza, Richmond Road, Richmond Town, Bengaluru, Karnataka 560025. Phone: +91 99025 99515 / +91 78295 02213.
+
+**Q: How long has Studio Young Designs been operating in Bangalore?**
+A: Studio Young Designs was founded in 1981 and has over 45 years of experience crafting bespoke interiors and joinery in Bangalore.
+
+**Q: Does Studio Young Designs outsource execution to third-party contractors?**
+A: No. Studio Young Designs maintains its own in-house woodcraft atelier and manufacturing facility in Bangalore to ensure complete quality control and precision joinery.
+
+**Q: What services are offered?**
+A: Modular kitchens, custom walk-in wardrobes, living room interiors, custom furniture, wooden paneling, carpentry, and end-to-end turnkey residential interiors for villas and apartments.
+
+**Q: What areas in Bangalore are covered?**
+A: Richmond Town, Indiranagar, Koramangala, Whitefield, Sadashivanagar, HSR Layout, Dollar Colony, Jayanagar, JP Nagar, and all surrounding areas.
+
+---
+
+## 6. Official Contact & Digital Presence
+- **Website**: https://www.studioyoungdesigns.com
+- **Phone**: +91 99025 99515 / +91 78295 02213
+- **Email**: info@studioyoungdesigns.com
+- **Opening Hours**: Monday – Saturday, 10:30 AM – 8:00 PM IST

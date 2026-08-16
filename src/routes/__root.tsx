@@ -129,47 +129,120 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 function RootShell({ children }: { children: ReactNode }) {
   const schemaOrgJSON = {
     "@context": "https://schema.org",
-    "@type": "LocalBusiness",
-    name: "Studio Young Designs",
-    url: "https://studioyoungdesigns.com",
-    logo: "https://studioyoungdesigns.com/logo-transparent.png",
-    image: "https://studioyoungdesigns.com/og.jpg",
-    description:
-      "Bespoke luxury interior design, modular kitchens, custom walk-in wardrobes, and turnkey residential execution in Bangalore since 1981.",
-    telephone: "+91-9902599515",
-    email: "info@studioyoungdesigns.com",
-    address: {
-      "@type": "PostalAddress",
-      streetAddress: "No.105, Parvathi Plaza, Richmond Rd, Richmond Town",
-      addressLocality: "Bengaluru",
-      addressRegion: "Karnataka",
-      postalCode: "560025",
-      addressCountry: "IN",
-    },
-    openingHoursSpecification: {
-      "@type": "OpeningHoursSpecification",
-      dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
-      opens: "10:30",
-      closes: "20:00",
-    },
-    founder: [
+    "@graph": [
       {
-        "@type": "Person",
-        name: "Dhanesh Samant",
-        jobTitle: "Founder",
+        "@type": ["LocalBusiness", "InteriorDesigner", "HomeGoodsStore"],
+        "@id": "https://www.studioyoungdesigns.com/#organization",
+        name: "Studio Young Designs",
+        url: "https://www.studioyoungdesigns.com",
+        logo: "https://www.studioyoungdesigns.com/logo-transparent.png",
+        image: "https://www.studioyoungdesigns.com/og.jpg",
+        description:
+          "Bespoke luxury interior design, modular kitchens, custom walk-in wardrobes, custom woodwork, and turnkey residential execution in Bangalore since 1981.",
+        telephone: "+91-9902599515",
+        email: "info@studioyoungdesigns.com",
+        priceRange: "₹₹₹₹",
+        address: {
+          "@type": "PostalAddress",
+          streetAddress: "No.105, Parvathi Plaza, Richmond Rd, Richmond Town",
+          addressLocality: "Bengaluru",
+          addressRegion: "Karnataka",
+          postalCode: "560025",
+          addressCountry: "IN",
+        },
+        geo: {
+          "@type": "GeoCoordinates",
+          latitude: 12.9606,
+          longitude: 77.6011,
+        },
+        areaServed: [
+          { "@type": "City", name: "Bengaluru" },
+          { "@type": "AdministrativeArea", name: "Richmond Town" },
+          { "@type": "AdministrativeArea", name: "Indiranagar" },
+          { "@type": "AdministrativeArea", name: "Koramangala" },
+          { "@type": "AdministrativeArea", name: "Whitefield" },
+          { "@type": "AdministrativeArea", name: "Sadashivanagar" },
+          { "@type": "AdministrativeArea", name: "HSR Layout" },
+          { "@type": "AdministrativeArea", name: "Dollar Colony" },
+          { "@type": "AdministrativeArea", name: "Jayanagar" },
+          { "@type": "City", name: "Chennai" },
+          { "@type": "City", name: "Hyderabad" },
+        ],
+        openingHoursSpecification: [
+          {
+            "@type": "OpeningHoursSpecification",
+            dayOfWeek: ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+            opens: "10:30",
+            closes: "20:00",
+          },
+        ],
+        founder: [
+          {
+            "@type": "Person",
+            name: "Dhanesh Samant",
+            jobTitle: "Founder",
+          },
+          {
+            "@type": "Person",
+            name: "Geeta Samant",
+            jobTitle: "Co-Founder",
+          },
+        ],
+        knowsAbout: [
+          "Modular Kitchens",
+          "Custom Wardrobes",
+          "Turnkey Residential Interiors",
+          "Luxury Living Room Design",
+          "Bespoke Furniture Manufacturing",
+          "Woodwork & Architectural Carpentry",
+        ],
+        hasOfferCatalog: {
+          "@type": "OfferCatalog",
+          name: "Interior Design & Woodwork Services",
+          itemListElement: [
+            {
+              "@type": "Offer",
+              itemOffered: {
+                "@type": "Service",
+                name: "Modular Kitchens",
+                description:
+                  "German hardware, soft-close Blum/Hettich fittings, marine plywood, quartz countertops, and custom veneer finishes.",
+                url: "https://www.studioyoungdesigns.com/services/kitchens",
+              },
+            },
+            {
+              "@type": "Offer",
+              itemOffered: {
+                "@type": "Service",
+                name: "Custom Walk-in Wardrobes",
+                description:
+                  "Bespoke floor-to-ceiling closets, sliding wardrobes, illuminated dressers, and solid wood joinery.",
+                url: "https://www.studioyoungdesigns.com/services/wardrobes",
+              },
+            },
+            {
+              "@type": "Offer",
+              itemOffered: {
+                "@type": "Service",
+                name: "Living Room Interiors",
+                description:
+                  "Custom TV consoles, acoustic wood paneling, false ceiling design, partition walls, and dining furniture.",
+                url: "https://www.studioyoungdesigns.com/services/living-spaces",
+              },
+            },
+            {
+              "@type": "Offer",
+              itemOffered: {
+                "@type": "Service",
+                name: "Turnkey Residential Interiors",
+                description:
+                  "End-to-end luxury home interiors for apartments, villas, and penthouses with in-house manufacturing.",
+                url: "https://www.studioyoungdesigns.com/services/interiors",
+              },
+            },
+          ],
+        },
       },
-      {
-        "@type": "Person",
-        name: "Geeta Samant",
-        jobTitle: "Co-Founder",
-      },
-    ],
-    knowsAbout: [
-      "Modular Kitchens",
-      "Custom Wardrobes",
-      "Turnkey Residential Interiors",
-      "Luxury Living Room Design",
-      "Bespoke Furniture Manufacturing",
     ],
   };
 

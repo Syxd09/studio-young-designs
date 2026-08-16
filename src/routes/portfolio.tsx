@@ -32,13 +32,34 @@ import aboutImg from "@/assets/about.jpg";
 export const Route = createFileRoute("/portfolio")({
   head: () => ({
     meta: [
-      { title: "Our Portfolio — Studio Young Designs" },
+      {
+        title:
+          "Interior Design Portfolio & Project Gallery | Studio Young Designs Bangalore",
+      },
       {
         name: "description",
         content:
-          "Browse our portfolio of bespoke interiors, modular kitchens, custom wardrobes, and living spaces crafted over 45 years.",
+          "Browse our portfolio of luxury residential interiors, modular kitchens, custom wardrobes, and bespoke living spaces crafted in Bangalore across 45+ years.",
       },
+      {
+        name: "keywords",
+        content:
+          "interior design portfolio Bangalore, luxury interior projects Bangalore, modular kitchen portfolio, custom wardrobes gallery, Studio Young Designs portfolio, turnkey home design Bangalore",
+      },
+      {
+        property: "og:title",
+        content:
+          "Interior Design Portfolio & Project Gallery | Studio Young Designs Bangalore",
+      },
+      {
+        property: "og:description",
+        content:
+          "Browse our portfolio of luxury residential interiors, modular kitchens, custom wardrobes, and bespoke living spaces crafted in Bangalore across 45+ years.",
+      },
+      { property: "og:image", content: "https://www.studioyoungdesigns.com/og.jpg" },
       { property: "og:url", content: "https://www.studioyoungdesigns.com/portfolio" },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [{ rel: "canonical", href: "https://www.studioyoungdesigns.com/portfolio" }],
   }),
@@ -336,8 +357,43 @@ function PortfolioPage() {
     }
   }, [isOpen, selectedIdx]);
 
+  const portfolioSchema = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          {
+            "@type": "ListItem",
+            position: 1,
+            name: "Home",
+            item: "https://www.studioyoungdesigns.com",
+          },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: "Portfolio",
+            item: "https://www.studioyoungdesigns.com/portfolio",
+          },
+        ],
+      },
+      {
+        "@type": "ImageGallery",
+        "@id": "https://www.studioyoungdesigns.com/portfolio/#gallery",
+        name: "Studio Young Designs Portfolio Gallery",
+        description:
+          "Curated gallery of luxury residential interiors, modular kitchens, custom wardrobes, and architectural joinery in Bangalore.",
+        url: "https://www.studioyoungdesigns.com/portfolio",
+      },
+    ],
+  };
+
   return (
     <PageWrapper>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(portfolioSchema) }}
+      />
       <PageHero
         image={
           layoutImages.portfolio_hero_bg ||
