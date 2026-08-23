@@ -12,32 +12,84 @@ export const Route = createFileRoute("/services/$slug")({
       .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
       .join(" ");
 
+    const SERVICE_SEO_MAP: Record<string, { title: string; desc: string }> = {
+      kitchens: {
+        title: "Modular Kitchens in Bangalore | Studio Young Designs",
+        desc: "Precision-engineered modular kitchens in Bangalore tailored for modern luxury. Blum & Hettich German soft-close fittings, acrylic finishes, and BWP marine plywood.",
+      },
+      kitchen: {
+        title: "Modular Kitchens in Bangalore | Studio Young Designs",
+        desc: "Precision-engineered modular kitchens in Bangalore tailored for modern luxury. Blum & Hettich German soft-close fittings, acrylic finishes, and BWP marine plywood.",
+      },
+      wardrobes: {
+        title: "Custom Walk-in Wardrobes in Bangalore | Studio Young Designs",
+        desc: "Bespoke walk-in closets, sliding glass wardrobes, and luxury bedroom storage in Bangalore. Handcrafted with natural veneers, solid wood, and integrated LED lighting.",
+      },
+      wardrobe: {
+        title: "Custom Walk-in Wardrobes in Bangalore | Studio Young Designs",
+        desc: "Bespoke walk-in closets, sliding glass wardrobes, and luxury bedroom storage in Bangalore. Handcrafted with natural veneers, solid wood, and integrated LED lighting.",
+      },
+      interiors: {
+        title: "Turnkey Residential Interiors in Bangalore | Studio Young Designs",
+        desc: "End-to-end luxury home interiors for apartments, penthouses, and villas in Bangalore. Single-point accountability from architectural design to final handover.",
+      },
+      interior: {
+        title: "Turnkey Residential Interiors in Bangalore | Studio Young Designs",
+        desc: "End-to-end luxury home interiors for apartments, penthouses, and villas in Bangalore. Single-point accountability from architectural design to final handover.",
+      },
+      "living-spaces": {
+        title: "Living Room Interiors & Furniture in Bangalore | Studio Young Designs",
+        desc: "Custom living room interiors, TV credenzas, wall paneling, fluted wood partitions, and handcrafted leather sofas tailored to your Bengaluru home.",
+      },
+      furniture: {
+        title: "Bespoke Handcrafted Furniture Store in Bangalore | Studio Young Designs",
+        desc: "Handcrafted solid teakwood dining tables, custom sofas, consoles, and credenzas made in our Bangalore atelier since 1981.",
+      },
+      "custom-furniture": {
+        title: "Custom Furniture Atelier in Bangalore | Studio Young Designs",
+        desc: "Bespoke architectural furniture made with natural veneers, solid hardwoods, and precision joinery in Bangalore.",
+      },
+      "office-furniture": {
+        title: "Executive Office & Workstation Furniture in Bangalore | Studio Young Designs",
+        desc: "Bespoke executive desks, conference tables, acoustic wooden paneling, and commercial furniture in Bangalore.",
+      },
+      "home-improvement": {
+        title: "Full-Home Renovation & Interior Improvement in Bangalore | Studio Young Designs",
+        desc: "Turnkey residential renovation, space redesign, civil updates, false ceiling lighting, and interior overhaul across Bangalore.",
+      },
+    };
+
+    const targetSeo = SERVICE_SEO_MAP[slug] || {
+      title: `${formattedTitle} in Bangalore | Studio Young Designs`,
+      desc: `Bespoke luxury ${formattedTitle.toLowerCase()} design, custom manufacturing, and turnkey execution in Bangalore by Studio Young Designs. 45+ years of craftsmanship.`,
+    };
+
     return {
       meta: [
-        { title: `${formattedTitle} in Bangalore | Studio Young Designs` },
+        { title: targetSeo.title },
         {
           name: "description",
-          content: `Bespoke luxury ${formattedTitle.toLowerCase()} design, custom manufacturing, and turnkey execution in Bangalore by Studio Young Designs. 45+ years of craftsmanship.`,
+          content: targetSeo.desc,
         },
         {
           name: "keywords",
           content: `${formattedTitle.toLowerCase()} Bangalore, custom ${formattedTitle.toLowerCase()} Bangalore, luxury ${formattedTitle.toLowerCase()} design, interior designers Bangalore, custom woodwork Bangalore`,
         },
-        { property: "og:title", content: `${formattedTitle} in Bangalore | Studio Young Designs` },
+        { property: "og:title", content: targetSeo.title },
         {
           property: "og:description",
-          content: `Bespoke luxury ${formattedTitle.toLowerCase()} design, custom manufacturing, and turnkey execution in Bangalore.`,
+          content: targetSeo.desc,
         },
         { property: "og:image", content: "https://www.studioyoungdesigns.com/og.jpg" },
         { property: "og:url", content: `https://www.studioyoungdesigns.com/services/${slug}` },
         { property: "og:type", content: "article" },
         { name: "twitter:card", content: "summary_large_image" },
-        { name: "twitter:title", content: `${formattedTitle} in Bangalore | Studio Young Designs` },
+        { name: "twitter:title", content: targetSeo.title },
         {
           name: "twitter:description",
-          content: `Bespoke luxury ${formattedTitle.toLowerCase()} design and turnkey execution in Bangalore.`,
+          content: targetSeo.desc,
         },
-        { name: "twitter:image", content: "https://www.studioyoungdesigns.com/og.jpg" },
+        { property: "og:image", content: "https://www.studioyoungdesigns.com/og.jpg" },
       ],
       links: [{ rel: "canonical", href: `https://www.studioyoungdesigns.com/services/${slug}` }],
     };
