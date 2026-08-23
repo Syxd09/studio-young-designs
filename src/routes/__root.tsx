@@ -131,7 +131,7 @@ function RootShell({ children }: { children: ReactNode }) {
     "@context": "https://schema.org",
     "@graph": [
       {
-        "@type": ["LocalBusiness", "InteriorDesigner", "HomeGoodsStore"],
+        "@type": ["LocalBusiness", "InteriorDesigner", "FurnitureStore", "HomeGoodsStore"],
         "@id": "https://www.studioyoungdesigns.com/#organization",
         name: "Studio Young Designs",
         url: "https://www.studioyoungdesigns.com",

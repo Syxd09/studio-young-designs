@@ -45,6 +45,106 @@ export const Route = createFileRoute("/services/$slug")({
   component: DynamicServicePage,
 });
 
+const FALLBACK_SERVICES: Record<string, any> = {
+  furniture: {
+    slug: "furniture",
+    title: "Bespoke Handcrafted Furniture Store",
+    short_desc: "Custom teakwood, walnut, and oak furniture handcrafted in our Bangalore atelier.",
+    description:
+      "Since 1981, Studio Young Designs has been crafting bespoke luxury furniture for homes in Bangalore. From solid teak dining tables and leather-upholstered seating to custom coffee tables, credenzas, and consoles, every piece is built to endure for generations.",
+    image_url: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=1600&q=80",
+    features: [
+      {
+        title: "Solid Wood Dining Tables",
+        description:
+          "Quarter-sawn oak, walnut, and teakwood dining tables tailored to your exact spatial dimensions.",
+        size: "half",
+        theme: "light",
+      },
+      {
+        title: "Custom Seating & Upholstery",
+        description:
+          "Italian leather, high-density comfort foam, and handcrafted solid hardwood frames.",
+        size: "half",
+        theme: "dark",
+      },
+    ],
+  },
+  "custom-furniture": {
+    slug: "custom-furniture",
+    title: "Custom Furniture Atelier",
+    short_desc: "Bespoke architectural furniture made with natural veneers and solid joinery.",
+    description:
+      "Our Bangalore atelier crafts one-of-a-kind furniture pieces tailored precisely to your interior architecture. We blend traditional joinery with German soft-close fittings.",
+    image_url: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=1600&q=80",
+    features: [
+      {
+        title: "Custom Credenzas & Consoles",
+        description: "Fluted wood details, brass hardware, and integrated wire management.",
+        size: "half",
+        theme: "light",
+      },
+    ],
+  },
+  "office-furniture": {
+    slug: "office-furniture",
+    title: "Executive Office & Workstation Furniture",
+    short_desc: "Bespoke executive desks, conference tables, and acoustic workspace paneling.",
+    description:
+      "Studio Young Designs creates refined corporate and home office interiors in Bangalore. Our custom executive desks, conference tables, and storage credenzas combine ergonomic comfort with architectural elegance.",
+    image_url: "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1600&q=80",
+    features: [
+      {
+        title: "Executive Desks & Workstations",
+        description:
+          "Bespoke hardwood executive desks with leather writing pads and concealed power outlets.",
+        size: "half",
+        theme: "light",
+      },
+      {
+        title: "Conference & Boardroom Tables",
+        description:
+          "Large-format solid wood conference tables built for modern technology integration.",
+        size: "half",
+        theme: "dark",
+      },
+    ],
+  },
+  "office-interiors": {
+    slug: "office-interiors",
+    title: "Executive Office Interiors & Commercial Furniture",
+    short_desc: "Bespoke commercial interiors, executive suites, and corporate woodwork.",
+    description:
+      "Commercial interior design and executive furniture crafting in Bangalore. We design productive workspace environments tailored to modern corporate standards.",
+    image_url: "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1600&q=80",
+    features: [
+      {
+        title: "Executive Office Suites",
+        description: "Tailored office layouts, acoustic wooden paneling, and custom desks.",
+        size: "half",
+        theme: "light",
+      },
+    ],
+  },
+  "home-improvement": {
+    slug: "home-improvement",
+    title: "Full-Home Improvement & Renovation",
+    short_desc: "Turnkey residential renovation, space redesign, civil updates, and interior overhaul.",
+    description:
+      "Complete home transformation and interior improvement services across Bangalore. We handle civil modifications, electrical routing, custom joinery, false ceiling lighting, and white-glove installation.",
+    image_url: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1600&q=80",
+    features: [
+      {
+        title: "Turnkey Renovation & Redesign",
+        description:
+          "Complete interior overhaul for apartments and villas with single-point accountability.",
+        size: "half",
+        theme: "light",
+      },
+    ],
+  },
+};
+
 function DynamicServicePage() {
   const { slug } = Route.useParams();
 
@@ -73,7 +173,9 @@ function DynamicServicePage() {
     },
   });
 
-  if (isLoading) {
+  const activeService = dbService || FALLBACK_SERVICES[slug] || FALLBACK_SERVICES[slug.replace(/-store$/, "")] || FALLBACK_SERVICES[slug.replace(/s$/, "")];
+
+  if (isLoading && !activeService) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-cream">
         <Loader2 className="h-10 w-10 animate-spin text-[#cb2026]" />
@@ -81,7 +183,7 @@ function DynamicServicePage() {
     );
   }
 
-  if (error || !dbService) {
+  if (!activeService) {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center bg-cream text-stone-900">
         <h1 className="font-display text-2xl uppercase tracking-widest text-[#cb2026]">
@@ -95,7 +197,7 @@ function DynamicServicePage() {
   }
 
   // Parse features
-  const parsedFeatures = (dbService.features || []).map((f: any, idx: number) => {
+  const parsedFeatures = (activeService.features || []).map((f: any, idx: number) => {
     if (typeof f === "object" && f !== null) {
       return {
         title: f.title || `Offer Card 0${idx + 1}`,
@@ -140,12 +242,15 @@ function DynamicServicePage() {
   });
 
   const pageData: ServicePageData = {
-    slug: dbService.slug,
-    title: dbService.title,
-    subtitle: dbService.short_desc,
-    heroImage: dbService.image_url,
-    intro: dbService.title,
-    description: dbService.description,
+    slug: activeService.slug,
+    title: activeService.title,
+    subtitle: activeService.short_desc || activeService.subtitle,
+    heroImage: activeService.image_url || activeService.heroImage || "",
+    intro: activeService.title,
+    description: activeService.description,
+    features: parsedFeatures,
+    gallery: [], // Loaded dynamically in ServicePageLayout
+  };
     features: parsedFeatures,
     gallery: [], // Loaded dynamically in ServicePageLayout
   };

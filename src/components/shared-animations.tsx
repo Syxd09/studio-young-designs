@@ -167,7 +167,7 @@ export function SplitHeading({ text, className = "" }: { text: string; className
   const ref = useRef<HTMLHeadingElement>(null);
   const inView = useInView(ref, { once: true, margin: "-100px" });
   return (
-    <h2 ref={ref} className={`font-display leading-[1.02] tracking-tight ${className}`}>
+    <h2 ref={ref} aria-label={text} className={`font-display leading-[1.02] tracking-tight ${className}`}>
       {words.map((w, i) => (
         <span key={i} className="inline-block overflow-hidden pb-2 pr-[0.28em] align-bottom">
           <motion.span
@@ -179,6 +179,7 @@ export function SplitHeading({ text, className = "" }: { text: string; className
           >
             {w}
           </motion.span>
+          {i < words.length - 1 && <span className="inline">&nbsp;</span>}
         </span>
       ))}
     </h2>
@@ -722,7 +723,7 @@ export function Footer() {
 
         <div className="hairline mb-8 opacity-30" />
         <div className="flex flex-wrap items-center justify-between gap-6 text-xs">
-          <div className="font-display text-base normal-case tracking-normal italic text-cream/70">
+          <div aria-label="Spaces shaped by legacy and light." className="font-display text-base normal-case tracking-normal italic text-cream/70">
             {"Spaces shaped by legacy and light.".split("").map((ch, i) => (
               <motion.span
                 key={i}

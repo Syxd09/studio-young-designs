@@ -1567,7 +1567,7 @@ function Testimonials({ testimonials = [] }: { testimonials?: any[] }) {
       ? testimonials
           .filter((t) => t.is_approved)
           .map((t) => ({
-            q: t.content,
+            q: (t.content || "").replace(/elligant/gi, "elegant"),
             n: t.customer_name,
             p: t.company_name || "Client",
           }))
