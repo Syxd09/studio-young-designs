@@ -251,9 +251,6 @@ function DynamicServicePage() {
     features: parsedFeatures,
     gallery: [], // Loaded dynamically in ServicePageLayout
   };
-    features: parsedFeatures,
-    gallery: [], // Loaded dynamically in ServicePageLayout
-  };
 
   return <ServicePageLayout data={pageData} />;
 }
