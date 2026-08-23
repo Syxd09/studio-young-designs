@@ -94,10 +94,7 @@ export const Route = createFileRoute("/")({
       },
       { name: "twitter:image", content: "https://www.studioyoungdesigns.com/og.jpg" },
     ],
-    links: [
-      { rel: "canonical", href: "https://www.studioyoungdesigns.com" },
-      { rel: "preload", as: "image", href: heroImg, fetchPriority: "high" },
-    ],
+    links: [{ rel: "canonical", href: "https://www.studioyoungdesigns.com" }],
   }),
   component: Home,
 });

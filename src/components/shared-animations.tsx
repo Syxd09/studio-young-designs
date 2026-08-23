@@ -579,6 +579,8 @@ export function Footer() {
             "social_whatsapp",
           ]);
 
+        if (error) return;
+
         if (data && data.length > 0) {
           const map: Record<string, string> = {};
           data.forEach((item) => {
@@ -588,7 +590,7 @@ export function Footer() {
           setSocials((prev) => ({ ...prev, ...map }));
         }
       } catch (e) {
-        console.error("Failed to load dynamic social links", e);
+        // Fallback silently to static links
       }
     }
     loadSocials();
