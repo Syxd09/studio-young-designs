@@ -1784,7 +1784,7 @@ function Testimonials({ testimonials = [] }: { testimonials?: any[] }) {
       <AnimatePresence>
         {expandedReview && (
           <div
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm"
+            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm overflow-y-auto"
             onClick={() => setExpandedReview(null)}
           >
             <motion.div
@@ -1793,9 +1793,9 @@ function Testimonials({ testimonials = [] }: { testimonials?: any[] }) {
               exit={{ opacity: 0, scale: 0.95, y: 15 }}
               transition={{ duration: 0.3, ease: EASE_SMOOTH }}
               onClick={(e) => e.stopPropagation()}
-              className="relative w-full max-w-xl overflow-hidden rounded-xl border border-gold/40 bg-cream p-6 md:p-8 text-charcoal shadow-2xl space-y-6"
+              className="relative w-full max-w-xl max-h-[85vh] flex flex-col rounded-xl border border-gold/40 bg-cream p-6 md:p-8 text-charcoal shadow-2xl my-auto"
             >
-              <div className="flex justify-between items-center border-b border-stone-200 pb-4">
+              <div className="flex justify-between items-center border-b border-stone-200 pb-4 shrink-0">
                 <div className="flex items-center gap-1 text-[#cb2026]">
                   {[...Array(5)].map((_, idx) => (
                     <Star key={idx} size={16} className="fill-[#cb2026] text-[#cb2026]" />
@@ -1804,19 +1804,23 @@ function Testimonials({ testimonials = [] }: { testimonials?: any[] }) {
                 <button
                   type="button"
                   onClick={() => setExpandedReview(null)}
-                  className="text-stone-400 hover:text-stone-900 text-2xl font-bold transition-colors cursor-pointer"
+                  className="text-stone-400 hover:text-stone-900 text-2xl font-bold transition-colors cursor-pointer p-1"
                 >
                   ×
                 </button>
               </div>
 
-              <blockquote className="font-display text-xl md:text-2xl leading-relaxed text-stone-900 max-h-[48vh] overflow-y-auto pr-3 scrollbar-thin">
-                <span className="text-[#cb2026] font-serif mr-1">"</span>
+              <blockquote
+                onTouchMove={(e) => e.stopPropagation()}
+                style={{ WebkitOverflowScrolling: "touch", touchAction: "pan-y" }}
+                className="font-display text-lg md:text-2xl leading-relaxed text-stone-900 overflow-y-auto pr-3 py-4 my-2 scrollbar-thin flex-1 overscroll-contain"
+              >
+                <span className="text-[#cb2026] font-serif mr-1">&ldquo;</span>
                 {expandedReview.q}
-                <span className="text-[#cb2026] font-serif ml-1">"</span>
+                <span className="text-[#cb2026] font-serif ml-1">&rdquo;</span>
               </blockquote>
 
-              <div className="border-t border-stone-200 pt-4 flex items-center justify-between">
+              <div className="border-t border-stone-200 pt-4 flex items-center justify-between shrink-0">
                 <div>
                   <div className="font-display text-lg font-semibold text-stone-900">
                     {expandedReview.n}
@@ -1828,7 +1832,7 @@ function Testimonials({ testimonials = [] }: { testimonials?: any[] }) {
                 <button
                   type="button"
                   onClick={() => setExpandedReview(null)}
-                  className="bg-[#cb2026] text-white px-5 py-2 rounded text-xs font-bold uppercase tracking-wider hover:bg-[#df383e] transition-colors cursor-pointer"
+                  className="bg-[#cb2026] text-white px-5 py-2.5 rounded text-xs font-bold uppercase tracking-wider hover:bg-[#df383e] transition-colors cursor-pointer"
                 >
                   Close
                 </button>
