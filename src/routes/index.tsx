@@ -2123,7 +2123,7 @@ function Contact({
                 <div className="eyebrow text-cream/50">Studio</div>
                 <div className="mt-2 text-base leading-relaxed">
                   {config.contact_address ||
-                    "No.105, Parvathi Plaza, Richmond Rd, Richmond Town, Bengaluru, Karnataka 560025"}
+                    "No.105, Parvathi Plaza, Richmond Rd, Richmond Town, Bengaluru, Karnataka 560027"}
                 </div>
               </div>
               <div>

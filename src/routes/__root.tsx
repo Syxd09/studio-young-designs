@@ -149,7 +149,7 @@ function RootShell({ children }: { children: ReactNode }) {
           streetAddress: "No.105, Parvathi Plaza, Richmond Rd, Richmond Town",
           addressLocality: "Bengaluru",
           addressRegion: "Karnataka",
-          postalCode: "560025",
+          postalCode: "560027",
           addressCountry: "IN",
         },
         geo: {

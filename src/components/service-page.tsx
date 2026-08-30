@@ -245,7 +245,7 @@ export function ServicePageLayout({ data }: { data: ServicePageData }) {
             streetAddress: "No.105, Parvathi Plaza, Richmond Rd, Richmond Town",
             addressLocality: "Bengaluru",
             addressRegion: "Karnataka",
-            postalCode: "560025",
+            postalCode: "560027",
             addressCountry: "IN",
           },
         },

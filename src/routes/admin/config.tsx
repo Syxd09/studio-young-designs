@@ -96,7 +96,7 @@ function ConfigComponent() {
         contact_phone_2: "+91-7829502213",
         contact_email: "info@studioyoungdesigns.com",
         contact_address:
-          "No.105, Parvathi Plaza, Richmond Rd, Richmond Town, Bengaluru, Karnataka 560025",
+          "No.105, Parvathi Plaza, Richmond Rd, Richmond Town, Bengaluru, Karnataka 560027",
         contact_hours: "Mon–Sat · 10:30 AM – 8:00 PM",
         emailjs_service_id: "",
         emailjs_template_id: "",
