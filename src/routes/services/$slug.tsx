@@ -98,6 +98,94 @@ export const Route = createFileRoute("/services/$slug")({
 });
 
 const FALLBACK_SERVICES: Record<string, any> = {
+  kitchens: {
+    slug: "kitchens",
+    title: "Premium Modular Kitchens",
+    short_desc: "Precision-engineered kitchens tailored for modern luxury.",
+    description:
+      "Since 1981, Studio Young Designs has engineered bespoke modular kitchens across Bangalore. Blending German soft-close mechanisms (Blum & Hettich), Boiling Water Proof (BWP) marine plywood, quartz countertops, and concealed pantry storage.",
+    image_url: "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?auto=format&fit=crop&w=1600&q=80",
+    features: [
+      {
+        title: "German Soft-Close Joinery",
+        description: "Blum & Hettich motorized lift-up doors, Tandembox drawers, and corner carousels.",
+        size: "half",
+        theme: "light",
+      },
+      {
+        title: "BWP Marine Plywood",
+        description: "Boiling Water Proof grade IS-710 marine plywood core built for lifetime durability.",
+        size: "half",
+        theme: "dark",
+      },
+    ],
+  },
+  wardrobes: {
+    slug: "wardrobes",
+    title: "Custom Walk-in Wardrobes",
+    short_desc: "Bespoke walk-in closets and luxury bedroom storage.",
+    description:
+      "Handcrafted walk-in closets, sliding glass wardrobes, and floor-to-ceiling hinged wardrobes in Bangalore. Featuring natural wood veneers, leather-wrapped drawers, integrated LED lighting, and island jewelry dressers.",
+    image_url: "https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=1600&q=80",
+    features: [
+      {
+        title: "Walk-in Suite Closets",
+        description: "Custom island dressers, illuminated watch drawers, and velvet-lined compartments.",
+        size: "half",
+        theme: "light",
+      },
+      {
+        title: "Glass & Aluminum Shutters",
+        description: "Fluted glass doors with concealed soft-close hinges and anodized aluminum frames.",
+        size: "half",
+        theme: "dark",
+      },
+    ],
+  },
+  interiors: {
+    slug: "interiors",
+    title: "Turnkey Residential Interiors",
+    short_desc: "Complete end-to-end luxury home interiors and architectural execution.",
+    description:
+      "Comprehensive interior execution for 3BHK, 4BHK, penthouses, and luxury villas in Bangalore. Single-point accountability covering space planning, civil modifications, electrical routing, custom joinery, false ceiling lighting, and white-glove handover.",
+    image_url: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=1600&q=80",
+    features: [
+      {
+        title: "Single-Point Accountability",
+        description: "Complete design, civil modification, custom manufacturing, and white-glove installation.",
+        size: "half",
+        theme: "light",
+      },
+      {
+        title: "In-House Woodcraft Atelier",
+        description: "All furniture and joinery manufactured in our Bangalore factory with strict quality control.",
+        size: "half",
+        theme: "dark",
+      },
+    ],
+  },
+  "living-spaces": {
+    slug: "living-spaces",
+    title: "Living Room Interiors & Furniture",
+    short_desc: "Custom living room interiors, media consoles, and handcrafted seating.",
+    description:
+      "Custom living room design featuring acoustic wooden wall paneling, fluted wood partitions, TV credenzas, Italian leather sofas, and architectural lighting in Bangalore.",
+    image_url: "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=1600&q=80",
+    features: [
+      {
+        title: "Media Wall Consoles",
+        description: "Concealed wiring, Italian marble backdrops, and fluted teakwood paneling.",
+        size: "half",
+        theme: "light",
+      },
+      {
+        title: "Handcrafted Seating",
+        description: "Italian leather, high-density comfort foam, and solid hardwood frames.",
+        size: "half",
+        theme: "dark",
+      },
+    ],
+  },
   furniture: {
     slug: "furniture",
     title: "Bespoke Handcrafted Furniture Store",
