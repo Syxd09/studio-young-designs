@@ -169,7 +169,7 @@ function JournalPage() {
         .from("journal_posts")
         .select("*")
         .order("published_date", { ascending: false });
-      if (error) throw error;
+      if (error) return [];
       return data || [];
     },
     staleTime: 0,
@@ -179,7 +179,7 @@ function JournalPage() {
     queryKey: ["layout_images"],
     queryFn: async () => {
       const { data, error } = await supabase.from("layout_images").select("key, image_url");
-      if (error) throw error;
+      if (error) return {};
       return (data || []).reduce((acc, curr) => ({ ...acc, [curr.key]: curr.image_url }), {});
     },
     staleTime: 0,

@@ -128,7 +128,7 @@ function ServicesPage() {
         .from("services")
         .select("*")
         .order("display_order", { ascending: true });
-      if (error) throw error;
+      if (error) return [];
       return data || [];
     },
     staleTime: 0,
@@ -138,7 +138,7 @@ function ServicesPage() {
     queryKey: ["layout_images"],
     queryFn: async () => {
       const { data, error } = await supabase.from("layout_images").select("key, image_url");
-      if (error) throw error;
+      if (error) return {};
       return (data || []).reduce((acc, curr) => ({ ...acc, [curr.key]: curr.image_url }), {});
     },
     staleTime: 0,
@@ -148,7 +148,7 @@ function ServicesPage() {
     queryKey: ["site_config"],
     queryFn: async () => {
       const { data, error } = await supabase.from("site_config").select("key, value");
-      if (error) throw error;
+      if (error) return {};
       return (data || []).reduce((acc, curr) => ({ ...acc, [curr.key]: curr.value }), {});
     },
     staleTime: 0,

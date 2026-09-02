@@ -286,7 +286,7 @@ function PortfolioPage() {
         .select("*")
         .eq("is_visible", true)
         .order("display_order", { ascending: true });
-      if (error) throw error;
+      if (error) return [];
       return data || [];
     },
     staleTime: 0,
@@ -296,7 +296,7 @@ function PortfolioPage() {
     queryKey: ["layout_images"],
     queryFn: async () => {
       const { data, error } = await supabase.from("layout_images").select("key, image_url");
-      if (error) throw error;
+      if (error) return {};
       return (data || []).reduce((acc, curr) => ({ ...acc, [curr.key]: curr.image_url }), {});
     },
     staleTime: 0,
