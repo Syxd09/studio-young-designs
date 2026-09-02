@@ -60,7 +60,16 @@ function AdminLayoutComponent() {
       setTheme(savedTheme);
     }
 
-    // Check initial session
+    // Clear any lingering localStorage auth keys
+    if (typeof window !== "undefined") {
+      Object.keys(localStorage).forEach((key) => {
+        if (key.startsWith("sb-") && key.endsWith("-auth-token")) {
+          localStorage.removeItem(key);
+        }
+      });
+    }
+
+    // Check in-memory session (no disk caching)
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setLoading(false);

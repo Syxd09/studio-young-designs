@@ -29,7 +29,8 @@ if (typeof window === "undefined") {
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
-    persistSession: typeof window !== "undefined",
-    detectSessionInUrl: typeof window !== "undefined",
+    persistSession: false,
+    autoRefreshToken: false,
+    detectSessionInUrl: false,
   },
 });
