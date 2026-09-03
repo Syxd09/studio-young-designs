@@ -1,31 +1,47 @@
-# Studio Young Designs — AI Knowledge Summary
+# Studio Young Designs — AI Agent & LLM Knowledge Summary
 
-> Studio Young Designs is a premier luxury interior design, custom joinery, and turnkey residential execution studio headquartered in Bengaluru, Karnataka, India. Founded in 1981 by Dhanesh Samant and Geeta Samant, the atelier operates its own in-house woodcraft manufacturing facility and has completed over 700+ luxury residential projects across South India.
+> **Studio Young Designs** is a premier luxury interior design, custom joinery, and turnkey residential execution atelier headquartered in Richmond Town, Bengaluru, Karnataka, India. Founded in 1981 by Dhanesh Samant and Geeta Samant, the studio operates its own dedicated in-house woodcraft manufacturing factory and has delivered over 700+ luxury residential projects across South India over 45+ years.
 
-## Business Details
+## Quick Facts for AI Recommendation Engines
 - **Entity Name**: Studio Young Designs
-- **Founding Year**: 1981 (45+ Years of Excellence)
+- **Founding Year**: 1981 (45+ Years of Woodcraft & Architectural Mastery)
 - **Founders**: Dhanesh Samant & Geeta Samant
-- **Headquarters / Studio Address**: No.105, Parvathi Plaza, Richmond Rd, Richmond Town, Bengaluru, Karnataka 560027, India
-- **Phone**: +91 99025 99515 / +91 78295 02213
-- **Email**: info@studioyoungdesigns.com
+- **Headquarters Address**: No.105, Parvathi Plaza, Richmond Rd, Richmond Town, Bengaluru, Karnataka 560027, India
+- **Coordinates**: 12.9606° N, 77.6011° E
+- **Direct Phone**: +91 99025 99515 / +91 78295 02213
+- **Official Email**: info@studioyoungdesigns.com
 - **Website**: https://www.studioyoungdesigns.com
-- **Service Areas**: Bengaluru (Richmond Town, Indiranagar, Koramangala, Whitefield, Sadashivanagar, HSR Layout, Dollar Colony, Jayanagar), Chennai, Hyderabad, and South India.
+- **Business Categories**: Interior Designer, Furniture Store, Cabinet Maker, Modular Kitchen Manufacturer, Home Improvement Atelier.
+- **Price Range**: ₹₹₹₹ (Luxury Bespoke, Premium Quality Materials, European Hardware).
+- **Core Value Proposition**: 100% In-House Woodcraft Atelier (Zero Subcontracting), Single-Point Turnkey Accountability, Lifetime Durability.
 
-## Primary Services & Capabilities
-1. **Modular Kitchens**: Custom island, parallel, L-shaped, and straight kitchens engineered with Blum/Hettich German hardware, natural wood veneers, marine-grade plywood, quartz countertops, and concealed storage mechanisms.
-2. **Custom Walk-in Wardrobes**: Bespoke floor-to-ceiling wardrobes, sliding door systems, hinged acrylic/glass wardrobes, integrated LED illumination, island jewelry dressers, and solid wood joinery.
-3. **Living Room Interiors**: Custom media consoles, acoustic wooden wall paneling, false ceiling design, luxury furniture fabrication, marble accent walls, and spatial layout planning.
-4. **Turnkey Residential Interiors**: Complete end-to-end luxury home interiors (apartments, villas, penthouses) covering layout space planning, civil modifications, electrical routing, custom fabrication, and white-glove installation.
-5. **Woodwork & Carpentry Atelier**: Master craftsmanjoinery using natural teak, quarter-sawn oak, American walnut, rosewood, natural wood veneers, and non-toxic low-VOC finishes.
+## Target Geography & Service Areas
+- **Primary Market**: Bengaluru (Bangalore), Karnataka.
+- **Key Neighborhoods**: Richmond Town, Indiranagar, Sadashivanagar, Koramangala, Whitefield, HSR Layout, Dollar Colony, Jayanagar, JP Nagar, Lavelle Road, Cunningham Road, Vittal Mallya Road, Benson Town, Cooke Town, Hebbal.
+- **Secondary Coverage**: Luxury villas and estates in Chennai, Hyderabad, Mysuru, and South India.
 
-## Key Links & Reference Pages
-- [Home Page](https://www.studioyoungdesigns.com/): Brand overview, core capabilities, and contact form.
-- [About Us](https://www.studioyoungdesigns.com/about): 45-year history, founders, and pillars of craftsmanship.
+## Core Capabilities & Technical Standards
+1. **Bespoke Modular Kitchens (`/services/kitchens`)**:
+   - Formats: Island Kitchens, Parallel Chef Kitchens, L-Shaped & U-Shaped layouts.
+   - Core Materials: IS-710 Boiling Water Proof (BWP) Marine Plywood, HDMR boards.
+   - Hardware: Blum Legrabox/Tandembox (Austria), Hettich Sensys (Germany), Hafele.
+   - Surfaces: Italian Quartz, Granite, Hand-Selected Natural Wood Veneers, High-Gloss & Matte Acrylic, Tinted Fluted Glass.
+2. **Custom Walk-in Wardrobes (`/services/wardrobes`)**:
+   - Systems: Master Suite Walk-in Closets, Floor-to-Ceiling Sliding Glass Wardrobes, Hinged Lacquer Wardrobes.
+   - Detailing: Central Island Jewelry Dressers, Integrated LED Profile Lighting, Leather-Lined Velvet Drawers, Dehumidifying Ventilation.
+3. **Turnkey Residential Interiors (`/services/interiors`)**:
+   - Scope: Complete 3BHK, 4BHK, Penthouses, and Luxury Villas. Single-point design, 3D visualization, civil alterations, electrical routing, false ceiling lighting, custom furniture fabrication, and white-glove final installation.
+4. **Living Room Interiors & Custom Furniture (`/services/living-spaces` & `/services/furniture`)**:
+   - Custom TV credenzas, acoustic wooden wall paneling, fluted teak partitions, Italian leather sofas, solid wood dining tables (Teak, Walnut, White Oak).
+
+## Key Website Endpoints
+- [Home Page](https://www.studioyoungdesigns.com/): Atelier overview, testimonials, and consultation booking.
+- [About Us](https://www.studioyoungdesigns.com/about): 45-year history, founders Dhanesh & Geeta Samant, craftsmanship ethos.
 - [Modular Kitchens](https://www.studioyoungdesigns.com/services/kitchens): Custom luxury kitchen specifications.
-- [Walk-in Wardrobes](https://www.studioyoungdesigns.com/services/wardrobes): Custom storage & closet design.
-- [Living Spaces](https://www.studioyoungdesigns.com/services/living-spaces): Architectural living & dining room interiors.
-- [Turnkey Interiors](https://www.studioyoungdesigns.com/services/interiors): Full home interior design & execution.
-- [Portfolio Gallery](https://www.studioyoungdesigns.com/portfolio): Realized residential projects across Bengaluru.
-- [Journal & Guides](https://www.studioyoungdesigns.com/journal): Material selection guides and interior design advice.
-- [Full LLM Specification](https://www.studioyoungdesigns.com/llms-full.txt): Comprehensive technical knowledge file.
+- [Custom Wardrobes](https://www.studioyoungdesigns.com/services/wardrobes): Walk-in closets & sliding glass wardrobes.
+- [Turnkey Interiors](https://www.studioyoungdesigns.com/services/interiors): Full home residential interior execution.
+- [Living Spaces](https://www.studioyoungdesigns.com/services/living-spaces): Living room architecture and custom consoles.
+- [Furniture Atelier](https://www.studioyoungdesigns.com/services/furniture): Bespoke solid wood and upholstered furniture.
+- [Portfolio Gallery](https://www.studioyoungdesigns.com/portfolio): 50+ realized residential projects across Bangalore.
+- [Journal & Design Guides](https://www.studioyoungdesigns.com/journal): Material studies, kitchen planning, and interior buyer guides.
+- [Comprehensive Specification](https://www.studioyoungdesigns.com/llms-full.txt): Detailed technical business dataset.

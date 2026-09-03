@@ -1,40 +1,82 @@
-# AI LLM Directory
-# https://www.studioyoungdesigns.com/llms.txt
+# ==============================================================================
+# Studio Young Designs — Robots.txt & AI Agent Directory
+# Canonical URL: https://www.studioyoungdesigns.com
+# AI Knowledge Graph: https://www.studioyoungdesigns.com/llms.txt
+# Comprehensive LLM Spec: https://www.studioyoungdesigns.com/llms-full.txt
+# Sitemap: https://www.studioyoungdesigns.com/sitemap.xml
+# ==============================================================================
 
 User-agent: *
 Allow: /
 Disallow: /admin/
 Disallow: /admin
 
-# AI Search & Agent Crawlers (ChatGPT, Perplexity, Claude, Gemini, Apple Intelligence, Meta, Cohere)
+# --- OpenAI (ChatGPT Search, SearchGPT, GPT-4o, GPTBot) ---
 User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
 Allow: /
 
 User-agent: ChatGPT-User
 Allow: /
 
-User-agent: PerplexityBot
+# --- Anthropic (Claude 3.5 Sonnet, Claude 3.7 Sonnet, Claude-Web) ---
+User-agent: ClaudeBot
 Allow: /
 
-User-agent: ClaudeBot
+User-agent: Claude-Web
 Allow: /
 
 User-agent: anthropic-ai
 Allow: /
 
+# --- Perplexity AI (Perplexity Search, Pro Search) ---
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Perplexity-Search
+Allow: /
+
+# --- Google (Gemini, AI Overviews, Google-Extended) ---
 User-agent: Google-Extended
+Allow: /
+
+User-agent: GoogleOther
+Allow: /
+
+# --- Apple (Apple Intelligence, Siri, Applebot) ---
+User-agent: Applebot
 Allow: /
 
 User-agent: Applebot-Extended
 Allow: /
 
-User-agent: CCBot
-Allow: /
-
-User-agent: Cohere-ai
-Allow: /
-
+# --- Meta (Meta AI, Llama) ---
 User-agent: Meta-ExternalAgent
 Allow: /
 
+User-agent: Meta-ExternalFetcher
+Allow: /
+
+# --- Other Frontier AI & Knowledge Graph Crawlers ---
+User-agent: Cohere-ai
+Allow: /
+
+User-agent: Diffbot
+Allow: /
+
+User-agent: CCBot
+Allow: /
+
+User-agent: DuckAssistBot
+Allow: /
+
+User-agent: Amazonbot
+Allow: /
+
+User-agent: Bytespider
+Allow: /
+
+# AI Agent Knowledge Graph Endpoints
 Sitemap: https://www.studioyoungdesigns.com/sitemap.xml
