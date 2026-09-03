@@ -19,6 +19,7 @@ import {
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
 import { AdminSelect } from "@/components/ui/admin-select";
+import { optimizeImageBeforeUpload } from "@/utils/image-optimizer";
 
 export const Route = createFileRoute("/admin/portfolio")({
   component: PortfolioAdminComponent,
@@ -136,15 +137,17 @@ function PortfolioAdminComponent() {
     setIsModalOpen(true);
   };
 
-  const uploadImageFile = async (file: File): Promise<string> => {
+  const uploadImageFile = async (rawFile: File): Promise<string> => {
+    const file = await optimizeImageBeforeUpload(rawFile);
     const fileExt = file.name.split(".").pop();
-    const fileName = `gallery-${Math.random()}.${fileExt}`;
+    const fileName = `gallery-${Date.now()}-${Math.random().toString(36).substring(2, 7)}.${fileExt}`;
     const filePath = `gallery/${fileName}`;
 
     const { error: uploadError } = await supabase.storage
       .from("studio-young-assets")
       .upload(filePath, file, {
         contentType: file.type,
+        cacheControl: "31536000",
         upsert: false,
       });
 

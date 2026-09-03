@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
+import { optimizeImageBeforeUpload } from "@/utils/image-optimizer";
 
 export const Route = createFileRoute("/admin/services")({
   component: ServicesComponent,
@@ -242,16 +243,17 @@ function ServicesComponent() {
     setFeatures((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const handleCardImageUpload = async (file: File, targetIdx: number | "new") => {
-    if (!file) return;
+  const handleCardImageUpload = async (rawFile: File, targetIdx: number | "new") => {
+    if (!rawFile) return;
     setCardUploadingIdx(targetIdx);
     try {
+      const file = await optimizeImageBeforeUpload(rawFile);
       const ext = file.name.split(".").pop() || "jpg";
       const fileName = `offer_cards/card_${Date.now()}.${ext}`;
 
       const { error: uploadError } = await supabase.storage
         .from("studio-young-assets")
-        .upload(fileName, file, { upsert: true });
+        .upload(fileName, file, { cacheControl: "31536000", upsert: true });
 
       if (uploadError) throw uploadError;
 
@@ -438,24 +440,26 @@ function ServicesComponent() {
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, isNewForm = false) => {
     if (!e.target.files || !e.target.files[0]) return;
-    const file = e.target.files[0];
+    const rawFile = e.target.files[0];
 
-    if (file.size > 10 * 1024 * 1024) {
-      toast.error("File size is too large (max 10MB).");
+    if (rawFile.size > 15 * 1024 * 1024) {
+      toast.error("File size is too large (max 15MB).");
       return;
     }
 
     const currentSlug = isNewForm ? "new-service" : selectedService?.slug || "service";
     setUploading(true);
     try {
+      const file = await optimizeImageBeforeUpload(rawFile);
       const fileExt = file.name.split(".").pop();
-      const fileName = `service-${currentSlug}-${Math.random()}.${fileExt}`;
+      const fileName = `service-${currentSlug}-${Date.now()}.${fileExt}`;
       const filePath = `services/${fileName}`;
 
       const { error: uploadError } = await supabase.storage
         .from("studio-young-assets")
         .upload(filePath, file, {
           contentType: file.type,
+          cacheControl: "31536000",
           upsert: true,
         });
 

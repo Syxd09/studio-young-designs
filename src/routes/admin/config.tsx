@@ -24,6 +24,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
+import { optimizeImageBeforeUpload } from "@/utils/image-optimizer";
 
 export const Route = createFileRoute("/admin/config")({
   component: ConfigComponent,
@@ -193,23 +194,25 @@ function ConfigComponent() {
 
   const handleImageUpload = async (key: string, e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files || !e.target.files[0]) return;
-    const file = e.target.files[0];
+    const rawFile = e.target.files[0];
 
-    if (file.size > 10 * 1024 * 1024) {
-      toast.error("File size is too large. Limit is 10MB.");
+    if (rawFile.size > 15 * 1024 * 1024) {
+      toast.error("File size is too large. Limit is 15MB.");
       return;
     }
 
     setUploadingKey(key);
     try {
+      const file = await optimizeImageBeforeUpload(rawFile);
       const fileExt = file.name.split(".").pop();
-      const fileName = `${key}-${Math.random()}.${fileExt}`;
+      const fileName = `${key}-${Date.now()}.${fileExt}`;
       const filePath = `layout/${fileName}`;
 
       const { error: uploadError } = await supabase.storage
         .from("studio-young-assets")
         .upload(filePath, file, {
           contentType: file.type,
+          cacheControl: "31536000",
           upsert: true,
         });
 
@@ -237,15 +240,16 @@ function ConfigComponent() {
 
   const handleVideoPosterUpload = async (key: string, e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files || !e.target.files[0]) return;
-    const file = e.target.files[0];
+    const rawFile = e.target.files[0];
 
-    if (file.size > 10 * 1024 * 1024) {
-      toast.error("File size is too large. Limit is 10MB.");
+    if (rawFile.size > 15 * 1024 * 1024) {
+      toast.error("File size is too large. Limit is 15MB.");
       return;
     }
 
     setUploadingKey(key);
     try {
+      const file = await optimizeImageBeforeUpload(rawFile);
       const fileExt = file.name.split(".").pop() || "jpg";
       const fileName = `${key}_${Date.now()}.${fileExt}`;
       const filePath = `video_posters/${fileName}`;
@@ -254,6 +258,7 @@ function ConfigComponent() {
         .from("studio-young-assets")
         .upload(filePath, file, {
           contentType: file.type,
+          cacheControl: "31536000",
           upsert: true,
         });
 

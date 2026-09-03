@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
+import { optimizeImageBeforeUpload } from "@/utils/image-optimizer";
 
 export const Route = createFileRoute("/admin/about")({
   component: AdminAboutComponent,
@@ -212,21 +213,22 @@ function AdminAboutComponent() {
     e: React.ChangeEvent<HTMLInputElement>,
   ) => {
     if (!e.target.files || !e.target.files[0]) return;
-    const file = e.target.files[0];
-    if (file.size > 10 * 1024 * 1024) {
-      toast.error("File size is too large. Limit is 10MB.");
+    const rawFile = e.target.files[0];
+    if (rawFile.size > 15 * 1024 * 1024) {
+      toast.error("File size is too large. Limit is 15MB.");
       return;
     }
 
     setUploadingImage(true);
     try {
+      const file = await optimizeImageBeforeUpload(rawFile);
       const fileExt = file.name.split(".").pop();
       const fileName = `${key}-${Date.now()}.${fileExt}`;
       const filePath = `layout/${fileName}`;
 
       const { error: uploadError } = await supabase.storage
         .from("studio-young-assets")
-        .upload(filePath, file, { contentType: file.type, upsert: true });
+        .upload(filePath, file, { contentType: file.type, cacheControl: "31536000", upsert: true });
 
       if (uploadError) throw uploadError;
 
@@ -267,15 +269,16 @@ function AdminAboutComponent() {
 
   const handleVideoPosterUpload = async (key: string, e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files || !e.target.files[0]) return;
-    const file = e.target.files[0];
+    const rawFile = e.target.files[0];
 
-    if (file.size > 10 * 1024 * 1024) {
-      toast.error("File size is too large. Limit is 10MB.");
+    if (rawFile.size > 15 * 1024 * 1024) {
+      toast.error("File size is too large. Limit is 15MB.");
       return;
     }
 
     setUploadingVideoKey(key);
     try {
+      const file = await optimizeImageBeforeUpload(rawFile);
       const fileExt = file.name.split(".").pop() || "jpg";
       const fileName = `${key}_${Date.now()}.${fileExt}`;
       const filePath = `video_posters/${fileName}`;
@@ -284,6 +287,7 @@ function AdminAboutComponent() {
         .from("studio-young-assets")
         .upload(filePath, file, {
           contentType: file.type,
+          cacheControl: "31536000",
           upsert: true,
         });
 
@@ -314,21 +318,22 @@ function AdminAboutComponent() {
     key: "founder_img_1" | "founder_img_2",
   ) => {
     if (!e.target.files || !e.target.files[0]) return;
-    const file = e.target.files[0];
-    if (file.size > 10 * 1024 * 1024) {
-      toast.error("File size limit is 10MB.");
+    const rawFile = e.target.files[0];
+    if (rawFile.size > 15 * 1024 * 1024) {
+      toast.error("File size limit is 15MB.");
       return;
     }
 
     setUploadingImage(true);
     try {
+      const file = await optimizeImageBeforeUpload(rawFile, 1200, 1200, 0.85);
       const fileExt = file.name.split(".").pop();
       const fileName = `${key}-${Date.now()}.${fileExt}`;
       const filePath = `founders/${fileName}`;
 
       const { error: uploadError } = await supabase.storage
         .from("studio-young-assets")
-        .upload(filePath, file, { contentType: file.type, upsert: true });
+        .upload(filePath, file, { contentType: file.type, cacheControl: "31536000", upsert: true });
 
       if (uploadError) throw uploadError;
 

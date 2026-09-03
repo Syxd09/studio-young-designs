@@ -17,6 +17,7 @@ import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
 import { format } from "date-fns";
 import { AdminSelect } from "@/components/ui/admin-select";
+import { optimizeImageBeforeUpload } from "@/utils/image-optimizer";
 
 export const Route = createFileRoute("/admin/journal")({
   component: JournalComponent,
@@ -118,15 +119,17 @@ function JournalComponent() {
     setIsModalOpen(true);
   };
 
-  const uploadCoverFile = async (file: File): Promise<string> => {
+  const uploadCoverFile = async (rawFile: File): Promise<string> => {
+    const file = await optimizeImageBeforeUpload(rawFile);
     const fileExt = file.name.split(".").pop();
-    const fileName = `journal-${Math.random()}.${fileExt}`;
+    const fileName = `journal-${Date.now()}.${fileExt}`;
     const filePath = `journal/${fileName}`;
 
     const { error: uploadError } = await supabase.storage
       .from("studio-young-assets")
       .upload(filePath, file, {
         contentType: file.type,
+        cacheControl: "31536000",
         upsert: false,
       });
 

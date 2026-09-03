@@ -4,6 +4,7 @@ import { supabase } from "@/utils/supabase";
 import { Loader2, Plus, X, Upload, Trash2, Edit3, Eye, EyeOff, Star, Users } from "lucide-react";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
+import { optimizeImageBeforeUpload } from "@/utils/image-optimizer";
 
 export const Route = createFileRoute("/admin/testimonials")({
   component: TestimonialsComponent,
@@ -79,15 +80,17 @@ function TestimonialsComponent() {
     setIsModalOpen(true);
   };
 
-  const uploadAvatarFile = async (file: File): Promise<string> => {
+  const uploadAvatarFile = async (rawFile: File): Promise<string> => {
+    const file = await optimizeImageBeforeUpload(rawFile, 400, 400, 0.85);
     const fileExt = file.name.split(".").pop();
-    const fileName = `avatar-${Math.random()}.${fileExt}`;
+    const fileName = `avatar-${Date.now()}.${fileExt}`;
     const filePath = `avatars/${fileName}`;
 
     const { error: uploadError } = await supabase.storage
       .from("studio-young-assets")
       .upload(filePath, file, {
         contentType: file.type,
+        cacheControl: "31536000",
         upsert: false,
       });
 
